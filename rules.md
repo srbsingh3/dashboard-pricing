@@ -1,3 +1,0 @@
-- write test of each feature and verify your changes using these tests
-- Use centralized variables instead of magic numbers, and use those variables
-- build a storybook and add all the components in it
