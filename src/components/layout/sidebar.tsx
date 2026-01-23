@@ -70,8 +70,8 @@ export function Sidebar() {
           <div className="flex grow shrink-0 basis-0 items-center gap-3">
             <Avatar
               variant="brand"
-              size="small"
-              image="https://res.cloudinary.com/subframe/image/upload/v1711417515/shared/cdnbniyuqjnplaj2zbjw.png"
+              size="medium"
+              image="/bob-the-builder.jpg"
               square={false}
             >
               SS
