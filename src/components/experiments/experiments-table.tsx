@@ -113,7 +113,7 @@ export function ExperimentsTable() {
   const AlreadyStartedIcon = ({ started }: { started: boolean }) => (
     <div className={cn(
       "h-5 w-5 rounded-full flex items-center justify-center",
-      started ? "text-emerald-600" : "text-zinc-400"
+      started ? "text-success-600" : "text-neutral-400"
     )}>
       {started ? (
         <Check className="h-4 w-4" strokeWidth={2.5} />

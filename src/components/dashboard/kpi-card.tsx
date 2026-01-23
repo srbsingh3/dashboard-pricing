@@ -70,9 +70,9 @@ export function KPICard({ metric, index = 0 }: KPICardProps) {
         <motion.div
           className={cn(
             "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium",
-            metric.changeType === "positive" && "bg-emerald-50 text-emerald-600",
-            metric.changeType === "negative" && "bg-red-50 text-red-600",
-            metric.changeType === "neutral" && "bg-zinc-100 text-zinc-600"
+            metric.changeType === "positive" && "bg-success-50 text-success-600",
+            metric.changeType === "negative" && "bg-error-50 text-error-600",
+            metric.changeType === "neutral" && "bg-neutral-100 text-neutral-600"
           )}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}

@@ -33,12 +33,12 @@ export const EXPERIMENT_STATUS = {
   COMPLETED: "completed",
 } as const;
 
-// Status colors (for badges)
+// Status colors (for badges) - Using Subframe semantic colors
 export const STATUS_COLORS = {
-  enabled: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  disabled: "bg-zinc-50 text-zinc-600 border-zinc-200",
-  draft: "bg-amber-50 text-amber-700 border-amber-200",
-  completed: "bg-blue-50 text-blue-700 border-blue-200",
+  enabled: "bg-success-50 text-success-700 border-success-200",
+  disabled: "bg-neutral-100 text-neutral-600 border-neutral-200",
+  draft: "bg-warning-50 text-warning-700 border-warning-200",
+  completed: "bg-brand-50 text-brand-700 border-brand-200",
 } as const;
 
 // KPI metric types
