@@ -1,0 +1,79 @@
+import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { Sidebar } from './sidebar'
+
+// Mock next/navigation
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/',
+}))
+
+// Mock Subframe components
+vi.mock('@/subframe/components/SidebarWithSections', () => ({
+  SidebarWithSections: ({ children, header, footer }: { children: React.ReactNode; header: React.ReactNode; footer: React.ReactNode }) => (
+    <div data-testid="sidebar">
+      <div data-testid="sidebar-header">{header}</div>
+      <div data-testid="sidebar-content">{children}</div>
+      <div data-testid="sidebar-footer">{footer}</div>
+    </div>
+  ),
+}))
+
+// Add NavItem to the mock
+vi.mock('@/subframe/components/SidebarWithSections', () => {
+  const SidebarWithSections = ({ children, header, footer }: { children: React.ReactNode; header: React.ReactNode; footer: React.ReactNode }) => (
+    <div data-testid="sidebar">
+      <div data-testid="sidebar-header">{header}</div>
+      <div data-testid="sidebar-content">{children}</div>
+      <div data-testid="sidebar-footer">{footer}</div>
+    </div>
+  )
+  SidebarWithSections.NavItem = ({ children, icon, selected }: { children: React.ReactNode; icon?: React.ReactNode; selected?: boolean }) => (
+    <div data-testid="nav-item" data-selected={selected}>{children}</div>
+  )
+  return { SidebarWithSections }
+})
+
+vi.mock('@/subframe/components/Avatar', () => ({
+  Avatar: ({ children }: { children: React.ReactNode }) => <div data-testid="avatar">{children}</div>,
+}))
+
+vi.mock('@/subframe/components/IconButton', () => ({
+  IconButton: ({ icon }: { icon: React.ReactNode }) => <button data-testid="icon-button">{icon}</button>,
+}))
+
+vi.mock('@subframe/core', () => ({
+  FeatherLayoutDashboard: () => <span>DashboardIcon</span>,
+  FeatherLayers: () => <span>LayersIcon</span>,
+  FeatherTag: () => <span>TagIcon</span>,
+  FeatherMegaphone: () => <span>MegaphoneIcon</span>,
+  FeatherFlaskConical: () => <span>FlaskIcon</span>,
+  FeatherRepeat: () => <span>RepeatIcon</span>,
+  FeatherStore: () => <span>StoreIcon</span>,
+  FeatherSettings: () => <span>SettingsIcon</span>,
+  FeatherMoreVertical: () => <span>MoreIcon</span>,
+  FeatherGlobe: () => <span>GlobeIcon</span>,
+  FeatherChevronDown: () => <span>ChevronIcon</span>,
+}))
+
+describe('Sidebar', () => {
+  it('renders the sidebar with logo', () => {
+    render(<Sidebar />)
+    expect(screen.getByText('dps')).toBeInTheDocument()
+  })
+
+  it('renders navigation items', () => {
+    render(<Sidebar />)
+    expect(screen.getByText('Dashboard')).toBeInTheDocument()
+    expect(screen.getByText('Experiments')).toBeInTheDocument()
+  })
+
+  it('renders user name in footer', () => {
+    render(<Sidebar />)
+    expect(screen.getByText('Saurabh Singh')).toBeInTheDocument()
+  })
+
+  it('renders region selector', () => {
+    render(<Sidebar />)
+    expect(screen.getByText('Germany')).toBeInTheDocument()
+  })
+})
