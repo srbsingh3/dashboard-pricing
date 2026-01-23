@@ -20,9 +20,6 @@ export default function ExperimentsPage() {
       >
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Experiments</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Create and manage pricing experiments
-          </p>
         </div>
 
         <Button

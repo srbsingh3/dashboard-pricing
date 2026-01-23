@@ -31,9 +31,6 @@ export default function DashboardPage() {
       >
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Monitor key metrics and active experiments
-          </p>
         </div>
       </motion.div>
 
