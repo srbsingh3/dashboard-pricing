@@ -48,7 +48,7 @@ export default function DashboardPage() {
       </div>
 
       {/* KPI Cards - Bottom Row (2 cards) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {kpiMetrics.slice(3, 5).map((metric, index) => (
           <KPICard key={metric.id} metric={metric} index={index + 3} />
         ))}

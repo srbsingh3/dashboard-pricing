@@ -238,6 +238,20 @@
     @apply border-border;
   }
 
+  /* Interactive elements should show pointer cursor */
+  button,
+  a,
+  [role="button"],
+  [type="button"],
+  [type="submit"],
+  [type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  summary {
+    cursor: pointer;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-geist-sans), var(--font-family-sans);
