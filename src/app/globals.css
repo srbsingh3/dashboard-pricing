@@ -395,6 +395,14 @@
   box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring);
 }
 
+/* Remove focus ring from dropdown/popover content and triggers */
+[data-radix-popper-content-wrapper] *:focus-visible,
+[data-slot="dropdown-menu-content"]:focus-visible,
+[data-slot="dropdown-menu-trigger"]:focus-visible,
+[data-state="open"]:focus-visible {
+  box-shadow: none;
+}
+
 /* ============================================
    ANIMATIONS
    ============================================ */
