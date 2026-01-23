@@ -68,13 +68,17 @@ export function Sidebar() {
       footer={
         <>
           <div className="flex grow shrink-0 basis-0 items-center gap-3">
-            <Avatar variant="brand">UN</Avatar>
+            <Avatar
+              variant="brand"
+              size="small"
+              image="https://res.cloudinary.com/subframe/image/upload/v1711417515/shared/cdnbniyuqjnplaj2zbjw.png"
+              square={false}
+            >
+              SS
+            </Avatar>
             <div className="flex flex-col items-start">
               <span className="text-body-bold font-body-bold text-default-font">
-                User Name
-              </span>
-              <span className="text-caption font-caption text-subtext-color">
-                Admin
+                Saurabh Singh
               </span>
             </div>
           </div>
@@ -94,57 +98,8 @@ export function Sidebar() {
         </>
       }
     >
-      {/* Region & Entity Selectors */}
-      <SidebarWithSections.NavSection label="Context">
-        <div className="flex w-full flex-col gap-2 px-1">
-          {/* Region selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
-              >
-                <span className="flex items-center gap-2">
-                  <FeatherGlobe className="h-4 w-4" />
-                  {currentRegion}
-                </span>
-                <FeatherChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              {REGIONS.filter((r) => r.value !== "all").map((region) => (
-                <DropdownMenuItem key={region.value}>
-                  {region.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Entity selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
-              >
-                <span className="font-medium">FP_SG</span>
-                <FeatherChevronDown className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
-              <DropdownMenuItem>FP_DE (Germany)</DropdownMenuItem>
-              <DropdownMenuItem>FP_AR (Argentina)</DropdownMenuItem>
-              <DropdownMenuItem>FP_UK (United Kingdom)</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </SidebarWithSections.NavSection>
-
       {/* Main Navigation */}
-      <SidebarWithSections.NavSection label="Navigation">
+      <div className="flex w-full flex-col gap-1">
         {NAV_ITEMS.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -161,14 +116,62 @@ export function Sidebar() {
             </Link>
           );
         })}
-      </SidebarWithSections.NavSection>
+      </div>
 
-      {/* Settings Section */}
-      <SidebarWithSections.NavSection label="Settings">
+      {/* Divider */}
+      <div className="w-full border-t border-neutral-border my-2" />
+
+      {/* Region, Entity & Settings */}
+      <div className="flex w-full flex-col gap-1">
+        {/* Region selector */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+            >
+              <span className="flex items-center gap-2">
+                <FeatherGlobe className="h-4 w-4" />
+                {currentRegion}
+              </span>
+              <FeatherChevronDown className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            {REGIONS.filter((r) => r.value !== "all").map((region) => (
+              <DropdownMenuItem key={region.value}>
+                {region.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Entity selector */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+            >
+              <span className="font-medium">FP_SG</span>
+              <FeatherChevronDown className="h-3 w-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
+            <DropdownMenuItem>FP_DE (Germany)</DropdownMenuItem>
+            <DropdownMenuItem>FP_AR (Argentina)</DropdownMenuItem>
+            <DropdownMenuItem>FP_UK (United Kingdom)</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Settings */}
         <SidebarWithSections.NavItem icon={<FeatherSettings />}>
           Settings
         </SidebarWithSections.NavItem>
-      </SidebarWithSections.NavSection>
+      </div>
     </SidebarWithSections>
   );
 }
