@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Clock, UserPlus, MapPinned, X, Sun, Calendar } from "lucide-react";
+import { Clock, UserPlus, MapPinned, X, ChevronLeft } from "lucide-react";
 import { FeatherTrash2 } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -155,7 +155,7 @@ export function TimeConditionCard({
   };
 
   return (
-    <div className="flex flex-col rounded-lg border border-neutral-border bg-white shadow-sm">
+    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<Clock className="size-4 text-brand-600" />}
         title="Time Recurrence"
@@ -179,14 +179,12 @@ export function TimeConditionCard({
               value="weekly"
               className="flex-1 rounded-md text-body data-[state=active]:bg-white data-[state=active]:text-brand-600 data-[state=active]:shadow-sm"
             >
-              <Calendar className="mr-1.5 size-3.5" />
               Repeat Weekly
             </TabsTrigger>
             <TabsTrigger
               value="daily"
               className="flex-1 rounded-md text-body data-[state=active]:bg-white data-[state=active]:text-brand-600 data-[state=active]:shadow-sm"
             >
-              <Sun className="mr-1.5 size-3.5" />
               Repeat Daily
             </TabsTrigger>
           </TabsList>
@@ -276,7 +274,7 @@ export function NewCustomerConditionCard({
   onDelete,
 }: NewCustomerConditionCardProps) {
   return (
-    <div className="flex flex-col rounded-lg border border-neutral-border bg-white shadow-sm">
+    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<UserPlus className="size-4 text-success-600" />}
         title="New Customer Condition"
@@ -329,8 +327,9 @@ export function NewCustomerConditionCard({
             }
           />
           <span className="flex-1 text-body text-default-font">
-            Number of orders is less than
+            Number of orders
           </span>
+          <ChevronLeft className="size-4 text-neutral-400" />
           <TextField className="w-20">
             <TextField.Input
               type="number"
@@ -354,8 +353,9 @@ export function NewCustomerConditionCard({
             }
           />
           <span className="flex-1 text-body text-default-font">
-            Days since first order is less than
+            Days since first order
           </span>
+          <ChevronLeft className="size-4 text-neutral-400" />
           <TextField className="w-20">
             <TextField.Input
               type="number"
@@ -400,7 +400,7 @@ export function CustomerLocationCard({
   };
 
   return (
-    <div className="flex flex-col rounded-lg border border-neutral-border bg-white shadow-sm">
+    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<MapPinned className="size-4 text-warning-600" />}
         title="Customer Location"
