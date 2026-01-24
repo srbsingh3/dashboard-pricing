@@ -12,6 +12,8 @@ import {
   Trash2,
   GripVertical,
   Eye,
+  Split,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -206,21 +208,23 @@ export function ExperimentFormDialog({
 
               {/* Experiment Type */}
               <div className="flex flex-col gap-2">
-                <span className="font-caption-bold text-caption-bold text-default-font">
+                <span className="text-caption-bold text-neutral-700">
                   Experiment Type
                 </span>
                 <RadioCardGroup
                   value={experimentType}
                   onValueChange={setExperimentType}
                 >
-                  <div className="flex w-full items-start gap-2">
+                  <div className="flex w-full items-stretch gap-2">
                     <RadioCardGroup.RadioCard
                       value="ab_test"
                       checked={experimentType === "ab_test"}
                       hideRadio={true}
+                      className="flex-1"
                     >
-                      <div className="flex flex-col items-start pr-2">
-                        <span className="font-body-bold w-full text-body-bold text-default-font">
+                      <div className="flex flex-col items-start gap-4 py-2">
+                        <Split className="size-4 text-brand-500" />
+                        <span className="text-body-bold text-neutral-900">
                           A/B Test
                         </span>
                       </div>
@@ -229,9 +233,11 @@ export function ExperimentFormDialog({
                       value="switchback_test"
                       checked={experimentType === "switchback_test"}
                       hideRadio={true}
+                      className="flex-1"
                     >
-                      <div className="flex flex-col items-start pr-2">
-                        <span className="font-body-bold w-full text-body-bold text-default-font">
+                      <div className="flex flex-col items-start gap-4 py-2">
+                        <RefreshCw className="size-4 text-success-500" />
+                        <span className="text-body-bold text-neutral-900">
                           Switchback Test
                         </span>
                       </div>
