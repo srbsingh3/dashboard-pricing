@@ -838,8 +838,8 @@ export function ExperimentFormDialog({
                         <SubframeCore.DropdownMenu.Root>
                           <SubframeCore.DropdownMenu.Trigger asChild>
                             <IconButton
-                              size="small"
-                              icon={<ListFilter className="size-4" />}
+                              size="medium"
+                              icon={<ListFilter className="size-4 text-subtext-color" />}
                             />
                           </SubframeCore.DropdownMenu.Trigger>
                           <SubframeCore.DropdownMenu.Portal>
@@ -954,8 +954,8 @@ export function ExperimentFormDialog({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <IconButton
-                                size="small"
-                                icon={<Clock className="size-4" />}
+                                size="medium"
+                                icon={<Clock className="size-4 text-subtext-color" />}
                                 onClick={() => {
                                   // TODO: Open time condition panel
                                 }}
@@ -968,8 +968,8 @@ export function ExperimentFormDialog({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <IconButton
-                                size="small"
-                                icon={<UserPlus className="size-4" />}
+                                size="medium"
+                                icon={<UserPlus className="size-4 text-subtext-color" />}
                                 onClick={() => {
                                   // TODO: Open new customer condition panel
                                 }}
@@ -982,8 +982,8 @@ export function ExperimentFormDialog({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <IconButton
-                                size="small"
-                                icon={<MapPinned className="size-4" />}
+                                size="medium"
+                                icon={<MapPinned className="size-4 text-subtext-color" />}
                                 onClick={() => {
                                   // TODO: Open customer location condition panel
                                 }}
@@ -1011,8 +1011,8 @@ export function ExperimentFormDialog({
                         <SubframeCore.DropdownMenu.Root>
                           <SubframeCore.DropdownMenu.Trigger asChild>
                             <IconButton
-                              size="small"
-                              icon={<Plus className="size-4" />}
+                              size="medium"
+                              icon={<Plus className="size-4 text-subtext-color" />}
                             />
                           </SubframeCore.DropdownMenu.Trigger>
                           <SubframeCore.DropdownMenu.Portal>
