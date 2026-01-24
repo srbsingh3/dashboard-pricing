@@ -18,7 +18,8 @@ import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
-import { Store, SlidersHorizontal, GitBranch, Plus, ChevronUp } from "lucide-react";
+import { Store, SlidersHorizontal, GitBranch, Plus } from "lucide-react";
+import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
 
 interface ExperimentFormDialogProps {
@@ -269,10 +270,10 @@ export function ExperimentFormDialog({
                     <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
                       Priority 1
                     </span>
-                    <ChevronUp
+                    <FeatherChevronDown
                       className={cn(
-                        "size-4 text-default-font transition-transform duration-200",
-                        !isPriorityExpanded && "rotate-180"
+                        "text-body text-subtext-color transition-transform duration-200",
+                        isPriorityExpanded && "rotate-180"
                       )}
                     />
                   </div>
