@@ -35,8 +35,19 @@ export function ExperimentFormDialog({
     }, 200);
   };
 
+  // Prevent dialog from closing when interacting with Chrome extensions
+  const preventOutsideClose = (e: Event) => e.preventDefault();
+
   return (
-    <FullscreenDialog open={open} onOpenChange={onOpenChange} className="bg-background">
+    <FullscreenDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      className="bg-background"
+      {...{
+        onPointerDownOutside: preventOutsideClose,
+        onInteractOutside: preventOutsideClose,
+      }}
+    >
       {/* Visually hidden title for accessibility */}
       <DialogPrimitive.Title className="sr-only">
         New Experiment
