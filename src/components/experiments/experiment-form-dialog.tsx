@@ -101,7 +101,7 @@ export function ExperimentFormDialog({
       <div className="w-full flex-1 overflow-hidden bg-white">
         <div className="flex h-full">
           {/* Left Panel - Experiment Details Form */}
-          <div className="hidden w-96 border-r border-neutral-200 bg-neutral-50 p-6 lg:block">
+          <div className="hidden w-96 border-r border-neutral-200 bg-white p-6 lg:block">
             <div className="space-y-5">
               {/* Experiment Name */}
               <TextField label="Experiment Name" className="w-full gap-2">
@@ -253,7 +253,7 @@ export function ExperimentFormDialog({
           </div>
 
           {/* Right Panel */}
-          <div className="flex-1 overflow-y-auto p-6">
+          <div className="flex-1 overflow-y-auto bg-neutral-50 p-6">
             <div className="mx-auto max-w-[860px] space-y-4">
               {/* Section Header */}
               <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
