@@ -43,6 +43,7 @@ import {
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2 } from "@subframe/core";
 import { cn } from "@/lib/utils";
+import { ScrollContainer } from "@/components/ui/scroll-container";
 import {
   VendorFilterList,
   VendorFilter,
@@ -351,8 +352,9 @@ export function ExperimentFormDialog({
           </div>
 
           {/* Right Panel */}
-          <div className="scrollbar-hidden flex-1 overflow-y-auto bg-neutral-50 p-6">
-            <div className="mx-auto max-w-[860px] space-y-4">
+          <div className="flex-1 bg-neutral-50">
+            <ScrollContainer className="p-6">
+              <div className="mx-auto max-w-[860px] space-y-4">
               {/* Section Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -571,7 +573,8 @@ export function ExperimentFormDialog({
                   )}
                 </div>
               ))}
-            </div>
+              </div>
+            </ScrollContainer>
           </div>
         </div>
       </div>
