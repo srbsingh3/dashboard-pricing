@@ -78,7 +78,7 @@ export function SearchSelect({
               "data-[state=open]:border-brand-primary",
             ],
             variant === "ghost" && [
-              "w-full max-w-52 bg-transparent",
+              "w-full bg-transparent",
             ],
             disabled && "cursor-not-allowed opacity-50",
             className

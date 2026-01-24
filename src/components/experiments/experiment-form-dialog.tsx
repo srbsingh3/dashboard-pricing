@@ -691,7 +691,7 @@ export function ExperimentFormDialog({
           {/* Right Panel */}
           <div className="flex-1 bg-neutral-50">
             <ScrollContainer className="p-6">
-              <div className="mx-auto max-w-[860px] space-y-4">
+              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(860, 860 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 160)}px` }}>
               {/* Section Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -977,19 +977,27 @@ export function ExperimentFormDialog({
                       </div>
 
                       {/* Control and Variation Table */}
-                      <div className="w-full px-4 pb-4">
-                        <Table className="table-fixed border-separate border-spacing-0">
+                      <div className="w-full overflow-x-auto px-4 pb-4">
+                        <Table className="w-full border-separate border-spacing-0" style={{ minWidth: `${100 + (2 + group.enabledColumns.length) * 160}px` }}>
+                          <colgroup>
+                            <col className="w-[100px]" />
+                            <col className="w-[160px]" />
+                            <col className="w-[160px]" />
+                            {group.enabledColumns.map((col) => (
+                              <col key={col} className="w-[160px]" />
+                            ))}
+                          </colgroup>
                           <TableHeader>
                             <TableRow className="hover:bg-transparent">
-                              <TableHead className="h-10 w-28 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
-                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 pl-12 text-caption-bold text-neutral-500">
+                              <TableHead className="h-10 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
+                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500">
                                 <div className="flex items-center gap-1.5">
                                   <Banknote className="size-3.5" />
                                   Delivery Fee
                                 </div>
                               </TableHead>
                               <TableHead className={cn(
-                                "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                 group.enabledColumns.length === 0 && "rounded-r-md border-r"
                               )}>
                                 <div className="flex items-center gap-1.5">
@@ -999,7 +1007,7 @@ export function ExperimentFormDialog({
                               </TableHead>
                               {group.enabledColumns.includes("fleet_delay") && (
                                 <TableHead className={cn(
-                                  "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                  "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   group.enabledColumns[group.enabledColumns.length - 1] === "fleet_delay" && "rounded-r-md border-r"
                                 )}>
                                   <div className="flex items-center gap-1.5">
@@ -1010,7 +1018,7 @@ export function ExperimentFormDialog({
                               )}
                               {group.enabledColumns.includes("basket_value") && (
                                 <TableHead className={cn(
-                                  "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                  "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   group.enabledColumns[group.enabledColumns.length - 1] === "basket_value" && "rounded-r-md border-r"
                                 )}>
                                   <div className="flex items-center gap-1.5">
@@ -1021,7 +1029,7 @@ export function ExperimentFormDialog({
                               )}
                               {group.enabledColumns.includes("service_fee") && (
                                 <TableHead className={cn(
-                                  "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                  "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   group.enabledColumns[group.enabledColumns.length - 1] === "service_fee" && "rounded-r-md border-r"
                                 )}>
                                   <div className="flex items-center gap-1.5">
@@ -1031,7 +1039,7 @@ export function ExperimentFormDialog({
                                 </TableHead>
                               )}
                               {group.enabledColumns.includes("priority_fee") && (
-                                <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">
+                                <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500">
                                   <div className="flex items-center gap-1.5">
                                     <Zap className="size-3.5" />
                                     Priority Fee
@@ -1043,8 +1051,8 @@ export function ExperimentFormDialog({
                           <TableBody>
                             {/* Control Row */}
                             <TableRow className="group/row border-0 hover:bg-neutral-50">
-                              <TableCell className="w-28 py-2 text-body text-neutral-500">Control</TableCell>
-                              <TableCell className="py-2 pl-12">
+                              <TableCell className="py-2 pl-3 text-body text-neutral-500">Control</TableCell>
+                              <TableCell className="px-3 py-2">
                                 <SearchSelect
                                   options={DELIVERY_FEE_COMPONENTS}
                                   value={group.controlDeliveryFee}
@@ -1053,7 +1061,7 @@ export function ExperimentFormDialog({
                                   variant="ghost"
                                 />
                               </TableCell>
-                              <TableCell className="py-2">
+                              <TableCell className="px-3 py-2">
                                 <SearchSelect
                                   options={MOV_COMPONENTS}
                                   value={group.controlMov}
@@ -1063,7 +1071,7 @@ export function ExperimentFormDialog({
                                 />
                               </TableCell>
                               {group.enabledColumns.includes("fleet_delay") && (
-                                <TableCell className="py-2">
+                                <TableCell className="px-3 py-2">
                                   <SearchSelect
                                     options={FLEET_DELAY_COMPONENTS}
                                     value={group.controlFleetDelay}
@@ -1074,7 +1082,7 @@ export function ExperimentFormDialog({
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("basket_value") && (
-                                <TableCell className="py-2">
+                                <TableCell className="px-3 py-2">
                                   <SearchSelect
                                     options={BASKET_VALUE_COMPONENTS}
                                     value={group.controlBasketValue}
@@ -1085,7 +1093,7 @@ export function ExperimentFormDialog({
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("service_fee") && (
-                                <TableCell className="py-2">
+                                <TableCell className="px-3 py-2">
                                   <SearchSelect
                                     options={SERVICE_FEE_COMPONENTS}
                                     value={group.controlServiceFee}
@@ -1096,7 +1104,7 @@ export function ExperimentFormDialog({
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("priority_fee") && (
-                                <TableCell className="py-2">
+                                <TableCell className="px-3 py-2">
                                   <SearchSelect
                                     options={PRIORITY_FEE_COMPONENTS}
                                     value={group.controlPriorityFee}
@@ -1110,8 +1118,8 @@ export function ExperimentFormDialog({
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
                               <TableRow key={i} className="group/row border-0 hover:bg-neutral-50">
-                                <TableCell className="w-28 py-2 text-body text-neutral-500">Variation {i + 1}</TableCell>
-                                <TableCell className="py-2 pl-12">
+                                <TableCell className="py-2 pl-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
+                                <TableCell className="px-3 py-2">
                                   <SearchSelect
                                     options={[
                                       { value: "same_as_control", label: "Same as control" },
@@ -1123,7 +1131,7 @@ export function ExperimentFormDialog({
                                     variant="ghost"
                                   />
                                 </TableCell>
-                                <TableCell className="py-2">
+                                <TableCell className="px-3 py-2">
                                   <SearchSelect
                                     options={[
                                       { value: "same_as_control", label: "Same as control" },
@@ -1136,7 +1144,7 @@ export function ExperimentFormDialog({
                                   />
                                 </TableCell>
                                 {group.enabledColumns.includes("fleet_delay") && (
-                                  <TableCell className="py-2">
+                                  <TableCell className="px-3 py-2">
                                     <SearchSelect
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
@@ -1150,7 +1158,7 @@ export function ExperimentFormDialog({
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("basket_value") && (
-                                  <TableCell className="py-2">
+                                  <TableCell className="px-3 py-2">
                                     <SearchSelect
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
@@ -1164,7 +1172,7 @@ export function ExperimentFormDialog({
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("service_fee") && (
-                                  <TableCell className="py-2">
+                                  <TableCell className="px-3 py-2">
                                     <SearchSelect
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
@@ -1178,7 +1186,7 @@ export function ExperimentFormDialog({
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("priority_fee") && (
-                                  <TableCell className="py-2">
+                                  <TableCell className="px-3 py-2">
                                     <SearchSelect
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
