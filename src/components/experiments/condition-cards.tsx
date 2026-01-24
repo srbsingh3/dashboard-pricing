@@ -4,7 +4,6 @@ import * as React from "react";
 import { Clock, UserPlus, MapPinned, X, ChevronLeft } from "lucide-react";
 import { FeatherTrash2 } from "@subframe/core";
 import { cn } from "@/lib/utils";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TextField } from "@/subframe/components/TextField";
 import { Checkbox } from "@/subframe/components/Checkbox";
 import { Badge } from "@/subframe/components/Badge";
@@ -164,32 +163,6 @@ export function TimeConditionCard({
       />
 
       <div className="flex flex-col gap-4 p-4">
-        {/* Repeat Mode Tabs */}
-        <Tabs
-          value={condition.repeatMode}
-          onValueChange={(value) =>
-            onUpdate({
-              ...condition,
-              repeatMode: value as "weekly" | "daily",
-            })
-          }
-        >
-          <TabsList className="h-10 w-full rounded-lg bg-neutral-100 p-1">
-            <TabsTrigger
-              value="weekly"
-              className="flex-1 rounded-md text-body data-[state=active]:bg-white data-[state=active]:text-brand-600 data-[state=active]:shadow-sm"
-            >
-              Repeat Weekly
-            </TabsTrigger>
-            <TabsTrigger
-              value="daily"
-              className="flex-1 rounded-md text-body data-[state=active]:bg-white data-[state=active]:text-brand-600 data-[state=active]:shadow-sm"
-            >
-              Repeat Daily
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         {/* All Day Toggle */}
         <div className="flex items-center justify-between">
           <span className="text-body text-default-font">All Day</span>
@@ -225,34 +198,30 @@ export function TimeConditionCard({
           </div>
         )}
 
-        {/* Day Selection - only show for weekly mode */}
-        {condition.repeatMode === "weekly" && (
-          <div className="flex flex-col gap-2">
-            <span className="text-caption-bold text-neutral-700">
-              Repeat on
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {WEEKDAYS.map((day) => {
-                const isSelected = condition.selectedDays.includes(day.value);
-                return (
-                  <button
-                    key={day.value}
-                    type="button"
-                    onClick={() => toggleDay(day.value)}
-                    className={cn(
-                      "flex size-9 items-center justify-center rounded-lg text-caption-bold transition-all",
-                      isSelected
-                        ? "bg-brand-600 text-white"
-                        : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-                    )}
-                  >
-                    {day.label}
-                  </button>
-                );
-              })}
-            </div>
+        {/* Day Selection */}
+        <div className="flex flex-col gap-2">
+          <span className="text-caption-bold text-neutral-700">Repeat on</span>
+          <div className="flex flex-wrap gap-2">
+            {WEEKDAYS.map((day) => {
+              const isSelected = condition.selectedDays.includes(day.value);
+              return (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => toggleDay(day.value)}
+                  className={cn(
+                    "flex size-9 items-center justify-center rounded-lg text-caption-bold transition-all",
+                    isSelected
+                      ? "bg-brand-600 text-white"
+                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                  )}
+                >
+                  {day.label}
+                </button>
+              );
+            })}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
