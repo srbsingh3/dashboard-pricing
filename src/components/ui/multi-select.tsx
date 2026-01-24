@@ -83,9 +83,7 @@ export function MultiSelect({
         <div className="flex items-center justify-between">
           <span className="text-caption-bold text-neutral-700">{label}</span>
           {optional && (
-            <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-caption text-neutral-400">
-              Optional
-            </span>
+            <span className="text-caption text-neutral-400">Optional</span>
           )}
         </div>
       )}
