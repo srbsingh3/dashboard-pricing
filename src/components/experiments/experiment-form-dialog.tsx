@@ -41,7 +41,24 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
-import { FeatherChevronDown, FeatherTrash2, FeatherCopy } from "@subframe/core";
+import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { ScrollContainer } from "@/components/ui/scroll-container";
 import {
@@ -83,6 +100,40 @@ const generateRandomVendorCount = (
 interface ExperimentFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+// Sortable Priority Card wrapper component
+interface SortablePriorityCardProps {
+  id: number;
+  children: React.ReactNode;
+  disabled?: boolean;
+}
+
+function SortablePriorityCard({ id, children, disabled }: SortablePriorityCardProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id, disabled });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : undefined,
+    opacity: isDragging ? 0.9 : undefined,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes}>
+      {/* Clone children and pass drag handle props */}
+      {typeof children === 'function'
+        ? (children as (props: { listeners: typeof listeners; isDragging: boolean }) => React.ReactNode)({ listeners, isDragging })
+        : children}
+    </div>
+  );
 }
 
 export function ExperimentFormDialog({
@@ -206,6 +257,35 @@ export function ExperimentFormDialog({
       return newGroups;
     });
   }, []);
+
+  // Reorder priority groups after drag and drop
+  const reorderPriorityGroups = useCallback((activeId: number, overId: number) => {
+    setPriorityGroups((prev) => {
+      const oldIndex = prev.findIndex((g) => g.id === activeId);
+      const newIndex = prev.findIndex((g) => g.id === overId);
+      return arrayMove(prev, oldIndex, newIndex);
+    });
+  }, []);
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Handle drag end
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      reorderPriorityGroups(active.id as number, over.id as number);
+    }
+  }, [reorderPriorityGroups]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -453,51 +533,76 @@ export function ExperimentFormDialog({
                 </div>
               </div>
 
-              {/* Priority Cards - rendered from state */}
-              {priorityGroups.map((group, index) => (
-                <div key={group.id} className="flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
-                  {/* Header */}
-                  <div className="group/header flex w-full items-center gap-2 px-6 py-4">
-                    <button
-                      type="button"
-                      onClick={() => toggleGroupExpanded(group.id)}
-                      className="flex shrink-0 grow basis-0 items-center gap-2"
+              {/* Priority Cards - rendered from state with drag and drop */}
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={priorityGroups.map((g) => g.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {priorityGroups.map((group, index) => (
+                    <SortablePriorityCard
+                      key={group.id}
+                      id={group.id}
                     >
-                      <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
-                        Priority {index + 1}
-                      </span>
-                    </button>
-                    {priorityGroups.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => deletePriorityGroup(group.id)}
-                        className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
-                        aria-label="Remove priority group"
-                      >
-                        <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => duplicatePriorityGroup(group.id)}
-                      className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
-                      aria-label="Duplicate priority group"
-                    >
-                      <FeatherCopy className="text-body text-subtext-color" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => toggleGroupExpanded(group.id)}
-                      className="-my-1 flex size-8 items-center justify-center rounded-md transition-colors hover:bg-neutral-100"
-                    >
-                      <FeatherChevronDown
-                        className={cn(
-                          "text-body text-subtext-color transition-transform duration-200",
-                          group.isExpanded && "rotate-180"
-                        )}
-                      />
-                    </button>
-                  </div>
+                      {({ listeners, isDragging }: { listeners: Record<string, unknown>; isDragging: boolean }) => (
+                        <div className={cn(
+                          "flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm",
+                          isDragging && "shadow-lg ring-2 ring-brand-200"
+                        )}>
+                          {/* Header */}
+                          <div className="group/header flex w-full items-center gap-2 px-6 py-4">
+                            {/* Drag Handle */}
+                            <div
+                              {...listeners}
+                              className="-ml-2 flex size-8 cursor-grab items-center justify-center rounded-md transition-all hover:bg-neutral-100 active:cursor-grabbing"
+                              aria-label="Drag to reorder"
+                            >
+                              <FeatherGripVertical className="text-body text-subtext-color" />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => toggleGroupExpanded(group.id)}
+                              className="flex shrink-0 grow basis-0 items-center gap-2"
+                            >
+                              <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
+                                Priority {index + 1}
+                              </span>
+                            </button>
+                            {priorityGroups.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => deletePriorityGroup(group.id)}
+                                className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
+                                aria-label="Remove priority group"
+                              >
+                                <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => duplicatePriorityGroup(group.id)}
+                              className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
+                              aria-label="Duplicate priority group"
+                            >
+                              <FeatherCopy className="text-body text-subtext-color" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => toggleGroupExpanded(group.id)}
+                              className="-my-1 flex size-8 items-center justify-center rounded-md transition-colors hover:bg-neutral-100"
+                            >
+                              <FeatherChevronDown
+                                className={cn(
+                                  "text-body text-subtext-color transition-transform duration-200",
+                                  group.isExpanded && "rotate-180"
+                                )}
+                              />
+                            </button>
+                          </div>
                   {/* Divider */}
                   <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
                   {/* List of sections - collapsible */}
@@ -652,8 +757,12 @@ export function ExperimentFormDialog({
                       </div>
                     </div>
                   )}
-                </div>
-              ))}
+                        </div>
+                      )}
+                    </SortablePriorityCard>
+                  ))}
+                </SortableContext>
+              </DndContext>
               </div>
             </ScrollContainer>
           </div>
