@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { ZONES, PARENT_VERTICALS } from "@/lib/constants";
+import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -33,6 +33,8 @@ export function ExperimentFormDialog({
   const [experimentType, setExperimentType] = useState("ab_test");
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
+  const [numberOfVariations, setNumberOfVariations] = useState("1");
+  const [participantShare, setParticipantShare] = useState("");
 
   const handleClose = () => {
     onOpenChange(false);
@@ -44,6 +46,8 @@ export function ExperimentFormDialog({
       setExperimentType("ab_test");
       setSelectedZones([]);
       setSelectedVerticals([]);
+      setNumberOfVariations("1");
+      setParticipantShare("");
     }, 200);
   };
 
@@ -191,6 +195,52 @@ export function ExperimentFormDialog({
                 itemLabel="vertical"
                 optional
               />
+
+              {/* Two side-by-side fields */}
+              <div className="flex gap-3">
+                {/* Number of Variations */}
+                <div className="flex flex-1 flex-col gap-2">
+                  <span className="text-caption-bold text-neutral-700">Number of Variations</span>
+                  <Select
+                    value={numberOfVariations}
+                    onValueChange={setNumberOfVariations}
+                  >
+                    <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 [&>svg]:text-subtext-color">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent position="popper" sideOffset={4} className="border-neutral-border bg-white shadow-lg">
+                      {VARIATION_OPTIONS.map((option) => (
+                        <SelectItem
+                          key={option.value}
+                          value={option.value}
+                          className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600"
+                        >
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Total Participant Share */}
+                <TextField
+                  label="Total Participant Share"
+                  className="flex-1 gap-2"
+                  iconRight={<span className="text-body text-neutral-400">%</span>}
+                >
+                  <TextField.Input
+                    type="number"
+                    placeholder="Enter value"
+                    value={participantShare}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === "" || (Number(val) >= 1 && Number(val) <= 100)) {
+                        setParticipantShare(val);
+                      }
+                    }}
+                  />
+                </TextField>
+              </div>
 
             </div>
           </div>
