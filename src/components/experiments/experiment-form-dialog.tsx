@@ -442,7 +442,10 @@ export function ExperimentFormDialog({
                           Conditions
                         </span>
                       </div>
-                      <Plus className="size-4 text-default-font" />
+                      <IconButton
+                        size="small"
+                        icon={<Plus className="size-4" />}
+                      />
                     </div>
 
                     {/* Control and Variation */}
@@ -457,7 +460,10 @@ export function ExperimentFormDialog({
                           Control and Variation
                         </span>
                       </div>
-                      <Plus className="size-4 text-default-font" />
+                      <IconButton
+                        size="small"
+                        icon={<Plus className="size-4" />}
+                      />
                     </div>
                   </div>
                 )}
