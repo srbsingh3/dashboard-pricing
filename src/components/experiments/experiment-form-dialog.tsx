@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
+import { SearchSelect } from "@/components/ui/search-select";
+import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS } from "@/lib/constants";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
@@ -157,8 +158,24 @@ export function ExperimentFormDialog({
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
-  const [priorityGroups, setPriorityGroups] = useState<{ id: number; isExpanded: boolean; vendorFilters: VendorFilter[]; vendorCount: number }[]>(() => [
-    { id: 1, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }
+  const [priorityGroups, setPriorityGroups] = useState<{
+    id: number;
+    isExpanded: boolean;
+    vendorFilters: VendorFilter[];
+    vendorCount: number;
+    controlDeliveryFee: string | null;
+    controlMov: string | null;
+    variations: Array<{ deliveryFee: string | null; mov: string | null }>;
+  }[]>(() => [
+    {
+      id: 1,
+      isExpanded: true,
+      vendorFilters: [],
+      vendorCount: generateRandomVendorCount(),
+      controlDeliveryFee: null,
+      controlMov: null,
+      variations: Array.from({ length: 1 }, () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })),
+    }
   ]);
 
   // Add a new filter to a specific priority group
@@ -222,9 +239,17 @@ export function ExperimentFormDialog({
   const addPriorityGroup = useCallback(() => {
     setPriorityGroups((prev) => {
       const newId = Math.max(...prev.map((g) => g.id)) + 1;
-      return [{ id: newId, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }, ...prev];
+      return [{
+        id: newId,
+        isExpanded: true,
+        vendorFilters: [],
+        vendorCount: generateRandomVendorCount(),
+        controlDeliveryFee: null,
+        controlMov: null,
+        variations: Array.from({ length: parseInt(numberOfVariations, 10) }, () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })),
+      }, ...prev];
     });
-  }, []);
+  }, [numberOfVariations]);
 
   // Collapse all priority groups
   const collapseAll = useCallback(() => {
@@ -260,11 +285,45 @@ export function ExperimentFormDialog({
         id: newId,
         vendorFilters: groupToDuplicate.vendorFilters.map((f) => ({ ...f, id: generateFilterId() })),
         vendorCount: groupToDuplicate.vendorCount,
+        controlDeliveryFee: groupToDuplicate.controlDeliveryFee,
+        controlMov: groupToDuplicate.controlMov,
+        variations: groupToDuplicate.variations.map((v) => ({ ...v })),
       };
       const newGroups = [...prev];
       newGroups.splice(groupIndex + 1, 0, duplicatedGroup);
       return newGroups;
     });
+  }, []);
+
+  // Update control selection for a priority group
+  const updateControlSelection = useCallback((groupId: number, field: 'deliveryFee' | 'mov', value: string | null) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        if (field === 'deliveryFee') {
+          return { ...group, controlDeliveryFee: value };
+        } else {
+          return { ...group, controlMov: value };
+        }
+      })
+    );
+  }, []);
+
+  // Update variation selection for a priority group
+  const updateVariationSelection = useCallback((groupId: number, variationIndex: number, field: 'deliveryFee' | 'mov', value: string | null) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        const newVariations = [...group.variations];
+        if (newVariations[variationIndex]) {
+          newVariations[variationIndex] = {
+            ...newVariations[variationIndex],
+            [field]: value,
+          };
+        }
+        return { ...group, variations: newVariations };
+      })
+    );
   }, []);
 
   // Reorder priority groups after drag and drop
@@ -296,6 +355,33 @@ export function ExperimentFormDialog({
     }
   }, [reorderPriorityGroups]);
 
+  // Handle number of variations change - also update priority groups
+  const handleNumberOfVariationsChange = useCallback((newValue: string) => {
+    setNumberOfVariations(newValue);
+    const numVariations = parseInt(newValue, 10);
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        const currentLength = group.variations.length;
+        if (currentLength === numVariations) return group;
+
+        if (currentLength < numVariations) {
+          // Add new variations with default "same_as_control"
+          const newVariations = [
+            ...group.variations,
+            ...Array.from(
+              { length: numVariations - currentLength },
+              () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })
+            ),
+          ];
+          return { ...group, variations: newVariations };
+        } else {
+          // Remove extra variations
+          return { ...group, variations: group.variations.slice(0, numVariations) };
+        }
+      })
+    );
+  }, []);
+
   const handleClose = () => {
     onOpenChange(false);
     // Reset form state
@@ -308,7 +394,15 @@ export function ExperimentFormDialog({
       setSelectedVerticals([]);
       setNumberOfVariations("1");
       setParticipantShare("");
-      setPriorityGroups([{ id: 1, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }]);
+      setPriorityGroups([{
+        id: 1,
+        isExpanded: true,
+        vendorFilters: [],
+        vendorCount: generateRandomVendorCount(),
+        controlDeliveryFee: null,
+        controlMov: null,
+        variations: Array.from({ length: 1 }, () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })),
+      }]);
     }, 200);
   };
 
@@ -471,7 +565,7 @@ export function ExperimentFormDialog({
                   <span className="text-caption-bold text-neutral-700">Number of Variations</span>
                   <Select
                     value={numberOfVariations}
-                    onValueChange={setNumberOfVariations}
+                    onValueChange={handleNumberOfVariationsChange}
                   >
                     <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus-visible:border-brand-primary focus-visible:ring-0 [&>svg]:text-subtext-color">
                       <SelectValue />
@@ -777,36 +871,62 @@ export function ExperimentFormDialog({
                           </TableHeader>
                           <TableBody>
                             {/* Control Row */}
-                            <TableRow className="group border-0 hover:bg-neutral-50">
-                              <TableCell className="py-3 text-body text-neutral-500">Control</TableCell>
-                              <TableCell className="py-3 pl-12">
-                                <span className="mr-24 flex items-center justify-between">
-                                  <span className="text-body text-neutral-400">Select component</span>
-                                  <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
-                                </span>
+                            <TableRow className="border-0 hover:bg-neutral-50">
+                              <TableCell className="py-2 text-body text-neutral-500">Control</TableCell>
+                              <TableCell className="py-2 pl-12">
+                                <div className="mr-24">
+                                  <SearchSelect
+                                    options={DELIVERY_FEE_COMPONENTS}
+                                    value={group.controlDeliveryFee}
+                                    onValueChange={(value) => updateControlSelection(group.id, 'deliveryFee', value)}
+                                    placeholder="Select component"
+                                    variant="ghost"
+                                  />
+                                </div>
                               </TableCell>
-                              <TableCell className="py-3">
-                                <span className="mr-24 flex items-center justify-between">
-                                  <span className="text-body text-neutral-400">Select component</span>
-                                  <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
-                                </span>
+                              <TableCell className="py-2">
+                                <div className="mr-24">
+                                  <SearchSelect
+                                    options={MOV_COMPONENTS}
+                                    value={group.controlMov}
+                                    onValueChange={(value) => updateControlSelection(group.id, 'mov', value)}
+                                    placeholder="Select component"
+                                    variant="ghost"
+                                  />
+                                </div>
                               </TableCell>
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
-                              <TableRow key={i} className="group border-0 hover:bg-neutral-50">
-                                <TableCell className="py-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
-                                <TableCell className="py-3 pl-12">
-                                  <span className="mr-24 flex items-center justify-between">
-                                    <span className="text-body text-default-font">Same as control</span>
-                                    <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
-                                  </span>
+                              <TableRow key={i} className="border-0 hover:bg-neutral-50">
+                                <TableCell className="py-2 text-body text-neutral-500">Variation {i + 1}</TableCell>
+                                <TableCell className="py-2 pl-12">
+                                  <div className="mr-24">
+                                    <SearchSelect
+                                      options={[
+                                        { value: "same_as_control", label: "Same as control" },
+                                        ...DELIVERY_FEE_COMPONENTS,
+                                      ]}
+                                      value={group.variations[i]?.deliveryFee ?? null}
+                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'deliveryFee', value)}
+                                      placeholder="Same as control"
+                                      variant="ghost"
+                                    />
+                                  </div>
                                 </TableCell>
-                                <TableCell className="py-3">
-                                  <span className="mr-24 flex items-center justify-between">
-                                    <span className="text-body text-default-font">Same as control</span>
-                                    <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
-                                  </span>
+                                <TableCell className="py-2">
+                                  <div className="mr-24">
+                                    <SearchSelect
+                                      options={[
+                                        { value: "same_as_control", label: "Same as control" },
+                                        ...MOV_COMPONENTS,
+                                      ]}
+                                      value={group.variations[i]?.mov ?? null}
+                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'mov', value)}
+                                      placeholder="Same as control"
+                                      variant="ghost"
+                                    />
+                                  </div>
                                 </TableCell>
                               </TableRow>
                             ))}
