@@ -18,8 +18,11 @@ import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
+import { IconButton } from "@/subframe/components/IconButton";
+import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import { Store, SlidersHorizontal, GitBranch, Plus } from "lucide-react";
-import { FeatherChevronDown } from "@subframe/core";
+import * as SubframeCore from "@subframe/core";
+import { FeatherChevronDown, FeatherFilter } from "@subframe/core";
 import { cn } from "@/lib/utils";
 
 interface ExperimentFormDialogProps {
@@ -295,7 +298,37 @@ export function ExperimentFormDialog({
                           Target Vendors
                         </span>
                       </div>
-                      <Plus className="size-4 text-default-font" />
+                      <SubframeCore.DropdownMenu.Root>
+                        <SubframeCore.DropdownMenu.Trigger asChild>
+                          <IconButton
+                            size="small"
+                            icon={<FeatherFilter />}
+                          />
+                        </SubframeCore.DropdownMenu.Trigger>
+                        <SubframeCore.DropdownMenu.Portal>
+                          <SubframeCore.DropdownMenu.Content
+                            side="bottom"
+                            align="end"
+                            sideOffset={4}
+                            asChild
+                          >
+                            <DropdownMenu>
+                              <DropdownMenu.DropdownItem icon={null}>
+                                All Vendors
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={null}>
+                                Active Only
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={null}>
+                                By Region
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={null}>
+                                By Vertical
+                              </DropdownMenu.DropdownItem>
+                            </DropdownMenu>
+                          </SubframeCore.DropdownMenu.Content>
+                        </SubframeCore.DropdownMenu.Portal>
+                      </SubframeCore.DropdownMenu.Root>
                     </div>
 
                     {/* Conditions */}
