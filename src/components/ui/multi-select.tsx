@@ -4,6 +4,7 @@ import * as React from "react";
 import { X, Check, Minus } from "lucide-react";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/subframe/components/Badge";
 import {
   Popover,
   PopoverContent,
@@ -108,14 +109,9 @@ export function MultiSelect({
               {value.length === 0 ? (
                 <span className="truncate text-neutral-400">{placeholder}</span>
               ) : (
-                <span
-                  className={cn(
-                    "inline-flex items-center rounded-sm border border-brand-200 bg-brand-50 px-1.5 text-(length:--text-caption) text-brand-700",
-                    "animate-in duration-150 fade-in-0 zoom-in-95",
-                  )}
-                >
+                <Badge variant="brand" className="animate-in duration-150 fade-in-0 zoom-in-95">
                   {value.length} {value.length === 1 ? itemLabel : `${itemLabel}s`} selected
-                </span>
+                </Badge>
               )}
             </div>
 
