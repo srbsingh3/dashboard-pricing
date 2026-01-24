@@ -861,72 +861,64 @@ export function ExperimentFormDialog({
 
                       {/* Control and Variation Table */}
                       <div className="w-full px-4 pb-4">
-                        <Table className="border-separate border-spacing-0">
+                        <Table className="table-fixed border-separate border-spacing-0">
                           <TableHeader>
                             <TableRow className="hover:bg-transparent">
                               <TableHead className="h-10 w-28 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
-                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 pl-12 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
-                              <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
+                              <TableHead className="h-10 w-1/2 border-y border-neutral-border bg-neutral-50 pl-12 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
+                              <TableHead className="h-10 w-1/2 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {/* Control Row */}
-                            <TableRow className="border-0 hover:bg-neutral-50">
-                              <TableCell className="py-2 text-body text-neutral-500">Control</TableCell>
+                            <TableRow className="group/row border-0 hover:bg-neutral-50">
+                              <TableCell className="w-28 py-2 text-body text-neutral-500">Control</TableCell>
                               <TableCell className="py-2 pl-12">
-                                <div className="mr-24">
-                                  <SearchSelect
-                                    options={DELIVERY_FEE_COMPONENTS}
-                                    value={group.controlDeliveryFee}
-                                    onValueChange={(value) => updateControlSelection(group.id, 'deliveryFee', value)}
-                                    placeholder="Select component"
-                                    variant="ghost"
-                                  />
-                                </div>
+                                <SearchSelect
+                                  options={DELIVERY_FEE_COMPONENTS}
+                                  value={group.controlDeliveryFee}
+                                  onValueChange={(value) => updateControlSelection(group.id, 'deliveryFee', value)}
+                                  placeholder="Select component"
+                                  variant="ghost"
+                                />
                               </TableCell>
                               <TableCell className="py-2">
-                                <div className="mr-24">
-                                  <SearchSelect
-                                    options={MOV_COMPONENTS}
-                                    value={group.controlMov}
-                                    onValueChange={(value) => updateControlSelection(group.id, 'mov', value)}
-                                    placeholder="Select component"
-                                    variant="ghost"
-                                  />
-                                </div>
+                                <SearchSelect
+                                  options={MOV_COMPONENTS}
+                                  value={group.controlMov}
+                                  onValueChange={(value) => updateControlSelection(group.id, 'mov', value)}
+                                  placeholder="Select component"
+                                  variant="ghost"
+                                />
                               </TableCell>
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
-                              <TableRow key={i} className="border-0 hover:bg-neutral-50">
-                                <TableCell className="py-2 text-body text-neutral-500">Variation {i + 1}</TableCell>
+                              <TableRow key={i} className="group/row border-0 hover:bg-neutral-50">
+                                <TableCell className="w-28 py-2 text-body text-neutral-500">Variation {i + 1}</TableCell>
                                 <TableCell className="py-2 pl-12">
-                                  <div className="mr-24">
-                                    <SearchSelect
-                                      options={[
-                                        { value: "same_as_control", label: "Same as control" },
-                                        ...DELIVERY_FEE_COMPONENTS,
-                                      ]}
-                                      value={group.variations[i]?.deliveryFee ?? null}
-                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'deliveryFee', value)}
-                                      placeholder="Same as control"
-                                      variant="ghost"
-                                    />
-                                  </div>
+                                  <SearchSelect
+                                    options={[
+                                      { value: "same_as_control", label: "Same as control" },
+                                      ...DELIVERY_FEE_COMPONENTS,
+                                    ]}
+                                    value={group.variations[i]?.deliveryFee ?? null}
+                                    onValueChange={(value) => updateVariationSelection(group.id, i, 'deliveryFee', value)}
+                                    placeholder="Same as control"
+                                    variant="ghost"
+                                  />
                                 </TableCell>
                                 <TableCell className="py-2">
-                                  <div className="mr-24">
-                                    <SearchSelect
-                                      options={[
-                                        { value: "same_as_control", label: "Same as control" },
-                                        ...MOV_COMPONENTS,
-                                      ]}
-                                      value={group.variations[i]?.mov ?? null}
-                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'mov', value)}
-                                      placeholder="Same as control"
-                                      variant="ghost"
-                                    />
-                                  </div>
+                                  <SearchSelect
+                                    options={[
+                                      { value: "same_as_control", label: "Same as control" },
+                                      ...MOV_COMPONENTS,
+                                    ]}
+                                    value={group.variations[i]?.mov ?? null}
+                                    onValueChange={(value) => updateVariationSelection(group.id, i, 'mov', value)}
+                                    placeholder="Same as control"
+                                    variant="ghost"
+                                  />
                                 </TableCell>
                               </TableRow>
                             ))}

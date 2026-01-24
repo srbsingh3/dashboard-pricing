@@ -78,7 +78,7 @@ export function SearchSelect({
               "data-[state=open]:border-brand-primary",
             ],
             variant === "ghost" && [
-              "bg-transparent",
+              "w-full max-w-52 bg-transparent",
             ],
             disabled && "cursor-not-allowed opacity-50",
             className
@@ -97,7 +97,7 @@ export function SearchSelect({
           <FeatherChevronDown
             className={cn(
               "size-4 shrink-0 text-subtext-color transition duration-200",
-              variant === "ghost" && "opacity-0 group-hover:opacity-100",
+              variant === "ghost" && "opacity-0 group-hover:opacity-100 group-hover/row:opacity-100",
               open && "rotate-180",
               open && variant === "ghost" && "opacity-100"
             )}
