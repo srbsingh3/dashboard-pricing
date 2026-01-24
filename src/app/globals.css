@@ -471,3 +471,18 @@ button:focus-visible,
 .animate-slide-down {
   animation: slide-down 0.3s ease-out;
 }
+
+/* ============================================
+   COMPONENT ANIMATIONS
+   ============================================ */
+
+/* Chevron rotation for Subframe Select dropdown */
+[data-slot="select"] button[data-state="open"] svg:last-child,
+.group\/bb88f90b button[data-state="open"] svg:last-child {
+  transform: rotate(180deg);
+  transition: transform 300ms ease;
+}
+
+.group\/bb88f90b button svg:last-child {
+  transition: transform 300ms ease;
+}

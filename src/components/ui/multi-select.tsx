@@ -132,7 +132,7 @@ export function MultiSelect({
               )}
 
               {/* Chevron */}
-              <FeatherChevronDown className="text-body text-subtext-color" />
+              <FeatherChevronDown className="text-body text-subtext-color transition duration-300 group-data-[state=open]:rotate-180" />
             </div>
           </button>
         </PopoverTrigger>
