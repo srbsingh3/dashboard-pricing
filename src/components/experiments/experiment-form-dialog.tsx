@@ -552,7 +552,7 @@ export function ExperimentFormDialog({
                       {({ listeners, isDragging }: { listeners: Record<string, unknown>; isDragging: boolean }) => (
                         <div className={cn(
                           "flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm",
-                          isDragging && "shadow-lg ring-2 ring-brand-200"
+                          isDragging && "shadow-lg"
                         )}>
                           {/* Header */}
                           <div className="group/header flex w-full items-center gap-2 px-6 py-4">
