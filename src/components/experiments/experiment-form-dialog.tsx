@@ -387,12 +387,19 @@ export function ExperimentFormDialog({
                       </span>
                     </button>
                     {priorityGroups.length > 1 && (
-                      <IconButton
-                        size="small"
-                        icon={<Trash2 className="size-4" />}
-                        className="opacity-0 transition-opacity group-hover/header:opacity-100"
+                      <button
+                        type="button"
                         onClick={() => deletePriorityGroup(group.id)}
-                      />
+                        className={cn(
+                          "flex size-8 shrink-0 items-center justify-center rounded-md text-neutral-400",
+                          "-my-2 opacity-0 transition-all group-hover/header:opacity-100",
+                          "hover:bg-error-50 hover:text-error-600",
+                          "focus:outline-none focus-visible:ring-2 focus-visible:ring-error-500/30"
+                        )}
+                        aria-label="Remove priority group"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
                     )}
                     <button
                       type="button"
