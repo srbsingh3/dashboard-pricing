@@ -246,7 +246,7 @@ export function ExperimentFormDialog({
                   value={experimentObjective}
                   onValueChange={setExperimentObjective}
                 >
-                  <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color">
+                  <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color">
                     <SelectValue placeholder="Select objective" />
                   </SelectTrigger>
                   <SelectContent position="popper" sideOffset={4} className="border-neutral-border bg-white shadow-lg">
@@ -330,7 +330,7 @@ export function ExperimentFormDialog({
                     value={numberOfVariations}
                     onValueChange={setNumberOfVariations}
                   >
-                    <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 [&>svg]:text-subtext-color">
+                    <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus-visible:border-brand-primary focus-visible:ring-0 [&>svg]:text-subtext-color">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent position="popper" sideOffset={4} className="border-neutral-border bg-white shadow-lg">
