@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { ZONES } from "@/lib/constants";
+import { ZONES, PARENT_VERTICALS } from "@/lib/constants";
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -32,6 +32,7 @@ export function ExperimentFormDialog({
   const [experimentObjective, setExperimentObjective] = useState("");
   const [experimentType, setExperimentType] = useState("ab_test");
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
+  const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -42,6 +43,7 @@ export function ExperimentFormDialog({
       setExperimentObjective("");
       setExperimentType("ab_test");
       setSelectedZones([]);
+      setSelectedVerticals([]);
     }, 200);
   };
 
@@ -177,6 +179,16 @@ export function ExperimentFormDialog({
                 value={selectedZones}
                 onValueChange={setSelectedZones}
                 placeholder="Select zones..."
+              />
+
+              {/* Parent Verticals Multi-Select */}
+              <MultiSelect
+                label="Parent Verticals"
+                options={PARENT_VERTICALS}
+                value={selectedVerticals}
+                onValueChange={setSelectedVerticals}
+                placeholder="Select verticals..."
+                itemLabel="vertical"
               />
 
             </div>

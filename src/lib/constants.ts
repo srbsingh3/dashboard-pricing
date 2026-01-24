@@ -152,3 +152,14 @@ export const ZONES = [
   { value: "zone_19", label: "Garden District" },
   { value: "zone_20", label: "Financial District" },
 ] as const;
+
+// Parent verticals for experiments
+export const PARENT_VERTICALS = [
+  { value: "shops", label: "Shops" },
+  { value: "flowers", label: "Flowers" },
+  { value: "medicine", label: "Medicine" },
+  { value: "restaurants", label: "Restaurants" },
+  { value: "grocery", label: "Grocery" },
+  { value: "convenience", label: "Convenience" },
+  { value: "electronics", label: "Electronics" },
+] as const;

@@ -29,6 +29,8 @@ interface MultiSelectProps {
   onValueChange: (value: string[]) => void;
   placeholder?: string;
   label?: string;
+  /** Label for selected items (e.g., "zone" becomes "3 zones selected") */
+  itemLabel?: string;
   disabled?: boolean;
   className?: string;
 }
@@ -39,6 +41,7 @@ export function MultiSelect({
   onValueChange,
   placeholder = "Select...",
   label,
+  itemLabel = "zone",
   disabled = false,
   className,
 }: MultiSelectProps) {
@@ -102,7 +105,7 @@ export function MultiSelect({
                     "animate-in duration-150 fade-in-0 zoom-in-95",
                   )}
                 >
-                  {value.length} {value.length === 1 ? "zone" : "zones"} selected
+                  {value.length} {value.length === 1 ? itemLabel : `${itemLabel}s`} selected
                 </span>
               )}
             </div>
