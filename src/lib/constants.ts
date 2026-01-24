@@ -275,3 +275,22 @@ export const KEY_ACCOUNT_STATUS = [
   { value: "false", label: "No" },
 ] as const;
 
+// Delivery fee component options for experiments
+export const DELIVERY_FEE_COMPONENTS = [
+  { value: "df_standard", label: "Standard Delivery Fee" },
+  { value: "df_express", label: "Express Delivery Fee" },
+  { value: "df_scheduled", label: "Scheduled Delivery Fee" },
+  { value: "df_peak", label: "Peak Hour Fee" },
+  { value: "df_distance_based", label: "Distance-Based Fee" },
+  { value: "df_flat_rate", label: "Flat Rate Fee" },
+] as const;
+
+// MOV (Minimum Order Value) component options for experiments
+export const MOV_COMPONENTS = [
+  { value: "mov_standard", label: "Standard MOV" },
+  { value: "mov_express", label: "Express MOV" },
+  { value: "mov_free_delivery", label: "Free Delivery MOV" },
+  { value: "mov_premium", label: "Premium MOV" },
+  { value: "mov_promotional", label: "Promotional MOV" },
+] as const;
+
