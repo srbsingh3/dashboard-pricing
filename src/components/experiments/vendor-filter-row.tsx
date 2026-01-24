@@ -127,7 +127,7 @@ export function VendorFilterRow({
       )}
     >
       {/* Field selector */}
-      <div className="w-40 shrink-0">
+      <div className="w-44 shrink-0">
         <Select
           value={filter.field}
           onValueChange={(value) => onUpdate({ ...filter, field: value, values: [] })}
@@ -163,7 +163,7 @@ export function VendorFilterRow({
       </div>
 
       {/* Condition selector */}
-      <div className="w-36 shrink-0">
+      <div className="w-22 shrink-0">
         <Select
           value={filter.condition}
           onValueChange={(value) => onUpdate({ ...filter, condition: value })}

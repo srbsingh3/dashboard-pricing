@@ -180,8 +180,6 @@ export const PARENT_VERTICALS = [
 
 // Vendor filter constants
 export const VENDOR_FILTER_CONDITIONS = [
-  { value: "contains", label: "contains" },
-  { value: "does_not_contain", label: "does not contain" },
   { value: "is", label: "is" },
   { value: "is_not", label: "is not" },
 ] as const;
