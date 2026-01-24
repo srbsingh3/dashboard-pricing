@@ -231,13 +231,19 @@ export function ExperimentFormDialog({
               </TextField>
 
               {/* Hypothesis */}
-              <TextField label="Hypothesis" className="w-full gap-2">
-                <TextField.Input
-                  placeholder="Enter hypothesis"
-                  value={experimentHypothesis}
-                  onChange={(e) => setExperimentHypothesis(e.target.value)}
-                />
-              </TextField>
+              <div className="flex w-full flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-caption-bold text-neutral-700">Hypothesis</span>
+                  <span className="text-caption text-neutral-400">Optional</span>
+                </div>
+                <TextField className="w-full">
+                  <TextField.Input
+                    placeholder="Enter hypothesis"
+                    value={experimentHypothesis}
+                    onChange={(e) => setExperimentHypothesis(e.target.value)}
+                  />
+                </TextField>
+              </div>
 
               {/* Objective */}
               <div className="flex w-full flex-col gap-2">
