@@ -82,6 +82,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ParticipantSplitChart } from "./participant-split-chart";
 
 // Helper to generate random vendor count between 40 and 2000
 // direction: 'increase' when filter removed, 'decrease' when filter added
@@ -697,6 +698,12 @@ export function ExperimentFormDialog({
                   />
                 </TextField>
               </div>
+
+              {/* Traffic Split Visualization */}
+              <ParticipantSplitChart
+                participantShare={Number(participantShare) || 0}
+                numberOfVariations={parseInt(numberOfVariations, 10)}
+              />
 
             </div>
           </div>
