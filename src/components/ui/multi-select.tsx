@@ -171,7 +171,7 @@ export function MultiSelect({
               <CommandGroup>
                 <CommandItem
                   onSelect={toggleSelectAll}
-                  className="ml-1 mt-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors aria-selected:bg-neutral-50"
+                  className="mt-1 ml-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors aria-selected:bg-neutral-50"
                 >
                   {/* Subframe-style checkbox with indeterminate state */}
                   <div

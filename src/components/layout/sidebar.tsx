@@ -60,7 +60,7 @@ export function Sidebar() {
             <circle cx="24" cy="16" r="4" fill="currentColor" opacity="0.8" />
             <circle cx="16" cy="24" r="4" fill="currentColor" />
           </svg>
-          <span className="font-heading-2 text-heading-2 tracking-tight text-default-font">
+          <span className="text-heading-2 tracking-tight text-default-font">
             dps
           </span>
         </div>
@@ -77,7 +77,7 @@ export function Sidebar() {
               SS
             </Avatar>
             <div className="flex flex-col items-start">
-              <span className="font-body-bold text-body-bold text-default-font">
+              <span className="text-body-bold text-default-font">
                 Saurabh Singh
               </span>
             </div>

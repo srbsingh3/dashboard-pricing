@@ -27,9 +27,11 @@ vi.mock('@/subframe/components/SidebarWithSections', () => {
       <div data-testid="sidebar-footer">{footer}</div>
     </div>
   )
-  SidebarWithSections.NavItem = ({ children, icon, selected }: { children: React.ReactNode; icon?: React.ReactNode; selected?: boolean }) => (
+  const NavItem = ({ children, selected }: { children: React.ReactNode; icon?: React.ReactNode; selected?: boolean }) => (
     <div data-testid="nav-item" data-selected={selected}>{children}</div>
   )
+  NavItem.displayName = 'SidebarWithSections.NavItem'
+  SidebarWithSections.NavItem = NavItem
   return { SidebarWithSections }
 })
 
