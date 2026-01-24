@@ -120,7 +120,8 @@ function SortablePriorityCard({ id, children, disabled }: SortablePriorityCardPr
   } = useSortable({ id, disabled });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    // Use Translate instead of Transform to prevent scaling/crushing when items have different heights
+    transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 10 : undefined,
     opacity: isDragging ? 0.9 : undefined,
