@@ -202,8 +202,7 @@ export function VendorFilterRow({
             className={cn(
               "flex h-9 w-full items-center rounded-md border border-neutral-border bg-default-background px-3 text-body",
               "hover:border-neutral-300",
-              "focus:border-brand-primary focus:outline-none",
-              "transition-[border-color] duration-150"
+              "focus:border-brand-primary focus:outline-none"
             )}
           />
         ) : (

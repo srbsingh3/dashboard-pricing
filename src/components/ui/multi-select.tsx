@@ -95,7 +95,7 @@ export function MultiSelect({
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              "group flex min-h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 py-1 text-body transition-[border-color] duration-150",
+              "group flex min-h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 py-1 text-body",
               "hover:border-neutral-300",
               "focus:border-brand-primary focus:outline-none",
               "data-[state=open]:border-brand-primary",
