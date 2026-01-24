@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
   X,
-  Check,
   ChevronUp,
   ChevronDown,
   Plus,
@@ -12,7 +12,6 @@ import {
   Trash2,
   GripVertical,
   Eye,
-  Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -47,13 +46,10 @@ interface ExperimentFormDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type Step = 1 | 2;
-
 export function ExperimentFormDialog({
   open,
   onOpenChange,
 }: ExperimentFormDialogProps) {
-  const [currentStep, setCurrentStep] = useState<Step>(1);
   const [experimentName, setExperimentName] = useState("");
   const [selectedAssignment, setSelectedAssignment] = useState<string>("");
   const [targetGroups, setTargetGroups] = useState([
@@ -67,7 +63,6 @@ export function ExperimentFormDialog({
     onOpenChange(false);
     // Reset form state
     setTimeout(() => {
-      setCurrentStep(1);
       setExperimentName("");
       setSelectedAssignment("");
       setTargetGroups([{ ...sampleTargetGroup, id: "tg_1" }]);
@@ -137,54 +132,49 @@ export function ExperimentFormDialog({
 
   return (
     <FullscreenDialog open={open} onOpenChange={onOpenChange} className="bg-background">
-      {/* Header */}
-      <div className="w-full px-6 py-4 border-b">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">
-            New Experiment
-          </h2>
+      {/* Visually hidden title for accessibility */}
+      <DialogPrimitive.Title className="sr-only">
+        New Experiment
+      </DialogPrimitive.Title>
+
+      {/* Header - Figma: Modal Header */}
+      <div className="w-full bg-white">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center gap-3">
+            <h2 className="text-body-bold text-neutral-900">
+              New Experiment
+            </h2>
+          </div>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8"
+            className="size-8 text-neutral-500 hover:text-neutral-700"
             onClick={handleClose}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         </div>
-
-        {/* Stepper */}
-        <div className="flex items-center justify-center gap-2 mt-4">
-          <StepIndicator
-            step={1}
-            label="Experiment Details"
-            isActive={currentStep === 1}
-            isCompleted={currentStep > 1}
-          />
-          <div className="w-24 h-0.5 bg-border" />
-          <StepIndicator
-            step={2}
-            label="Target Groups"
-            isActive={currentStep === 2}
-            isCompleted={false}
-          />
-        </div>
+        {/* Divider line like Figma */}
+        <div className="h-px bg-neutral-200" />
       </div>
 
-      {/* Content */}
-      <div className="flex-1 w-full overflow-y-auto p-6 scrollbar-thin">
-        <div className="max-w-4xl mx-auto">
-          <AnimatePresence mode="wait">
-            {currentStep === 1 ? (
-              <Step1Content
-                key="step1"
+      {/* Content - Figma: Modal Contents with left/right layout */}
+      <div className="w-full flex-1 overflow-hidden bg-white">
+        <div className="flex h-full">
+          {/* Left Panel - Form Fields */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="max-w-2xl space-y-6">
+              {/* Experiment Details Section */}
+              <ExperimentDetailsSection
                 experimentName={experimentName}
                 setExperimentName={setExperimentName}
-                onNext={() => setCurrentStep(2)}
               />
-            ) : (
-              <Step2Content
-                key="step2"
+
+              {/* Divider */}
+              <Separator />
+
+              {/* Target Groups Section */}
+              <TargetGroupsSection
                 selectedAssignment={selectedAssignment}
                 setSelectedAssignment={setSelectedAssignment}
                 targetGroups={targetGroups}
@@ -196,134 +186,104 @@ export function ExperimentFormDialog({
                 handleDeleteGroup={handleDeleteGroup}
                 handleAddTargetGroup={handleAddTargetGroup}
               />
-            )}
-          </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Right Panel - Preview/Info (optional, can be shown later) */}
+          <div className="hidden w-80 border-l border-neutral-200 bg-neutral-50 p-6 lg:block">
+            <div className="space-y-4">
+              <h3 className="text-body-bold text-neutral-700">Preview</h3>
+              <p className="text-caption text-neutral-500">
+                A preview of your experiment configuration will appear here as you fill out the form.
+              </p>
+
+              {experimentName && (
+                <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4">
+                  <p className="text-caption text-neutral-500">Experiment Name</p>
+                  <p className="text-body text-neutral-900">{experimentName}</p>
+                </div>
+              )}
+
+              {targetGroups.length > 0 && (
+                <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4">
+                  <p className="text-caption text-neutral-500">Target Groups</p>
+                  <p className="text-body text-neutral-900">{targetGroups.length} group{targetGroups.length > 1 ? 's' : ''} configured</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="w-full flex items-center justify-between px-6 py-4 border-t bg-muted/30">
-        <SubframeButton
-          variant="neutral-secondary"
-          icon={currentStep === 1 ? <X size={14} /> : <ChevronUp size={14} className="-rotate-90" />}
-          onClick={() => (currentStep === 1 ? handleClose() : setCurrentStep(1))}
-        >
-          Back
-        </SubframeButton>
-
-        <div className="flex items-center gap-2">
-          <SubframeButton variant="neutral-secondary" onClick={handleClose}>
+      {/* Footer - Figma: Modal Footer */}
+      <div className="w-full bg-white">
+        {/* Divider line like Figma */}
+        <div className="h-px bg-neutral-200" />
+        <div className="flex items-center justify-between px-6 py-4">
+          <SubframeButton
+            variant="neutral-secondary"
+            onClick={handleClose}
+          >
             Cancel
           </SubframeButton>
-          {currentStep === 1 ? (
-            <SubframeButton
-              variant="brand-primary"
-              iconRight={<ChevronUp size={14} className="rotate-90" />}
-              onClick={() => setCurrentStep(2)}
-            >
-              Continue
-            </SubframeButton>
-          ) : (
-            <SubframeButton variant="brand-primary">
-              Save Experiment
-            </SubframeButton>
-          )}
+
+          <SubframeButton variant="brand-primary">
+            Save Experiment
+          </SubframeButton>
         </div>
       </div>
     </FullscreenDialog>
   );
 }
 
-// Step Indicator Component
-function StepIndicator({
-  step,
-  label,
-  isActive,
-  isCompleted,
-}: {
-  step: number;
-  label: string;
-  isActive: boolean;
-  isCompleted: boolean;
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <div
-        className={cn(
-          "h-7 w-7 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
-          isCompleted
-            ? "bg-primary text-primary-foreground"
-            : isActive
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted text-muted-foreground"
-        )}
-      >
-        {isCompleted ? <Check className="h-4 w-4" /> : step}
-      </div>
-      <span
-        className={cn(
-          "text-sm font-medium",
-          isActive || isCompleted ? "text-foreground" : "text-muted-foreground"
-        )}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
-
-// Step 1 Content
-function Step1Content({
+// Experiment Details Section (formerly Step 1)
+function ExperimentDetailsSection({
   experimentName,
   setExperimentName,
-  onNext,
 }: {
   experimentName: string;
   setExperimentName: (name: string) => void;
-  onNext: () => void;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 20 }}
-      className="space-y-6"
-    >
-      <div className="space-y-2">
-        <Label htmlFor="name">Experiment Name</Label>
+    <div className="space-y-4">
+      <h3 className="text-body-bold text-neutral-900">Experiment Details</h3>
+
+      <div className="space-y-1.5">
+        <Label htmlFor="name" className="text-caption text-neutral-700">
+          Experiment Name <span className="text-error-500">*</span>
+        </Label>
         <Input
           id="name"
-          placeholder="Enter experiment name..."
+          placeholder="Enter experiment name"
           value={experimentName}
           onChange={(e) => setExperimentName(e.target.value)}
-          className="max-w-md"
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 max-w-md">
-        <div className="space-y-2">
-          <Label>Start Date</Label>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <Label className="text-caption text-neutral-700">Start Date</Label>
           <Input type="date" defaultValue="2024-01-15" />
         </div>
-        <div className="space-y-2">
-          <Label>End Date</Label>
+        <div className="space-y-1.5">
+          <Label className="text-caption text-neutral-700">End Date</Label>
           <Input type="date" defaultValue="2024-02-15" />
         </div>
       </div>
 
-      <div className="space-y-2 max-w-md">
-        <Label>Description (optional)</Label>
+      <div className="space-y-1.5">
+        <Label className="text-caption text-neutral-700">Description (optional)</Label>
         <textarea
-          className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex min-h-[80px] w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-body text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="Add a description for this experiment..."
         />
       </div>
-    </motion.div>
+    </div>
   );
 }
 
-// Step 2 Content - Target Groups Configuration
-function Step2Content({
+// Target Groups Section (formerly Step 2)
+function TargetGroupsSection({
   selectedAssignment,
   setSelectedAssignment,
   targetGroups,
@@ -337,7 +297,7 @@ function Step2Content({
 }: {
   selectedAssignment: string;
   setSelectedAssignment: (value: string) => void;
-  targetGroups: typeof sampleTargetGroup[];
+  targetGroups: (typeof sampleTargetGroup)[];
   expandedGroups: Set<string>;
   toggleGroupExpansion: (id: string) => void;
   handleCollapseAll: () => void;
@@ -347,18 +307,15 @@ function Step2Content({
   handleAddTargetGroup: () => void;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -20 }}
-      className="space-y-6"
-    >
+    <div className="space-y-4">
+      <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+
       {/* Import Section */}
-      <div className="bg-muted/50 rounded-lg p-4 border border-border/50">
-        <Label className="text-sm font-medium">
-          Import target groups from Automatic Assignments (optional)
+      <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-4">
+        <Label className="text-caption text-neutral-700">
+          Import from Automatic Assignments (optional)
         </Label>
-        <div className="flex items-center gap-3 mt-2">
+        <div className="mt-2 flex items-center gap-3">
           <Select value={selectedAssignment} onValueChange={setSelectedAssignment}>
             <SelectTrigger className="flex-1">
               <SelectValue placeholder="Select Automatic Assignments to Import" />
@@ -368,7 +325,7 @@ function Step2Content({
                 <SelectItem key={assignment.id} value={assignment.id}>
                   <div className="flex flex-col items-start">
                     <span>{assignment.name}</span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-caption text-neutral-500">
                       {assignment.targetGroups} target groups
                     </span>
                   </div>
@@ -384,12 +341,22 @@ function Step2Content({
 
       {/* Target Groups Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-semibold">Target Groups</h3>
+        <span className="text-caption text-neutral-500">
+          {targetGroups.length} target group{targetGroups.length > 1 ? 's' : ''}
+        </span>
         <div className="flex items-center gap-2">
           <Button
             variant="link"
             size="sm"
-            className="text-primary"
+            className="text-caption text-brand-600"
+            onClick={handleExpandAll}
+          >
+            Expand All
+          </Button>
+          <Button
+            variant="link"
+            size="sm"
+            className="text-caption text-brand-600"
             onClick={handleCollapseAll}
           >
             Collapse All
@@ -397,17 +364,17 @@ function Step2Content({
           <Button
             variant="link"
             size="sm"
-            className="text-primary gap-1"
+            className="gap-1 text-caption text-brand-600"
             onClick={handleAddTargetGroup}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-3.5" />
             Add Target Group
           </Button>
         </div>
       </div>
 
       {/* Target Groups List */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <AnimatePresence>
           {targetGroups.map((group, index) => (
             <TargetGroupCard
@@ -423,7 +390,7 @@ function Step2Content({
           ))}
         </AnimatePresence>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -451,20 +418,20 @@ function TargetGroupCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ delay: index * 0.05 }}
-      className="border rounded-lg overflow-hidden bg-card"
+      className="overflow-hidden rounded-lg border border-neutral-200 bg-white"
     >
       {/* Card Header */}
       <div
-        className="flex items-center justify-between px-4 py-3 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors"
+        className="flex cursor-pointer items-center justify-between bg-neutral-50 px-4 py-3 transition-colors hover:bg-neutral-100"
         onClick={onToggle}
       >
         <div className="flex items-center gap-3">
-          <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
-          <span className="font-medium">Priority {index + 1}</span>
+          <GripVertical className="size-4 cursor-grab text-neutral-400" />
+          <span className="text-body-bold text-neutral-900">Priority {index + 1}</span>
           {!isExpanded && group.vendorFilters.length > 0 && (
-            <div className="flex items-center gap-2 ml-4">
+            <div className="ml-4 flex items-center gap-2">
               {group.vendorFilters.map((filter) => (
-                <Badge key={filter.id} variant="secondary" className="text-xs">
+                <Badge key={filter.id} variant="secondary" className="text-caption">
                   {filter.field}: {filter.values.join(", ") || "..."}
                 </Badge>
               ))}
@@ -477,13 +444,13 @@ function TargetGroupCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="size-8 text-neutral-500 hover:text-neutral-700"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDuplicate();
                 }}
               >
-                <Copy className="h-4 w-4" />
+                <Copy className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Duplicate</TooltipContent>
@@ -493,23 +460,23 @@ function TargetGroupCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-destructive hover:text-destructive"
+                className="size-8 text-error-500 hover:text-error-600"
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete();
                 }}
                 disabled={!canDelete}
               >
-                <Trash2 className="h-4 w-4" />
+                <Trash2 className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>Delete</TooltipContent>
           </Tooltip>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
+          <Button variant="ghost" size="icon" className="size-8 text-neutral-500">
             {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="size-4" />
             ) : (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             )}
           </Button>
         </div>
@@ -525,13 +492,13 @@ function TargetGroupCard({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="p-4 space-y-6">
+            <div className="space-y-6 p-4">
               {/* Target Vendors Section */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold">Target Vendors</h4>
-                  <Button variant="link" size="sm" className="text-primary gap-1 h-auto p-0">
-                    <Plus className="h-3 w-3" />
+                  <h4 className="text-body-bold text-neutral-700">Target Vendors</h4>
+                  <Button variant="link" size="sm" className="h-auto gap-1 p-0 text-caption text-brand-600">
+                    <Plus className="size-3" />
                     Add Filter
                   </Button>
                 </div>
@@ -577,13 +544,13 @@ function TargetGroupCard({
                       </SelectContent>
                     </Select>
 
-                    <Button variant="link" size="sm" className="text-destructive px-2">
+                    <Button variant="link" size="sm" className="px-2 text-caption text-error-500">
                       Remove
                     </Button>
                   </div>
                 ))}
 
-                <Button variant="link" size="sm" className="text-primary gap-1 h-auto p-0">
+                <Button variant="link" size="sm" className="h-auto gap-1 p-0 text-caption text-brand-600">
                   Show Number Of Vendors
                 </Button>
               </div>
@@ -593,13 +560,13 @@ function TargetGroupCard({
               {/* Conditions Section */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold">Conditions</h4>
-                  <Button variant="link" size="sm" className="text-primary gap-1 h-auto p-0">
-                    <Plus className="h-3 w-3" />
+                  <h4 className="text-body-bold text-neutral-700">Conditions</h4>
+                  <Button variant="link" size="sm" className="h-auto gap-1 p-0 text-caption text-brand-600">
+                    <Plus className="size-3" />
                     Add Condition
                   </Button>
                 </div>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-caption text-neutral-500">
                   No conditions added yet.
                 </p>
               </div>
@@ -609,32 +576,32 @@ function TargetGroupCard({
               {/* Control and Variation Components - THE KEY TABLE */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-semibold">Control and Variation Components</h4>
-                  <Button variant="link" size="sm" className="text-primary gap-1 h-auto p-0">
-                    <Plus className="h-3 w-3" />
+                  <h4 className="text-body-bold text-neutral-700">Control and Variation Components</h4>
+                  <Button variant="link" size="sm" className="h-auto gap-1 p-0 text-caption text-brand-600">
+                    <Plus className="size-3" />
                     Add Component Type
                   </Button>
                 </div>
 
-                {/* Table View - This is the key innovation */}
-                <div className="border rounded-lg overflow-hidden">
+                {/* Table View */}
+                <div className="overflow-hidden rounded-lg border border-neutral-200">
                   <table className="w-full">
                     <thead>
-                      <tr className="bg-muted/50">
-                        <th className="text-left text-xs font-medium text-muted-foreground px-3 py-2 w-[100px]"></th>
+                      <tr className="bg-neutral-50">
+                        <th className="w-[100px] px-3 py-2 text-left text-caption text-neutral-500"></th>
                         {group.components.map((comp) => (
                           <th
                             key={comp.type}
-                            className="text-left text-xs font-medium px-3 py-2"
+                            className="px-3 py-2 text-left text-caption text-neutral-700"
                           >
                             <div className="flex items-center gap-1">
                               {comp.type}
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-5 w-5"
+                                className="size-5 text-neutral-400 hover:text-neutral-600"
                               >
-                                <X className="h-3 w-3" />
+                                <X className="size-3" />
                               </Button>
                             </div>
                           </th>
@@ -643,8 +610,8 @@ function TargetGroupCard({
                     </thead>
                     <tbody>
                       {/* Control Row */}
-                      <tr className="border-t">
-                        <td className="px-3 py-2 text-sm font-medium bg-muted/30">
+                      <tr className="border-t border-neutral-200">
+                        <td className="bg-neutral-50 px-3 py-2 text-body-bold text-neutral-700">
                           Control
                         </td>
                         {group.components.map((comp) => (
@@ -659,8 +626,8 @@ function TargetGroupCard({
 
                       {/* Variation Rows */}
                       {group.components[0]?.variations.map((variation, vIndex) => (
-                        <tr key={variation.id} className="border-t">
-                          <td className="px-3 py-2 text-sm font-medium bg-muted/30">
+                        <tr key={variation.id} className="border-t border-neutral-200">
+                          <td className="bg-neutral-50 px-3 py-2 text-body-bold text-neutral-700">
                             Variation {vIndex + 1}
                           </td>
                           {group.components.map((comp) => {
@@ -706,14 +673,14 @@ function ComponentSelect({
       <Select defaultValue={isSameAsControl ? "same_as_control" : value}>
         <SelectTrigger
           className={cn(
-            "h-8 text-sm",
-            isSameAsControl && "text-muted-foreground italic"
+            "h-8 text-body",
+            isSameAsControl && "text-neutral-500 italic"
           )}
         >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="same_as_control" className="italic text-muted-foreground">
+          <SelectItem value="same_as_control" className="text-neutral-500 italic">
             Same as Control
           </SelectItem>
           <Separator className="my-1" />
@@ -730,15 +697,15 @@ function ComponentSelect({
       {component && !isSameAsControl && (
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Eye className="h-4 w-4 text-muted-foreground" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Eye className="size-4 text-neutral-400" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="right" className="max-w-xs">
             <div className="space-y-1">
-              <p className="font-medium">{component.name}</p>
-              <p className="text-xs text-muted-foreground">{component.value}</p>
-              <p className="text-xs">{component.description}</p>
+              <p className="text-body-bold">{component.name}</p>
+              <p className="text-caption text-neutral-500">{component.value}</p>
+              <p className="text-caption">{component.description}</p>
             </div>
           </TooltipContent>
         </Tooltip>
