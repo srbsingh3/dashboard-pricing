@@ -20,7 +20,24 @@ import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
-import { Store, SlidersHorizontal, GitBranch, Plus, ListFilter } from "lucide-react";
+import {
+  Store,
+  SlidersHorizontal,
+  GitBranch,
+  Plus,
+  ListFilter,
+  Calendar,
+  Power,
+  MapPin,
+  Tag,
+  Link,
+  Layers,
+  Map,
+  Truck,
+  Users,
+  Crown,
+  Building2
+} from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
@@ -313,17 +330,38 @@ export function ExperimentFormDialog({
                             asChild
                           >
                             <DropdownMenu>
-                              <DropdownMenu.DropdownItem icon={null}>
-                                All Vendors
+                              <DropdownMenu.DropdownItem icon={<Calendar className="size-3.5" />}>
+                                Activation Date
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={null}>
-                                Active Only
+                              <DropdownMenu.DropdownItem icon={<Power className="size-3.5" />}>
+                                Active
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={null}>
-                                By Region
+                              <DropdownMenu.DropdownItem icon={<Link className="size-3.5" />}>
+                                Chain Name
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={null}>
-                                By Vertical
+                              <DropdownMenu.DropdownItem icon={<MapPin className="size-3.5" />}>
+                                City Names
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Users className="size-3.5" />}>
+                                Customer Types
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Truck className="size-3.5" />}>
+                                Delivery Types
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Crown className="size-3.5" />}>
+                                Key Account
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Tag className="size-3.5" />}>
+                                Marketing Tags
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Building2 className="size-3.5" />}>
+                                Vendor Name
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Layers className="size-3.5" />}>
+                                Vertical Type
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem icon={<Map className="size-3.5" />}>
+                                Zone Names
                               </DropdownMenu.DropdownItem>
                             </DropdownMenu>
                           </SubframeCore.DropdownMenu.Content>
