@@ -254,7 +254,7 @@ export function ExperimentFormDialog({
 
           {/* Right Panel */}
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="space-y-4">
+            <div className="mx-auto max-w-[860px] space-y-4">
               {/* Section Header */}
               <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
 
