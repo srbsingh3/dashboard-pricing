@@ -72,6 +72,11 @@ import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { ScrollContainer } from "@/components/ui/scroll-container";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   VendorFilterList,
   VendorFilter,
   generateFilterId,
@@ -945,40 +950,50 @@ export function ExperimentFormDialog({
                             Conditions
                           </span>
                         </div>
-                        <SubframeCore.DropdownMenu.Root>
-                          <SubframeCore.DropdownMenu.Trigger asChild>
-                            <IconButton
-                              size="small"
-                              icon={<Plus className="size-4" />}
-                            />
-                          </SubframeCore.DropdownMenu.Trigger>
-                          <SubframeCore.DropdownMenu.Portal>
-                            <SubframeCore.DropdownMenu.Content
-                              side="left"
-                              align="start"
-                              sideOffset={4}
-                              asChild
-                            >
-                              <DropdownMenu>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Clock className="size-3.5" />}
-                                >
-                                  Time condition
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<UserPlus className="size-3.5" />}
-                                >
-                                  New customer condition
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<MapPinned className="size-3.5" />}
-                                >
-                                  Customer location condition
-                                </DropdownMenu.DropdownItem>
-                              </DropdownMenu>
-                            </SubframeCore.DropdownMenu.Content>
-                          </SubframeCore.DropdownMenu.Portal>
-                        </SubframeCore.DropdownMenu.Root>
+                        <div className="flex items-center gap-1">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <IconButton
+                                size="small"
+                                icon={<Clock className="size-4" />}
+                                onClick={() => {
+                                  // TODO: Open time condition panel
+                                }}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" sideOffset={4}>
+                              Time condition
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <IconButton
+                                size="small"
+                                icon={<UserPlus className="size-4" />}
+                                onClick={() => {
+                                  // TODO: Open new customer condition panel
+                                }}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" sideOffset={4}>
+                              New customer condition
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <IconButton
+                                size="small"
+                                icon={<MapPinned className="size-4" />}
+                                onClick={() => {
+                                  // TODO: Open customer location condition panel
+                                }}
+                              />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" sideOffset={4}>
+                              Customer location condition
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       </div>
 
                       {/* Control and Variation */}
