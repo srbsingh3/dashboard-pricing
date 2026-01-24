@@ -48,6 +48,10 @@ import {
   VendorFilter,
   generateFilterId,
 } from "./vendor-filter-row";
+import { Badge } from "@/subframe/components/Badge";
+
+// Helper to generate random vendor count between 40 and 2000
+const generateRandomVendorCount = () => Math.floor(Math.random() * (2000 - 40 + 1)) + 40;
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -66,8 +70,8 @@ export function ExperimentFormDialog({
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
-  const [priorityGroups, setPriorityGroups] = useState<{ id: number; isExpanded: boolean; vendorFilters: VendorFilter[] }[]>([
-    { id: 1, isExpanded: true, vendorFilters: [] }
+  const [priorityGroups, setPriorityGroups] = useState<{ id: number; isExpanded: boolean; vendorFilters: VendorFilter[]; vendorCount: number }[]>(() => [
+    { id: 1, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }
   ]);
 
   // Add a new filter to a specific priority group
@@ -81,7 +85,7 @@ export function ExperimentFormDialog({
     setPriorityGroups((prev) =>
       prev.map((group) =>
         group.id === groupId
-          ? { ...group, vendorFilters: [...group.vendorFilters, newFilter] }
+          ? { ...group, vendorFilters: [...group.vendorFilters, newFilter], vendorCount: generateRandomVendorCount() }
           : group
       )
     );
@@ -91,7 +95,7 @@ export function ExperimentFormDialog({
   const updateGroupFilters = useCallback((groupId: number, filters: VendorFilter[]) => {
     setPriorityGroups((prev) =>
       prev.map((group) =>
-        group.id === groupId ? { ...group, vendorFilters: filters } : group
+        group.id === groupId ? { ...group, vendorFilters: filters, vendorCount: generateRandomVendorCount() } : group
       )
     );
   }, []);
@@ -109,7 +113,7 @@ export function ExperimentFormDialog({
   const addPriorityGroup = useCallback(() => {
     setPriorityGroups((prev) => {
       const newId = Math.max(...prev.map((g) => g.id)) + 1;
-      return [...prev, { id: newId, isExpanded: true, vendorFilters: [] }];
+      return [...prev, { id: newId, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }];
     });
   }, []);
 
@@ -147,7 +151,7 @@ export function ExperimentFormDialog({
       setSelectedVerticals([]);
       setNumberOfVariations("1");
       setParticipantShare("");
-      setPriorityGroups([{ id: 1, isExpanded: true, vendorFilters: [] }]);
+      setPriorityGroups([{ id: 1, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }]);
     }, 200);
   };
 
@@ -351,7 +355,10 @@ export function ExperimentFormDialog({
             <div className="mx-auto max-w-[860px] space-y-4">
               {/* Section Header */}
               <div className="flex items-center justify-between">
-                <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+                  <Badge variant="neutral">{priorityGroups.length}</Badge>
+                </div>
                 <div className="flex items-center gap-1">
                   <IconButton
                     size="medium"
@@ -420,10 +427,13 @@ export function ExperimentFormDialog({
                           variant="brand"
                           icon={<Store className="size-4" />}
                         />
-                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                          <span className="w-full text-body-bold text-default-font">
+                        <div className="flex shrink-0 grow basis-0 items-center gap-2">
+                          <span className="text-body-bold text-default-font">
                             Target Vendors
                           </span>
+                          {group.vendorFilters.length > 0 && (
+                            <Badge variant="brand">{group.vendorCount.toLocaleString()}</Badge>
+                          )}
                         </div>
                         <SubframeCore.DropdownMenu.Root>
                           <SubframeCore.DropdownMenu.Trigger asChild>
