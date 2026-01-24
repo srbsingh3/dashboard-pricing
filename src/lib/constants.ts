@@ -187,6 +187,7 @@ export const VENDOR_FILTER_CONDITIONS = [
 export const VENDOR_FILTER_FIELDS = [
   { value: "activation_date", label: "Activation Date", icon: "Calendar" },
   { value: "active", label: "Active", icon: "Power" },
+  { value: "assignment", label: "Assignment", icon: "Equal" },
   { value: "chain_name", label: "Chain Name", icon: "Link" },
   { value: "city_names", label: "City Names", icon: "MapPin" },
   { value: "customer_types", label: "Customer Types", icon: "Users" },
@@ -271,6 +272,20 @@ export const ACTIVE_STATUS = [
 export const KEY_ACCOUNT_STATUS = [
   { value: "true", label: "Yes" },
   { value: "false", label: "No" },
+] as const;
+
+// Assignment names for vendor filters
+export const ASSIGNMENT_NAMES = [
+  { value: "premium_tier", label: "Premium Tier Assignment" },
+  { value: "standard_tier", label: "Standard Tier Assignment" },
+  { value: "new_vendor_onboarding", label: "New Vendor Onboarding" },
+  { value: "seasonal_promotion", label: "Seasonal Promotion" },
+  { value: "loyalty_program", label: "Loyalty Program" },
+  { value: "regional_campaign", label: "Regional Campaign" },
+  { value: "ab_test_group_a", label: "A/B Test Group A" },
+  { value: "ab_test_group_b", label: "A/B Test Group B" },
+  { value: "control_group", label: "Control Group" },
+  { value: "pilot_program", label: "Pilot Program" },
 ] as const;
 
 // Delivery fee component options for experiments

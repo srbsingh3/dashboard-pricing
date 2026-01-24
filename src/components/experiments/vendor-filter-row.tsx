@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Calendar, Power, Link, MapPin, Users, Truck, Crown, Tag, Building2, Layers, Map } from "lucide-react";
+import { Trash2, Calendar, Power, Link, MapPin, Users, Truck, Crown, Tag, Building2, Layers, Map, Equal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -24,11 +24,13 @@ import {
   VERTICAL_TYPES,
   ACTIVE_STATUS,
   KEY_ACCOUNT_STATUS,
+  ASSIGNMENT_NAMES,
 } from "@/lib/constants";
 
 // Icon mapping for filter fields
 const FIELD_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   Calendar,
+  Equal,
   Power,
   Link,
   MapPin,
@@ -78,6 +80,8 @@ function getFieldOptions(field: string) {
       return ACTIVE_STATUS;
     case "key_account":
       return KEY_ACCOUNT_STATUS;
+    case "assignment":
+      return ASSIGNMENT_NAMES;
     default:
       return [];
   }
@@ -105,6 +109,8 @@ function getItemLabel(field: string): string {
     case "active":
     case "key_account":
       return "option";
+    case "assignment":
+      return "assignment";
     default:
       return "item";
   }

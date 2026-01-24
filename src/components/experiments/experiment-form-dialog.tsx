@@ -46,6 +46,7 @@ import {
   Zap,
   Banknote,
   ShoppingCart,
+  Equal,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
@@ -853,6 +854,12 @@ export function ExperimentFormDialog({
                                   onClick={() => addVendorFilter(group.id, "active")}
                                 >
                                   Active
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Equal className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "assignment")}
+                                >
+                                  Assignment
                                 </DropdownMenu.DropdownItem>
                                 <DropdownMenu.DropdownItem
                                   icon={<Link className="size-3.5" />}
