@@ -704,7 +704,7 @@ export function ExperimentFormDialog({
           {/* Right Panel */}
           <div className="flex-1 bg-neutral-50">
             <ScrollContainer className="p-6">
-              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(860, 860 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 160)}px` }}>
+              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(860, 860 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
               {/* Section Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -991,13 +991,13 @@ export function ExperimentFormDialog({
 
                       {/* Control and Variation Table */}
                       <div className="w-full overflow-x-auto px-4 pb-4">
-                        <Table className="w-full border-separate border-spacing-0" style={{ minWidth: `${100 + (2 + group.enabledColumns.length) * 160}px` }}>
+                        <Table className="w-full border-separate border-spacing-0" style={{ minWidth: `${100 + (2 + group.enabledColumns.length) * 140}px` }}>
                           <colgroup>
                             <col className="w-[100px]" />
-                            <col className="w-[160px]" />
-                            <col className="w-[160px]" />
+                            <col className="w-[140px]" />
+                            <col className="w-[140px]" />
                             {group.enabledColumns.map((col) => (
-                              <col key={col} className="w-[160px]" />
+                              <col key={col} className="w-[140px]" />
                             ))}
                           </colgroup>
                           <TableHeader>
@@ -1023,7 +1023,7 @@ export function ExperimentFormDialog({
                                   "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   !group.enabledColumns.includes("basket_value") && !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
-                                  <div className="flex items-center justify-between gap-1">
+                                  <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
                                       <Clock className="size-3.5" />
                                       Fleet Delay
@@ -1031,7 +1031,7 @@ export function ExperimentFormDialog({
                                     <button
                                       type="button"
                                       onClick={() => removeVariableColumn(group.id, "fleet_delay")}
-                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                      className="mr-2 rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
                                     >
                                       <X className="size-3 text-neutral-400 hover:text-neutral-600" />
                                     </button>
@@ -1043,7 +1043,7 @@ export function ExperimentFormDialog({
                                   "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
-                                  <div className="flex items-center justify-between gap-1">
+                                  <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
                                       <ShoppingBasket className="size-3.5" />
                                       Basket Value
@@ -1051,7 +1051,7 @@ export function ExperimentFormDialog({
                                     <button
                                       type="button"
                                       onClick={() => removeVariableColumn(group.id, "basket_value")}
-                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                      className="mr-2 rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
                                     >
                                       <X className="size-3 text-neutral-400 hover:text-neutral-600" />
                                     </button>
@@ -1063,7 +1063,7 @@ export function ExperimentFormDialog({
                                   "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
-                                  <div className="flex items-center justify-between gap-1">
+                                  <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
                                       <Receipt className="size-3.5" />
                                       Service Fee
@@ -1071,7 +1071,7 @@ export function ExperimentFormDialog({
                                     <button
                                       type="button"
                                       onClick={() => removeVariableColumn(group.id, "service_fee")}
-                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                      className="mr-2 rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
                                     >
                                       <X className="size-3 text-neutral-400 hover:text-neutral-600" />
                                     </button>
@@ -1080,7 +1080,7 @@ export function ExperimentFormDialog({
                               )}
                               {group.enabledColumns.includes("priority_fee") && (
                                 <TableHead className="group/header h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500">
-                                  <div className="flex items-center justify-between gap-1">
+                                  <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
                                       <Zap className="size-3.5" />
                                       Priority Fee
@@ -1088,7 +1088,7 @@ export function ExperimentFormDialog({
                                     <button
                                       type="button"
                                       onClick={() => removeVariableColumn(group.id, "priority_fee")}
-                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                      className="mr-2 rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
                                     >
                                       <X className="size-3 text-neutral-400 hover:text-neutral-600" />
                                     </button>

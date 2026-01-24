@@ -69,16 +69,16 @@ export function SearchSelect({
           aria-expanded={open}
           disabled={disabled}
           className={cn(
-            "group flex h-8 items-center justify-between gap-2 text-body",
+            "group flex h-8 w-full items-center justify-between gap-2 text-body",
             "focus:outline-none",
             variant === "default" && [
-              "w-full rounded-md border border-solid border-neutral-border bg-default-background px-3",
+              "rounded-md border border-solid border-neutral-border bg-default-background px-3",
               "hover:border-neutral-300",
               "focus:border-brand-primary",
               "data-[state=open]:border-brand-primary",
             ],
             variant === "ghost" && [
-              "w-full bg-transparent",
+              "bg-transparent",
             ],
             disabled && "cursor-not-allowed opacity-50",
             className
@@ -97,7 +97,7 @@ export function SearchSelect({
           <FeatherChevronDown
             className={cn(
               "size-4 shrink-0 text-subtext-color transition duration-200",
-              variant === "ghost" && "opacity-0 group-hover:opacity-100 group-hover/row:opacity-100",
+              variant === "ghost" && "mr-2 opacity-0 group-hover:opacity-100 group-hover/row:opacity-100",
               open && "rotate-180",
               open && variant === "ghost" && "opacity-100"
             )}
