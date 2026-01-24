@@ -57,6 +57,13 @@ interface VendorFilterRowProps {
   isAnimating?: boolean;
 }
 
+// Binary fields that should use simple select instead of multi-select
+const BINARY_FIELDS = ["active", "key_account"];
+
+function isBinaryField(field: string): boolean {
+  return BINARY_FIELDS.includes(field);
+}
+
 // Get options for a specific field
 function getFieldOptions(field: string) {
   switch (field) {
@@ -198,7 +205,7 @@ export function VendorFilterRow({
         </Select>
       </div>
 
-      {/* Value selector - Multi-select or date input */}
+      {/* Value selector - Date input, binary select, or multi-select */}
       <div className="min-w-48 flex-1">
         {isDateField ? (
           <input
@@ -211,6 +218,33 @@ export function VendorFilterRow({
               "focus:border-brand-primary focus:outline-none"
             )}
           />
+        ) : isBinaryField(filter.field) ? (
+          <Select
+            value={filter.values[0] || ""}
+            onValueChange={(value) => onUpdate({ ...filter, values: [value] })}
+          >
+            <SelectTrigger
+              size="sm"
+              className="h-9 w-full border-neutral-border bg-default-background text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color"
+            >
+              <SelectValue placeholder="Select values..." />
+            </SelectTrigger>
+            <SelectContent
+              position="popper"
+              sideOffset={4}
+              className="border-neutral-border bg-white shadow-lg"
+            >
+              {fieldOptions.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600"
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         ) : (
           <MultiSelect
             options={[...fieldOptions]}
