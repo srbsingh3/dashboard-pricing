@@ -39,10 +39,9 @@ import {
   Building2,
   ChevronsDownUp,
   ChevronsUpDown,
-  Trash2,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
-import { FeatherChevronDown } from "@subframe/core";
+import { FeatherChevronDown, FeatherTrash2 } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import {
   VendorFilterList,
@@ -390,21 +389,16 @@ export function ExperimentFormDialog({
                       <button
                         type="button"
                         onClick={() => deletePriorityGroup(group.id)}
-                        className={cn(
-                          "flex size-8 shrink-0 items-center justify-center rounded-md text-neutral-400",
-                          "-my-2 opacity-0 transition-all group-hover/header:opacity-100",
-                          "hover:bg-error-50 hover:text-error-600",
-                          "focus:outline-none focus-visible:ring-2 focus-visible:ring-error-500/30"
-                        )}
+                        className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
                         aria-label="Remove priority group"
                       >
-                        <Trash2 className="size-4" />
+                        <FeatherTrash2 className="text-body text-subtext-color" />
                       </button>
                     )}
                     <button
                       type="button"
                       onClick={() => toggleGroupExpanded(group.id)}
-                      className="flex items-center"
+                      className="-my-1 flex size-8 items-center justify-center rounded-md transition-colors hover:bg-neutral-100"
                     >
                       <FeatherChevronDown
                         className={cn(
