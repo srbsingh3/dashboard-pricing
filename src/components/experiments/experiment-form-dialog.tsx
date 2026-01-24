@@ -41,7 +41,7 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
-import { FeatherChevronDown, FeatherTrash2 } from "@subframe/core";
+import { FeatherChevronDown, FeatherTrash2, FeatherCopy } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import { ScrollContainer } from "@/components/ui/scroll-container";
 import {
@@ -137,6 +137,25 @@ export function ExperimentFormDialog({
     setPriorityGroups((prev) => {
       if (prev.length <= 1) return prev;
       return prev.filter((group) => group.id !== groupId);
+    });
+  }, []);
+
+  // Duplicate a priority group
+  const duplicatePriorityGroup = useCallback((groupId: number) => {
+    setPriorityGroups((prev) => {
+      const groupToDuplicate = prev.find((g) => g.id === groupId);
+      if (!groupToDuplicate) return prev;
+      const newId = Math.max(...prev.map((g) => g.id)) + 1;
+      const groupIndex = prev.findIndex((g) => g.id === groupId);
+      const duplicatedGroup = {
+        ...groupToDuplicate,
+        id: newId,
+        vendorFilters: groupToDuplicate.vendorFilters.map((f) => ({ ...f, id: generateFilterId() })),
+        vendorCount: generateRandomVendorCount(),
+      };
+      const newGroups = [...prev];
+      newGroups.splice(groupIndex + 1, 0, duplicatedGroup);
+      return newGroups;
     });
   }, []);
 
@@ -404,6 +423,14 @@ export function ExperimentFormDialog({
                         <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
                       </button>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => duplicatePriorityGroup(group.id)}
+                      className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
+                      aria-label="Duplicate priority group"
+                    >
+                      <FeatherCopy className="text-body text-subtext-color" />
+                    </button>
                     <button
                       type="button"
                       onClick={() => toggleGroupExpanded(group.id)}
