@@ -307,8 +307,8 @@ export function ExperimentFormDialog({
                         </SubframeCore.DropdownMenu.Trigger>
                         <SubframeCore.DropdownMenu.Portal>
                           <SubframeCore.DropdownMenu.Content
-                            side="bottom"
-                            align="end"
+                            side="left"
+                            align="start"
                             sideOffset={4}
                             asChild
                           >
