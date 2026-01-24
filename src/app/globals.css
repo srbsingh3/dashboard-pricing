@@ -238,6 +238,7 @@
     @apply border-border;
   }
 
+
   /* Interactive elements should show pointer cursor */
   button,
   a,
@@ -397,6 +398,15 @@
   @media (width >= theme(--breakpoint-2xl)) {
     padding-left: calc((100vw + 16px - 1536px) / 2);
     padding-right: calc((100vw + 16px - 1536px) / 2);
+  }
+}
+
+/* Hidden scrollbar - scrolling works but no visible scrollbar */
+@utility scrollbar-hidden {
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
   }
 }
 

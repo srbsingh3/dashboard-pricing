@@ -351,7 +351,7 @@ export function ExperimentFormDialog({
           </div>
 
           {/* Right Panel */}
-          <div className="flex-1 overflow-y-auto bg-neutral-50 p-6">
+          <div className="scrollbar-hidden flex-1 overflow-y-auto bg-neutral-50 p-6">
             <div className="mx-auto max-w-[860px] space-y-4">
               {/* Section Header */}
               <div className="flex items-center justify-between">
