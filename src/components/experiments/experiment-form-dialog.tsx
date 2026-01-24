@@ -490,7 +490,7 @@ export function ExperimentFormDialog({
                 >
                   <TextField.Input
                     type="number"
-                    placeholder="Enter value"
+                    placeholder="1-100"
                     value={participantShare}
                     onChange={(e) => {
                       const val = e.target.value;
