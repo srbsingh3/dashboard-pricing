@@ -16,9 +16,12 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Button as SubframeButton } from "@/subframe/components/Button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
+import { TextField } from "@/subframe/components/TextField";
+import { Select as SubframeSelect } from "@/subframe/components/Select";
+import { RadioGroup } from "@/subframe/components/RadioGroup";
+import { Checkbox } from "@/subframe/components/Checkbox";
 import {
   Select,
   SelectContent,
@@ -51,6 +54,10 @@ export function ExperimentFormDialog({
   onOpenChange,
 }: ExperimentFormDialogProps) {
   const [experimentName, setExperimentName] = useState("");
+  const [experimentHypothesis, setExperimentHypothesis] = useState("");
+  const [experimentObjective, setExperimentObjective] = useState("");
+  const [experimentType, setExperimentType] = useState("ab_test");
+  const [enableMAB, setEnableMAB] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<string>("");
   const [targetGroups, setTargetGroups] = useState([
     { ...sampleTargetGroup, id: "tg_1" },
@@ -64,6 +71,10 @@ export function ExperimentFormDialog({
     // Reset form state
     setTimeout(() => {
       setExperimentName("");
+      setExperimentHypothesis("");
+      setExperimentObjective("");
+      setExperimentType("ab_test");
+      setEnableMAB(false);
       setSelectedAssignment("");
       setTargetGroups([{ ...sampleTargetGroup, id: "tg_1" }]);
       setExpandedGroups(new Set(["tg_1"]));
@@ -161,18 +172,67 @@ export function ExperimentFormDialog({
       {/* Content - Figma: Modal Contents with left/right layout */}
       <div className="w-full flex-1 overflow-hidden bg-white">
         <div className="flex h-full">
-          {/* Left Panel - Form Fields */}
+          {/* Left Panel - Experiment Details Form */}
+          <div className="hidden w-96 border-r border-neutral-200 bg-neutral-50 p-6 lg:block">
+            <div className="space-y-5">
+              {/* Experiment Name */}
+              <TextField label="Experiment Name" className="w-full">
+                <TextField.Input
+                  placeholder="Enter experiment name"
+                  value={experimentName}
+                  onChange={(e) => setExperimentName(e.target.value)}
+                />
+              </TextField>
+
+              {/* Hypothesis */}
+              <TextField label="Hypothesis" className="w-full">
+                <TextField.Input
+                  placeholder="Enter hypothesis"
+                  value={experimentHypothesis}
+                  onChange={(e) => setExperimentHypothesis(e.target.value)}
+                />
+              </TextField>
+
+              {/* Objective */}
+              <SubframeSelect
+                label="Objective"
+                placeholder="Select objective"
+                value={experimentObjective}
+                onValueChange={setExperimentObjective}
+                className="w-full"
+              >
+                <SubframeSelect.Item value="increase_conversion">Increase Conversion</SubframeSelect.Item>
+                <SubframeSelect.Item value="reduce_costs">Reduce Costs</SubframeSelect.Item>
+                <SubframeSelect.Item value="improve_experience">Improve Experience</SubframeSelect.Item>
+                <SubframeSelect.Item value="optimize_pricing">Optimize Pricing</SubframeSelect.Item>
+              </SubframeSelect>
+
+              {/* Experiment Type */}
+              <RadioGroup
+                label="Experiment Type"
+                value={experimentType}
+                onValueChange={setExperimentType}
+              >
+                <RadioGroup.Option value="ab_test" label="AB Test" />
+                <RadioGroup.Option value="switchback_test" label="Switchback Test" />
+              </RadioGroup>
+
+              {/* Enable Multi-Armed Bandit */}
+              <Checkbox
+                label={
+                  <span className="underline decoration-dashed underline-offset-2">
+                    Enable Multi-Armed Bandit
+                  </span>
+                }
+                checked={enableMAB}
+                onCheckedChange={(checked) => setEnableMAB(checked)}
+              />
+            </div>
+          </div>
+
+          {/* Right Panel - Target Groups */}
           <div className="flex-1 overflow-y-auto p-6">
             <div className="max-w-2xl space-y-6">
-              {/* Experiment Details Section */}
-              <ExperimentDetailsSection
-                experimentName={experimentName}
-                setExperimentName={setExperimentName}
-              />
-
-              {/* Divider */}
-              <Separator />
-
               {/* Target Groups Section */}
               <TargetGroupsSection
                 selectedAssignment={selectedAssignment}
@@ -186,30 +246,6 @@ export function ExperimentFormDialog({
                 handleDeleteGroup={handleDeleteGroup}
                 handleAddTargetGroup={handleAddTargetGroup}
               />
-            </div>
-          </div>
-
-          {/* Right Panel - Preview/Info (optional, can be shown later) */}
-          <div className="hidden w-80 border-l border-neutral-200 bg-neutral-50 p-6 lg:block">
-            <div className="space-y-4">
-              <h3 className="text-body-bold text-neutral-700">Preview</h3>
-              <p className="text-caption text-neutral-500">
-                A preview of your experiment configuration will appear here as you fill out the form.
-              </p>
-
-              {experimentName && (
-                <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4">
-                  <p className="text-caption text-neutral-500">Experiment Name</p>
-                  <p className="text-body text-neutral-900">{experimentName}</p>
-                </div>
-              )}
-
-              {targetGroups.length > 0 && (
-                <div className="space-y-2 rounded-lg border border-neutral-200 bg-white p-4">
-                  <p className="text-caption text-neutral-500">Target Groups</p>
-                  <p className="text-body text-neutral-900">{targetGroups.length} group{targetGroups.length > 1 ? 's' : ''} configured</p>
-                </div>
-              )}
             </div>
           </div>
         </div>
@@ -236,53 +272,7 @@ export function ExperimentFormDialog({
   );
 }
 
-// Experiment Details Section (formerly Step 1)
-function ExperimentDetailsSection({
-  experimentName,
-  setExperimentName,
-}: {
-  experimentName: string;
-  setExperimentName: (name: string) => void;
-}) {
-  return (
-    <div className="space-y-4">
-      <h3 className="text-body-bold text-neutral-900">Experiment Details</h3>
-
-      <div className="space-y-1.5">
-        <Label htmlFor="name" className="text-caption text-neutral-700">
-          Experiment Name <span className="text-error-500">*</span>
-        </Label>
-        <Input
-          id="name"
-          placeholder="Enter experiment name"
-          value={experimentName}
-          onChange={(e) => setExperimentName(e.target.value)}
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-1.5">
-          <Label className="text-caption text-neutral-700">Start Date</Label>
-          <Input type="date" defaultValue="2024-01-15" />
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-caption text-neutral-700">End Date</Label>
-          <Input type="date" defaultValue="2024-02-15" />
-        </div>
-      </div>
-
-      <div className="space-y-1.5">
-        <Label className="text-caption text-neutral-700">Description (optional)</Label>
-        <textarea
-          className="flex min-h-[80px] w-full rounded-md border border-neutral-200 bg-white px-3 py-2 text-body text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder="Add a description for this experiment..."
-        />
-      </div>
-    </div>
-  );
-}
-
-// Target Groups Section (formerly Step 2)
+// Target Groups Section
 function TargetGroupsSection({
   selectedAssignment,
   setSelectedAssignment,
