@@ -210,11 +210,11 @@ export function ExperimentFormDialog({
     );
   }, []);
 
-  // Add a new priority group
+  // Add a new priority group at the top
   const addPriorityGroup = useCallback(() => {
     setPriorityGroups((prev) => {
       const newId = Math.max(...prev.map((g) => g.id)) + 1;
-      return [...prev, { id: newId, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }];
+      return [{ id: newId, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }, ...prev];
     });
   }, []);
 
