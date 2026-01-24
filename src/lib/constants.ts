@@ -347,3 +347,39 @@ export const PRIORITY_FEE_COMPONENTS = [
   { value: "pf_none", label: "No Priority" },
 ] as const;
 
+// Weekdays for time condition
+export const WEEKDAYS = [
+  { value: "mon", label: "M" },
+  { value: "tue", label: "T" },
+  { value: "wed", label: "W" },
+  { value: "thu", label: "Th" },
+  { value: "fri", label: "F" },
+  { value: "sat", label: "Sa" },
+  { value: "sun", label: "S" },
+] as const;
+
+// Customer condition types for new customer condition
+export const CUSTOMER_CONDITION_TYPES = [
+  { value: "new_qcommerce", label: "New users to QCommerce" },
+  { value: "new_platform", label: "New users to Platform" },
+  { value: "returning_customer", label: "Returning Customer" },
+  { value: "lapsed_customer", label: "Lapsed Customer" },
+  { value: "high_value", label: "High Value Customer" },
+] as const;
+
+// Customer locations for location condition
+export const CUSTOMER_LOCATIONS = [
+  { value: "downtown", label: "Downtown" },
+  { value: "midtown", label: "Midtown" },
+  { value: "uptown", label: "Uptown" },
+  { value: "suburbs_north", label: "Suburbs North" },
+  { value: "suburbs_south", label: "Suburbs South" },
+  { value: "industrial", label: "Industrial Area" },
+  { value: "commercial", label: "Commercial District" },
+  { value: "residential_east", label: "Residential East" },
+  { value: "residential_west", label: "Residential West" },
+  { value: "airport", label: "Airport Area" },
+  { value: "waterfront", label: "Waterfront" },
+  { value: "university", label: "University District" },
+] as const;
+

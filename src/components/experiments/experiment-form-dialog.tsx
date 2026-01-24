@@ -86,6 +86,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ParticipantSplitChart } from "./participant-split-chart";
+import {
+  ConditionsGrid,
+  Condition,
+  createTimeCondition,
+  createNewCustomerCondition,
+  createCustomerLocationCondition,
+} from "./condition-cards";
 
 // Helper to generate random vendor count between 40 and 2000
 // direction: 'increase' when filter removed, 'decrease' when filter added
@@ -173,6 +180,7 @@ export function ExperimentFormDialog({
     isExpanded: boolean;
     vendorFilters: VendorFilter[];
     vendorCount: number;
+    conditions: Condition[];
     controlDeliveryFee: string | null;
     controlMov: string | null;
     controlFleetDelay: string | null;
@@ -194,6 +202,7 @@ export function ExperimentFormDialog({
       isExpanded: true,
       vendorFilters: [],
       vendorCount: generateRandomVendorCount(),
+      conditions: [],
       controlDeliveryFee: null,
       controlMov: null,
       controlFleetDelay: null,
@@ -278,6 +287,7 @@ export function ExperimentFormDialog({
         isExpanded: true,
         vendorFilters: [],
         vendorCount: generateRandomVendorCount(),
+        conditions: [],
         controlDeliveryFee: null,
         controlMov: null,
         controlFleetDelay: null,
@@ -331,6 +341,7 @@ export function ExperimentFormDialog({
         id: newId,
         vendorFilters: groupToDuplicate.vendorFilters.map((f) => ({ ...f, id: generateFilterId() })),
         vendorCount: groupToDuplicate.vendorCount,
+        conditions: groupToDuplicate.conditions.map((c) => ({ ...c, data: { ...c.data } })),
         controlDeliveryFee: groupToDuplicate.controlDeliveryFee,
         controlMov: groupToDuplicate.controlMov,
         controlFleetDelay: groupToDuplicate.controlFleetDelay,
@@ -414,6 +425,50 @@ export function ExperimentFormDialog({
     });
   }, []);
 
+  // Add a condition to a specific priority group
+  const addCondition = useCallback((groupId: number, conditionType: "time" | "new_customer" | "customer_location") => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        let newCondition: Condition;
+        switch (conditionType) {
+          case "time":
+            newCondition = { type: "time", data: createTimeCondition() };
+            break;
+          case "new_customer":
+            newCondition = { type: "new_customer", data: createNewCustomerCondition() };
+            break;
+          case "customer_location":
+            newCondition = { type: "customer_location", data: createCustomerLocationCondition() };
+            break;
+        }
+        return { ...group, conditions: [...group.conditions, newCondition] };
+      })
+    );
+  }, []);
+
+  // Update a condition in a specific priority group
+  const updateCondition = useCallback((groupId: number, conditionIndex: number, data: Condition["data"]) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        const newConditions = [...group.conditions];
+        newConditions[conditionIndex] = { ...newConditions[conditionIndex], data };
+        return { ...group, conditions: newConditions };
+      })
+    );
+  }, []);
+
+  // Delete a condition from a specific priority group
+  const deleteCondition = useCallback((groupId: number, conditionIndex: number) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        return { ...group, conditions: group.conditions.filter((_, i) => i !== conditionIndex) };
+      })
+    );
+  }, []);
+
   // Drag and drop sensors
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -485,6 +540,7 @@ export function ExperimentFormDialog({
         isExpanded: true,
         vendorFilters: [],
         vendorCount: generateRandomVendorCount(),
+        conditions: [],
         controlDeliveryFee: null,
         controlMov: null,
         controlFleetDelay: null,
@@ -940,8 +996,8 @@ export function ExperimentFormDialog({
                           variant="warning"
                           icon={<SlidersHorizontal className="size-4" />}
                         />
-                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                          <span className="w-full text-body-bold text-default-font">
+                        <div className="flex shrink-0 grow basis-0 items-center gap-2">
+                          <span className="text-body-bold text-default-font">
                             Conditions
                           </span>
                         </div>
@@ -980,6 +1036,17 @@ export function ExperimentFormDialog({
                           </SubframeCore.DropdownMenu.Portal>
                         </SubframeCore.DropdownMenu.Root>
                       </div>
+
+                      {/* Condition Cards Grid */}
+                      {group.conditions.length > 0 && (
+                        <div className="w-full px-4 pb-4">
+                          <ConditionsGrid
+                            conditions={group.conditions}
+                            onUpdateCondition={(index, data) => updateCondition(group.id, index, data)}
+                            onDeleteCondition={(index) => deleteCondition(group.id, index)}
+                          />
+                        </div>
+                      )}
 
                       {/* Control and Variation */}
                       <div className="flex w-full items-center gap-4 p-4">
