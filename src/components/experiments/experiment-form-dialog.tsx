@@ -47,6 +47,8 @@ import {
   Banknote,
   ShoppingCart,
   Equal,
+  UserPlus,
+  MapPinned,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
@@ -943,10 +945,40 @@ export function ExperimentFormDialog({
                             Conditions
                           </span>
                         </div>
-                        <IconButton
-                          size="small"
-                          icon={<Plus className="size-4" />}
-                        />
+                        <SubframeCore.DropdownMenu.Root>
+                          <SubframeCore.DropdownMenu.Trigger asChild>
+                            <IconButton
+                              size="small"
+                              icon={<Plus className="size-4" />}
+                            />
+                          </SubframeCore.DropdownMenu.Trigger>
+                          <SubframeCore.DropdownMenu.Portal>
+                            <SubframeCore.DropdownMenu.Content
+                              side="left"
+                              align="start"
+                              sideOffset={4}
+                              asChild
+                            >
+                              <DropdownMenu>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Clock className="size-3.5" />}
+                                >
+                                  Time condition
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<UserPlus className="size-3.5" />}
+                                >
+                                  New customer condition
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<MapPinned className="size-3.5" />}
+                                >
+                                  Customer location condition
+                                </DropdownMenu.DropdownItem>
+                              </DropdownMenu>
+                            </SubframeCore.DropdownMenu.Content>
+                          </SubframeCore.DropdownMenu.Portal>
+                        </SubframeCore.DropdownMenu.Root>
                       </div>
 
                       {/* Control and Variation */}
