@@ -21,7 +21,6 @@ import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
 import { TextField } from "@/subframe/components/TextField";
 import { Select as SubframeSelect } from "@/subframe/components/Select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
-import { Checkbox } from "@/subframe/components/Checkbox";
 import {
   Select,
   SelectContent,
@@ -57,7 +56,6 @@ export function ExperimentFormDialog({
   const [experimentHypothesis, setExperimentHypothesis] = useState("");
   const [experimentObjective, setExperimentObjective] = useState("");
   const [experimentType, setExperimentType] = useState("ab_test");
-  const [enableMAB, setEnableMAB] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<string>("");
   const [targetGroups, setTargetGroups] = useState([
     { ...sampleTargetGroup, id: "tg_1" },
@@ -74,7 +72,6 @@ export function ExperimentFormDialog({
       setExperimentHypothesis("");
       setExperimentObjective("");
       setExperimentType("ab_test");
-      setEnableMAB(false);
       setSelectedAssignment("");
       setTargetGroups([{ ...sampleTargetGroup, id: "tg_1" }]);
       setExpandedGroups(new Set(["tg_1"]));
@@ -176,7 +173,7 @@ export function ExperimentFormDialog({
           <div className="hidden w-96 border-r border-neutral-200 bg-neutral-50 p-6 lg:block">
             <div className="space-y-5">
               {/* Experiment Name */}
-              <TextField label="Experiment Name" className="w-full">
+              <TextField label="Experiment Name" className="w-full gap-2">
                 <TextField.Input
                   placeholder="Enter experiment name"
                   value={experimentName}
@@ -185,7 +182,7 @@ export function ExperimentFormDialog({
               </TextField>
 
               {/* Hypothesis */}
-              <TextField label="Hypothesis" className="w-full">
+              <TextField label="Hypothesis" className="w-full gap-2">
                 <TextField.Input
                   placeholder="Enter hypothesis"
                   value={experimentHypothesis}
@@ -199,7 +196,7 @@ export function ExperimentFormDialog({
                 placeholder="Select objective"
                 value={experimentObjective}
                 onValueChange={setExperimentObjective}
-                className="w-full"
+                className="w-full gap-2"
               >
                 <SubframeSelect.Item value="increase_conversion">Increase Conversion</SubframeSelect.Item>
                 <SubframeSelect.Item value="reduce_costs">Reduce Costs</SubframeSelect.Item>
@@ -208,7 +205,7 @@ export function ExperimentFormDialog({
               </SubframeSelect>
 
               {/* Experiment Type */}
-              <div className="space-y-2">
+              <div className="flex flex-col gap-2">
                 <span className="font-caption-bold text-caption-bold text-default-font">
                   Experiment Type
                 </span>
@@ -243,16 +240,6 @@ export function ExperimentFormDialog({
                 </RadioCardGroup>
               </div>
 
-              {/* Enable Multi-Armed Bandit */}
-              <Checkbox
-                label={
-                  <span className="underline decoration-dashed underline-offset-2">
-                    Enable Multi-Armed Bandit
-                  </span>
-                }
-                checked={enableMAB}
-                onCheckedChange={(checked) => setEnableMAB(checked)}
-              />
             </div>
           </div>
 
