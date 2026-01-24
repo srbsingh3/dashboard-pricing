@@ -151,7 +151,7 @@ export function MultiSelect({
               />
             </div>
 
-            <CommandList className="max-h-56 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-track]:bg-transparent">
+            <CommandList className="max-h-56 overflow-y-auto [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-track]:bg-transparent">
               <CommandEmpty className="py-6 text-center text-caption text-neutral-400">
                 No results found
               </CommandEmpty>
@@ -160,7 +160,7 @@ export function MultiSelect({
               <CommandGroup>
                 <CommandItem
                   onSelect={toggleSelectAll}
-                  className="mx-1 mt-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors aria-selected:bg-neutral-50"
+                  className="ml-1 mt-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors aria-selected:bg-neutral-50"
                 >
                   {/* Subframe-style checkbox with indeterminate state */}
                   <div
@@ -191,7 +191,7 @@ export function MultiSelect({
                       value={option.label}
                       onSelect={() => toggleOption(option.value)}
                       className={cn(
-                        "mx-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors",
+                        "ml-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors",
                         "aria-selected:bg-neutral-50",
                         isSelected && "bg-brand-50/50"
                       )}
