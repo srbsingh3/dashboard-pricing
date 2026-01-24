@@ -35,16 +35,16 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-wrap items-center gap-3 p-4 bg-card rounded-lg border border-border/50"
+      className="flex flex-wrap items-center gap-3 rounded-lg border border-border/50 bg-card p-4"
     >
       {/* Duration */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground font-medium">Duration</label>
+        <label className="text-xs font-medium text-muted-foreground">Duration</label>
         <Select
           value={filters.duration}
           onValueChange={(value) => onFilterChange("duration", value)}
         >
-          <SelectTrigger className="w-[140px] h-9 text-sm">
+          <SelectTrigger className="h-9 w-[140px] text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -59,12 +59,12 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
 
       {/* Comparison Unit */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground font-medium">Comparison Unit</label>
+        <label className="text-xs font-medium text-muted-foreground">Comparison Unit</label>
         <Select
           value={filters.comparison}
           onValueChange={(value) => onFilterChange("comparison", value)}
         >
-          <SelectTrigger className="w-[130px] h-9 text-sm">
+          <SelectTrigger className="h-9 w-[130px] text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -79,12 +79,12 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
 
       {/* City */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground font-medium">City</label>
+        <label className="text-xs font-medium text-muted-foreground">City</label>
         <Select
           value={filters.city}
           onValueChange={(value) => onFilterChange("city", value)}
         >
-          <SelectTrigger className="w-[120px] h-9 text-sm">
+          <SelectTrigger className="h-9 w-[120px] text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -99,12 +99,12 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
 
       {/* Zone */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground font-medium">Zone</label>
+        <label className="text-xs font-medium text-muted-foreground">Zone</label>
         <Select
           value={filters.zone}
           onValueChange={(value) => onFilterChange("zone", value)}
         >
-          <SelectTrigger className="w-[100px] h-9 text-sm">
+          <SelectTrigger className="h-9 w-[100px] text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -118,12 +118,12 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
 
       {/* Vertical Type */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground font-medium">Vertical Type</label>
+        <label className="text-xs font-medium text-muted-foreground">Vertical Type</label>
         <Select
           value={filters.verticalType}
           onValueChange={(value) => onFilterChange("verticalType", value)}
         >
-          <SelectTrigger className="w-[120px] h-9 text-sm">
+          <SelectTrigger className="h-9 w-[120px] text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -138,12 +138,12 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
 
       {/* Vendor/Chain Name */}
       <div className="flex flex-col gap-1">
-        <label className="text-xs text-muted-foreground font-medium">Vendor/Chain Name</label>
+        <label className="text-xs font-medium text-muted-foreground">Vendor/Chain Name</label>
         <Select
           value={filters.vendorChain}
           onValueChange={(value) => onFilterChange("vendorChain", value)}
         >
-          <SelectTrigger className="w-[140px] h-9 text-sm">
+          <SelectTrigger className="h-9 w-[140px] text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -157,10 +157,10 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
       </div>
 
       {/* Advanced filters button */}
-      <div className="flex flex-col gap-1 ml-auto">
+      <div className="ml-auto flex flex-col gap-1">
         <label className="text-xs text-transparent">Actions</label>
         <Button variant="outline" size="sm" className="h-9 gap-2">
-          <SlidersHorizontal className="h-4 w-4" />
+          <SlidersHorizontal className="size-4" />
           <span className="hidden sm:inline">More Filters</span>
         </Button>
       </div>

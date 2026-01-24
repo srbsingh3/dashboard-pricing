@@ -11,7 +11,7 @@ export default function ExperimentsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
-    <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+    <div className="mx-auto max-w-[1600px] space-y-6 p-6">
       {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -26,7 +26,7 @@ export default function ExperimentsPage() {
           onClick={() => setIsFormOpen(true)}
           className="gap-2"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="size-4" />
           Create New Experiment
         </Button>
       </motion.div>

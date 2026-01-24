@@ -38,16 +38,16 @@ export function KPICard({ metric, index = 0 }: KPICardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
-      className="group relative bg-card rounded-xl border border-border/50 p-5 hover:border-border hover:shadow-sm transition-all duration-200"
+      className="group relative rounded-xl border border-border/50 bg-card p-5 transition-all duration-200 hover:border-border hover:shadow-sm"
     >
       {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 rounded-xl bg-linear-to-br from-primary/2 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
 
       <div className="relative">
         {/* Prefix and Value */}
-        <div className="flex items-baseline gap-2 mb-1">
+        <div className="mb-1 flex items-baseline gap-2">
           {metric.prefix && (
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <span className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
               {metric.prefix}
             </span>
           )}
@@ -69,7 +69,7 @@ export function KPICard({ metric, index = 0 }: KPICardProps) {
         {/* Change indicator */}
         <motion.div
           className={cn(
-            "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium",
+            "inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-medium",
             metric.changeType === "positive" && "bg-success-50 text-success-600",
             metric.changeType === "negative" && "bg-error-50 text-error-600",
             metric.changeType === "neutral" && "bg-neutral-100 text-neutral-600"
@@ -78,7 +78,7 @@ export function KPICard({ metric, index = 0 }: KPICardProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: index * 0.05 + 0.15 }}
         >
-          <TrendIcon className="h-3 w-3" />
+          <TrendIcon className="size-3" />
           <span>{Math.abs(metric.change).toFixed(2)}%</span>
         </motion.div>
 

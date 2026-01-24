@@ -92,9 +92,9 @@ export function ExperimentsTable() {
   const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
     if (sortKey !== columnKey) return null;
     return sortDirection === "asc" ? (
-      <ChevronUp className="h-4 w-4" />
+      <ChevronUp className="size-4" />
     ) : (
-      <ChevronDown className="h-4 w-4" />
+      <ChevronDown className="size-4" />
     );
   };
 
@@ -102,7 +102,7 @@ export function ExperimentsTable() {
     <Badge
       variant="outline"
       className={cn(
-        "capitalize font-medium",
+        "font-medium capitalize",
         STATUS_COLORS[status]
       )}
     >
@@ -112,13 +112,13 @@ export function ExperimentsTable() {
 
   const AlreadyStartedIcon = ({ started }: { started: boolean }) => (
     <div className={cn(
-      "h-5 w-5 rounded-full flex items-center justify-center",
+      "flex size-5 items-center justify-center rounded-full",
       started ? "text-success-600" : "text-neutral-400"
     )}>
       {started ? (
-        <Check className="h-4 w-4" strokeWidth={2.5} />
+        <Check className="size-4" strokeWidth={2.5} />
       ) : (
-        <X className="h-4 w-4" strokeWidth={2.5} />
+        <X className="size-4" strokeWidth={2.5} />
       )}
     </div>
   );
@@ -129,22 +129,22 @@ export function ExperimentsTable() {
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" className="gap-2">
-            <Columns3 className="h-4 w-4" />
+            <Columns3 className="size-4" />
             Columns
           </Button>
           <Button variant="outline" size="sm" className="gap-2">
-            <Filter className="h-4 w-4" />
+            <Filter className="size-4" />
             Filters
           </Button>
         </div>
 
         <div className="relative w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-9"
+            className="h-9 pl-9"
           />
         </div>
       </div>
@@ -153,7 +153,7 @@ export function ExperimentsTable() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-lg border border-border overflow-hidden bg-card"
+        className="overflow-hidden rounded-lg border border-border bg-card"
       >
         <Table>
           <TableHeader>
@@ -210,7 +210,7 @@ export function ExperimentsTable() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ delay: index * 0.03 }}
-                  className="group hover:bg-muted/30 transition-colors"
+                  className="group transition-colors hover:bg-muted/30"
                 >
                   <TableCell className="font-medium text-muted-foreground">
                     {experiment.id}
@@ -235,39 +235,39 @@ export function ExperimentsTable() {
                   <TableCell className="text-muted-foreground">
                     {experiment.createdOn}
                   </TableCell>
-                  <TableCell className="text-muted-foreground truncate max-w-[200px]">
+                  <TableCell className="max-w-[200px] truncate text-muted-foreground">
                     {experiment.email}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <BarChart3 className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="size-8">
+                            <BarChart3 className="size-4" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>View Results</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Pencil className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="size-8">
+                            <Pencil className="size-4" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Edit</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <Copy className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="size-8">
+                            <Copy className="size-4" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Duplicate</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive">
-                            <Trash2 className="h-4 w-4" />
+                          <Button variant="ghost" size="icon" className="size-8 text-destructive hover:text-destructive">
+                            <Trash2 className="size-4" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Delete</TooltipContent>
@@ -313,20 +313,20 @@ export function ExperimentsTable() {
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8"
+              className="size-8"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => p - 1)}
             >
-              <ChevronDown className="h-4 w-4 rotate-90" />
+              <ChevronDown className="size-4 rotate-90" />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8"
+              className="size-8"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((p) => p + 1)}
             >
-              <ChevronDown className="h-4 w-4 -rotate-90" />
+              <ChevronDown className="size-4 -rotate-90" />
             </Button>
           </div>
         </div>

@@ -24,10 +24,10 @@ export function Header() {
   const currentRegion = "Germany";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
       <div className="flex h-14 items-center px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 mr-8">
+        <Link href="/" className="mr-8 flex items-center gap-2">
           <div className="flex items-center gap-1">
             <svg
               width="28"
@@ -42,7 +42,7 @@ export function Header() {
               <circle cx="24" cy="16" r="4" fill="currentColor" opacity="0.8" />
               <circle cx="16" cy="24" r="4" fill="currentColor" />
             </svg>
-            <span className="font-semibold text-lg tracking-tight">dps</span>
+            <span className="text-lg font-semibold tracking-tight">dps</span>
           </div>
         </Link>
 
@@ -57,10 +57,10 @@ export function Header() {
                 key={item.id}
                 href={item.href}
                 className={cn(
-                  "relative px-3 py-1.5 text-sm font-medium transition-colors rounded-md",
+                  "relative rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
                   isActive
                     ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
               >
                 {item.label}
@@ -82,9 +82,9 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-                <Globe className="h-4 w-4" />
+                <Globe className="size-4" />
                 <span className="hidden sm:inline">{currentRegion}</span>
-                <ChevronDown className="h-3 w-3" />
+                <ChevronDown className="size-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -101,7 +101,7 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
                 <span className="font-medium">FP_SG</span>
-                <ChevronDown className="h-3 w-3" />
+                <ChevronDown className="size-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -113,16 +113,16 @@ export function Header() {
           </DropdownMenu>
 
           {/* Settings */}
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Settings className="h-4 w-4 text-muted-foreground" />
+          <Button variant="ghost" size="icon" className="size-8">
+            <Settings className="size-4 text-muted-foreground" />
           </Button>
 
           {/* User avatar */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-primary text-primary-foreground text-xs font-medium">
+              <Button variant="ghost" size="icon" className="size-8 rounded-full">
+                <Avatar className="size-8">
+                  <AvatarFallback className="bg-primary text-xs font-medium text-primary-foreground">
                     UN
                   </AvatarFallback>
                 </Avatar>

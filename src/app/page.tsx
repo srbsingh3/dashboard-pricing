@@ -22,7 +22,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-[1600px] mx-auto">
+    <div className="mx-auto max-w-[1600px] space-y-6 p-6">
       {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
@@ -38,21 +38,21 @@ export default function DashboardPage() {
       <FilterBar filters={filters} onFilterChange={handleFilterChange} />
 
       {/* KPI Cards - Top Row (3 cards) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {kpiMetrics.slice(0, 3).map((metric, index) => (
           <KPICard key={metric.id} metric={metric} index={index} />
         ))}
       </div>
 
       {/* KPI Cards - Bottom Row (2 cards) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {kpiMetrics.slice(3, 5).map((metric, index) => (
           <KPICard key={metric.id} metric={metric} index={index + 3} />
         ))}
       </div>
 
       {/* Active Experiments & Campaigns */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <ActiveExperimentsCard />
         <ActiveCampaignsCard />
       </div>

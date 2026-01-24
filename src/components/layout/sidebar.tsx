@@ -60,14 +60,14 @@ export function Sidebar() {
             <circle cx="24" cy="16" r="4" fill="currentColor" opacity="0.8" />
             <circle cx="16" cy="24" r="4" fill="currentColor" />
           </svg>
-          <span className="text-heading-2 font-heading-2 text-default-font tracking-tight">
+          <span className="font-heading-2 text-heading-2 tracking-tight text-default-font">
             dps
           </span>
         </div>
       }
       footer={
         <>
-          <div className="flex grow shrink-0 basis-0 items-center gap-3">
+          <div className="flex shrink-0 grow basis-0 items-center gap-3">
             <Avatar
               variant="brand"
               size="medium"
@@ -77,7 +77,7 @@ export function Sidebar() {
               SS
             </Avatar>
             <div className="flex flex-col items-start">
-              <span className="text-body-bold font-body-bold text-default-font">
+              <span className="font-body-bold text-body-bold text-default-font">
                 Saurabh Singh
               </span>
             </div>
@@ -119,7 +119,7 @@ export function Sidebar() {
       </div>
 
       {/* Divider */}
-      <div className="w-full border-t border-neutral-border my-2" />
+      <div className="my-2 w-full border-t border-neutral-border" />
 
       {/* Region, Entity & Settings */}
       <div className="flex w-full flex-col gap-1">
@@ -132,10 +132,10 @@ export function Sidebar() {
               className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
             >
               <span className="flex items-center gap-2">
-                <FeatherGlobe className="h-4 w-4" />
+                <FeatherGlobe className="size-4" />
                 {currentRegion}
               </span>
-              <FeatherChevronDown className="h-3 w-3" />
+              <FeatherChevronDown className="size-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
@@ -156,7 +156,7 @@ export function Sidebar() {
               className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
             >
               <span className="font-medium">FP_SG</span>
-              <FeatherChevronDown className="h-3 w-3" />
+              <FeatherChevronDown className="size-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
