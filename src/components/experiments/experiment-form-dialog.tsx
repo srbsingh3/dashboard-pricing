@@ -998,7 +998,7 @@ export function ExperimentFormDialog({
 
                       {/* Control and Variation Table */}
                       <div className="w-full overflow-x-auto px-4 pb-4">
-                        <Table className="w-full border-separate border-spacing-0" style={{ minWidth: `${100 + (2 + group.enabledColumns.length) * 140}px` }}>
+                        <Table className="w-full table-fixed border-separate border-spacing-0" style={{ minWidth: `${100 + (2 + group.enabledColumns.length) * 140}px` }}>
                           <colgroup>
                             <col className="w-[100px]" />
                             <col className="w-[140px]" />
