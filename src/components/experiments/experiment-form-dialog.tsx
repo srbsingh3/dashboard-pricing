@@ -388,6 +388,19 @@ export function ExperimentFormDialog({
     );
   }, []);
 
+  // Remove a column from a priority group's Control and Variation table
+  const removeVariableColumn = useCallback((groupId: number, columnValue: string) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        return {
+          ...group,
+          enabledColumns: group.enabledColumns.filter((col) => col !== columnValue),
+        };
+      })
+    );
+  }, []);
+
   // Reorder priority groups after drag and drop
   const reorderPriorityGroups = useCallback((activeId: number, overId: number) => {
     setPriorityGroups((prev) => {
@@ -1007,42 +1020,78 @@ export function ExperimentFormDialog({
                               </TableHead>
                               {group.enabledColumns.includes("fleet_delay") && (
                                 <TableHead className={cn(
-                                  "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                  "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   !group.enabledColumns.includes("basket_value") && !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
-                                  <div className="flex items-center gap-1.5">
-                                    <Clock className="size-3.5" />
-                                    Fleet Delay
+                                  <div className="flex items-center justify-between gap-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <Clock className="size-3.5" />
+                                      Fleet Delay
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeVariableColumn(group.id, "fleet_delay")}
+                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                    >
+                                      <X className="size-3 text-neutral-400 hover:text-neutral-600" />
+                                    </button>
                                   </div>
                                 </TableHead>
                               )}
                               {group.enabledColumns.includes("basket_value") && (
                                 <TableHead className={cn(
-                                  "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                  "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
-                                  <div className="flex items-center gap-1.5">
-                                    <ShoppingBasket className="size-3.5" />
-                                    Basket Value
+                                  <div className="flex items-center justify-between gap-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <ShoppingBasket className="size-3.5" />
+                                      Basket Value
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeVariableColumn(group.id, "basket_value")}
+                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                    >
+                                      <X className="size-3 text-neutral-400 hover:text-neutral-600" />
+                                    </button>
                                   </div>
                                 </TableHead>
                               )}
                               {group.enabledColumns.includes("service_fee") && (
                                 <TableHead className={cn(
-                                  "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                  "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
                                   !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
-                                  <div className="flex items-center gap-1.5">
-                                    <Receipt className="size-3.5" />
-                                    Service Fee
+                                  <div className="flex items-center justify-between gap-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <Receipt className="size-3.5" />
+                                      Service Fee
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeVariableColumn(group.id, "service_fee")}
+                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                    >
+                                      <X className="size-3 text-neutral-400 hover:text-neutral-600" />
+                                    </button>
                                   </div>
                                 </TableHead>
                               )}
                               {group.enabledColumns.includes("priority_fee") && (
-                                <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500">
-                                  <div className="flex items-center gap-1.5">
-                                    <Zap className="size-3.5" />
-                                    Priority Fee
+                                <TableHead className="group/header h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500">
+                                  <div className="flex items-center justify-between gap-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <Zap className="size-3.5" />
+                                      Priority Fee
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => removeVariableColumn(group.id, "priority_fee")}
+                                      className="rounded-sm p-0.5 opacity-0 transition-opacity group-hover/header:opacity-100 hover:bg-neutral-200"
+                                    >
+                                      <X className="size-3 text-neutral-400 hover:text-neutral-600" />
+                                    </button>
                                   </div>
                                 </TableHead>
                               )}
