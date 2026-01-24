@@ -9,6 +9,8 @@ import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
 import { TextField } from "@/subframe/components/TextField";
 import { Select as SubframeSelect } from "@/subframe/components/Select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { ZONES } from "@/lib/constants";
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -23,6 +25,7 @@ export function ExperimentFormDialog({
   const [experimentHypothesis, setExperimentHypothesis] = useState("");
   const [experimentObjective, setExperimentObjective] = useState("");
   const [experimentType, setExperimentType] = useState("ab_test");
+  const [selectedZones, setSelectedZones] = useState<string[]>([]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -32,6 +35,7 @@ export function ExperimentFormDialog({
       setExperimentHypothesis("");
       setExperimentObjective("");
       setExperimentType("ab_test");
+      setSelectedZones([]);
     }, 200);
   };
 
@@ -151,6 +155,18 @@ export function ExperimentFormDialog({
                   </div>
                 </RadioCardGroup>
               </div>
+
+              {/* Divider */}
+              <div className="my-6 w-full border-t border-neutral-border" />
+
+              {/* Target Zones Multi-Select */}
+              <MultiSelect
+                label="Target Zones"
+                options={ZONES}
+                value={selectedZones}
+                onValueChange={setSelectedZones}
+                placeholder="Select zones..."
+              />
 
             </div>
           </div>

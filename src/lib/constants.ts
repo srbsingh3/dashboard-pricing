@@ -128,3 +128,17 @@ export const VERTICAL_TYPES = [
   { value: "convenience", label: "Convenience" },
   { value: "pharmacy", label: "Pharmacy" },
 ] as const;
+
+// Zones for experiments
+export const ZONES = [
+  { value: "zone_1", label: "Zone 1 - Downtown" },
+  { value: "zone_2", label: "Zone 2 - Midtown" },
+  { value: "zone_3", label: "Zone 3 - Uptown" },
+  { value: "zone_4", label: "Zone 4 - Suburbs North" },
+  { value: "zone_5", label: "Zone 5 - Suburbs South" },
+  { value: "zone_6", label: "Zone 6 - Industrial" },
+  { value: "zone_7", label: "Zone 7 - Commercial" },
+  { value: "zone_8", label: "Zone 8 - Residential East" },
+  { value: "zone_9", label: "Zone 9 - Residential West" },
+  { value: "zone_10", label: "Zone 10 - Airport Area" },
+] as const;
