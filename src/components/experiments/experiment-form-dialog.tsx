@@ -205,7 +205,7 @@ export function ExperimentFormDialog({
       <div className="w-full flex items-center justify-between px-6 py-4 border-t bg-muted/30">
         <SubframeButton
           variant="neutral-secondary"
-          icon={currentStep === 1 ? <X /> : <ChevronUp className="-rotate-90" />}
+          icon={currentStep === 1 ? <X size={14} /> : <ChevronUp size={14} className="-rotate-90" />}
           onClick={() => (currentStep === 1 ? handleClose() : setCurrentStep(1))}
         >
           Back
@@ -218,7 +218,7 @@ export function ExperimentFormDialog({
           {currentStep === 1 ? (
             <SubframeButton
               variant="brand-primary"
-              iconRight={<ChevronUp className="rotate-90" />}
+              iconRight={<ChevronUp size={14} className="rotate-90" />}
               onClick={() => setCurrentStep(2)}
             >
               Continue
