@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
 import { TextField } from "@/subframe/components/TextField";
 import { Select as SubframeSelect } from "@/subframe/components/Select";
-import { RadioGroup } from "@/subframe/components/RadioGroup";
+import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { Checkbox } from "@/subframe/components/Checkbox";
 import {
   Select,
@@ -150,7 +150,7 @@ export function ExperimentFormDialog({
 
       {/* Header - Figma: Modal Header */}
       <div className="w-full bg-white">
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
             <h2 className="text-body-bold text-neutral-900">
               New Experiment
@@ -208,14 +208,40 @@ export function ExperimentFormDialog({
               </SubframeSelect>
 
               {/* Experiment Type */}
-              <RadioGroup
-                label="Experiment Type"
-                value={experimentType}
-                onValueChange={setExperimentType}
-              >
-                <RadioGroup.Option value="ab_test" label="AB Test" />
-                <RadioGroup.Option value="switchback_test" label="Switchback Test" />
-              </RadioGroup>
+              <div className="space-y-2">
+                <span className="font-caption-bold text-caption-bold text-default-font">
+                  Experiment Type
+                </span>
+                <RadioCardGroup
+                  value={experimentType}
+                  onValueChange={setExperimentType}
+                >
+                  <div className="flex w-full items-start gap-2">
+                    <RadioCardGroup.RadioCard
+                      value="ab_test"
+                      checked={experimentType === "ab_test"}
+                      hideRadio={true}
+                    >
+                      <div className="flex flex-col items-start pr-2">
+                        <span className="font-body-bold w-full text-body-bold text-default-font">
+                          A/B Test
+                        </span>
+                      </div>
+                    </RadioCardGroup.RadioCard>
+                    <RadioCardGroup.RadioCard
+                      value="switchback_test"
+                      checked={experimentType === "switchback_test"}
+                      hideRadio={true}
+                    >
+                      <div className="flex flex-col items-start pr-2">
+                        <span className="font-body-bold w-full text-body-bold text-default-font">
+                          Switchback Test
+                        </span>
+                      </div>
+                    </RadioCardGroup.RadioCard>
+                  </div>
+                </RadioCardGroup>
+              </div>
 
               {/* Enable Multi-Armed Bandit */}
               <Checkbox
@@ -255,7 +281,7 @@ export function ExperimentFormDialog({
       <div className="w-full bg-white">
         {/* Divider line like Figma */}
         <div className="h-px bg-neutral-200" />
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-6 py-3">
           <SubframeButton
             variant="neutral-secondary"
             onClick={handleClose}
