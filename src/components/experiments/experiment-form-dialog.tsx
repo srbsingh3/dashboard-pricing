@@ -52,7 +52,33 @@ import {
 import { Badge } from "@/subframe/components/Badge";
 
 // Helper to generate random vendor count between 40 and 2000
-const generateRandomVendorCount = () => Math.floor(Math.random() * (2000 - 40 + 1)) + 40;
+// direction: 'increase' when filter removed, 'decrease' when filter added
+const generateRandomVendorCount = (
+  currentCount?: number,
+  direction?: 'increase' | 'decrease'
+): number => {
+  const MIN_COUNT = 40;
+  const MAX_COUNT = 2000;
+
+  // If no current count or direction, return a random number in full range
+  if (currentCount === undefined || direction === undefined) {
+    return Math.floor(Math.random() * (MAX_COUNT - MIN_COUNT + 1)) + MIN_COUNT;
+  }
+
+  if (direction === 'decrease') {
+    // Filter added: generate a random number LESS than current (but at least MIN_COUNT)
+    const lowerBound = MIN_COUNT;
+    const upperBound = Math.max(MIN_COUNT, currentCount - 1);
+    if (lowerBound >= upperBound) return MIN_COUNT;
+    return Math.floor(Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
+  } else {
+    // Filter removed: generate a random number MORE than current (but at most MAX_COUNT)
+    const lowerBound = Math.min(MAX_COUNT, currentCount + 1);
+    const upperBound = MAX_COUNT;
+    if (lowerBound >= upperBound) return MAX_COUNT;
+    return Math.floor(Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
+  }
+};
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -86,7 +112,11 @@ export function ExperimentFormDialog({
     setPriorityGroups((prev) =>
       prev.map((group) =>
         group.id === groupId
-          ? { ...group, vendorFilters: [...group.vendorFilters, newFilter], vendorCount: generateRandomVendorCount() }
+          ? {
+              ...group,
+              vendorFilters: [...group.vendorFilters, newFilter],
+              vendorCount: generateRandomVendorCount(group.vendorCount, 'decrease')
+            }
           : group
       )
     );
@@ -95,9 +125,27 @@ export function ExperimentFormDialog({
   // Update vendor filters for a specific group
   const updateGroupFilters = useCallback((groupId: number, filters: VendorFilter[]) => {
     setPriorityGroups((prev) =>
-      prev.map((group) =>
-        group.id === groupId ? { ...group, vendorFilters: filters, vendorCount: generateRandomVendorCount() } : group
-      )
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+
+        // Determine direction based on filter count change
+        const oldCount = group.vendorFilters.length;
+        const newCount = filters.length;
+        let direction: 'increase' | 'decrease' | undefined;
+
+        if (newCount > oldCount) {
+          direction = 'decrease'; // Filter added
+        } else if (newCount < oldCount) {
+          direction = 'increase'; // Filter removed
+        }
+        // If count is same (filter value changed), keep existing vendor count
+
+        return {
+          ...group,
+          vendorFilters: filters,
+          vendorCount: direction ? generateRandomVendorCount(group.vendorCount, direction) : group.vendorCount
+        };
+      })
     );
   }, []);
 
