@@ -20,9 +20,9 @@ import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
-import { Store, SlidersHorizontal, GitBranch, Plus } from "lucide-react";
+import { Store, SlidersHorizontal, GitBranch, Plus, ListFilter } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
-import { FeatherChevronDown, FeatherFilter } from "@subframe/core";
+import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
 
 interface ExperimentFormDialogProps {
@@ -302,7 +302,7 @@ export function ExperimentFormDialog({
                         <SubframeCore.DropdownMenu.Trigger asChild>
                           <IconButton
                             size="small"
-                            icon={<FeatherFilter />}
+                            icon={<ListFilter className="size-4" />}
                           />
                         </SubframeCore.DropdownMenu.Trigger>
                         <SubframeCore.DropdownMenu.Portal>
