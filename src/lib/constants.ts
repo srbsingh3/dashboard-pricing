@@ -360,8 +360,8 @@ export const WEEKDAYS = [
 
 // Customer condition types for new customer condition
 export const CUSTOMER_CONDITION_TYPES = [
-  { value: "new_qcommerce", label: "New users to QCommerce" },
-  { value: "new_platform", label: "New users to Platform" },
+  { value: "new_qcommerce", label: "New to Q-Commerce" },
+  { value: "new_platform", label: "New to Platform" },
   { value: "returning_customer", label: "Returning Customer" },
   { value: "lapsed_customer", label: "Lapsed Customer" },
   { value: "high_value", label: "High Value Customer" },
