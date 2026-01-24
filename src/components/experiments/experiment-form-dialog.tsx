@@ -151,7 +151,7 @@ export function ExperimentFormDialog({
         ...groupToDuplicate,
         id: newId,
         vendorFilters: groupToDuplicate.vendorFilters.map((f) => ({ ...f, id: generateFilterId() })),
-        vendorCount: generateRandomVendorCount(),
+        vendorCount: groupToDuplicate.vendorCount,
       };
       const newGroups = [...prev];
       newGroups.splice(groupIndex + 1, 0, duplicatedGroup);
