@@ -767,12 +767,12 @@ export function ExperimentFormDialog({
 
                       {/* Control and Variation Table */}
                       <div className="w-full px-4 pb-4">
-                        <Table>
+                        <Table className="border-separate border-spacing-0">
                           <TableHeader>
-                            <TableRow className="border-y border-neutral-border hover:bg-transparent">
-                              <TableHead className="h-10 w-28 bg-neutral-50 text-caption-bold text-neutral-500" />
-                              <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
-                              <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
+                            <TableRow className="hover:bg-transparent">
+                              <TableHead className="h-10 w-28 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
+                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
+                              <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
