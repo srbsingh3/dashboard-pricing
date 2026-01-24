@@ -772,22 +772,22 @@ export function ExperimentFormDialog({
                             <TableRow className="border-y border-neutral-border hover:bg-transparent">
                               <TableHead className="h-10 w-28 bg-neutral-50 text-caption-bold text-neutral-500" />
                               <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
-                              <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">Name</TableHead>
+                              <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {/* Control Row */}
                             <TableRow className="border-0 hover:bg-neutral-50">
                               <TableCell className="py-3 text-body text-neutral-500">Control</TableCell>
-                              <TableCell className="py-3 text-body-bold text-neutral-700">—</TableCell>
-                              <TableCell className="py-3 text-body-bold text-default-font">—</TableCell>
+                              <TableCell className="py-3 text-body text-neutral-400">Select component</TableCell>
+                              <TableCell className="py-3 text-body text-neutral-400">Select component</TableCell>
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
                               <TableRow key={i} className="border-0 hover:bg-neutral-50">
                                 <TableCell className="py-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
-                                <TableCell className="py-3 text-body-bold text-neutral-700">—</TableCell>
-                                <TableCell className="py-3 text-body-bold text-default-font">—</TableCell>
+                                <TableCell className="py-3 text-body text-default-font">Same as control</TableCell>
+                                <TableCell className="py-3 text-body text-default-font">Same as control</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
