@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Button as SubframeButton } from "@/subframe/components/Button";
 import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
 import { TextField } from "@/subframe/components/TextField";
-import { Select as SubframeSelect } from "@/subframe/components/Select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ZONES } from "@/lib/constants";
@@ -103,18 +109,23 @@ export function ExperimentFormDialog({
               </TextField>
 
               {/* Objective */}
-              <SubframeSelect
-                label="Objective"
-                placeholder="Select objective"
-                value={experimentObjective}
-                onValueChange={setExperimentObjective}
-                className="w-full gap-2"
-              >
-                <SubframeSelect.Item value="increase_conversion">Increase Conversion</SubframeSelect.Item>
-                <SubframeSelect.Item value="reduce_costs">Reduce Costs</SubframeSelect.Item>
-                <SubframeSelect.Item value="improve_experience">Improve Experience</SubframeSelect.Item>
-                <SubframeSelect.Item value="optimize_pricing">Optimize Pricing</SubframeSelect.Item>
-              </SubframeSelect>
+              <div className="flex w-full flex-col gap-2">
+                <span className="text-caption-bold text-neutral-700">Objective</span>
+                <Select
+                  value={experimentObjective}
+                  onValueChange={setExperimentObjective}
+                >
+                  <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color">
+                    <SelectValue placeholder="Select objective" />
+                  </SelectTrigger>
+                  <SelectContent position="popper" sideOffset={4} className="border-neutral-border bg-white shadow-lg">
+                    <SelectItem value="increase_conversion" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Increase Conversion</SelectItem>
+                    <SelectItem value="reduce_costs" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Reduce Costs</SelectItem>
+                    <SelectItem value="improve_experience" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Improve Experience</SelectItem>
+                    <SelectItem value="optimize_pricing" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Optimize Pricing</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Experiment Type */}
               <div className="flex flex-col gap-2">
