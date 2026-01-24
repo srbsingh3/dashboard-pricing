@@ -96,7 +96,7 @@ export function SearchSelect({
 
           <FeatherChevronDown
             className={cn(
-              "size-4 shrink-0 text-subtext-color transition duration-200",
+              "shrink-0 text-body text-subtext-color transition duration-200",
               variant === "ghost" && "mr-2 opacity-0 group-hover:opacity-100 group-hover/row:opacity-100",
               open && "rotate-180",
               open && variant === "ghost" && "opacity-100"

@@ -724,17 +724,17 @@ export function ExperimentFormDialog({
                 <div className="flex items-center gap-1">
                   <IconButton
                     size="medium"
-                    icon={<ChevronsDownUp className="size-4" />}
+                    icon={<ChevronsDownUp className="size-4 text-subtext-color" />}
                     onClick={collapseAll}
                   />
                   <IconButton
                     size="medium"
-                    icon={<ChevronsUpDown className="size-4" />}
+                    icon={<ChevronsUpDown className="size-4 text-subtext-color" />}
                     onClick={expandAll}
                   />
                   <IconButton
                     size="medium"
-                    icon={<Plus className="size-4" />}
+                    icon={<Plus className="size-4 text-subtext-color" />}
                     onClick={addPriorityGroup}
                   />
                 </div>
