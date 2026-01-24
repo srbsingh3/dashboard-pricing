@@ -778,16 +778,16 @@ export function ExperimentFormDialog({
                           <TableBody>
                             {/* Control Row */}
                             <TableRow className="border-0 hover:bg-neutral-50">
-                              <TableCell className="text-body text-neutral-500">Control</TableCell>
-                              <TableCell className="text-body-bold text-neutral-700">—</TableCell>
-                              <TableCell className="text-body-bold text-default-font">—</TableCell>
+                              <TableCell className="py-3 text-body text-neutral-500">Control</TableCell>
+                              <TableCell className="py-3 text-body-bold text-neutral-700">—</TableCell>
+                              <TableCell className="py-3 text-body-bold text-default-font">—</TableCell>
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
                               <TableRow key={i} className="border-0 hover:bg-neutral-50">
-                                <TableCell className="text-body text-neutral-500">Variation {i + 1}</TableCell>
-                                <TableCell className="text-body-bold text-neutral-700">—</TableCell>
-                                <TableCell className="text-body-bold text-default-font">—</TableCell>
+                                <TableCell className="py-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
+                                <TableCell className="py-3 text-body-bold text-neutral-700">—</TableCell>
+                                <TableCell className="py-3 text-body-bold text-default-font">—</TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
