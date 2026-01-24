@@ -389,10 +389,10 @@ export function ExperimentFormDialog({
                       <button
                         type="button"
                         onClick={() => deletePriorityGroup(group.id)}
-                        className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
+                        className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
                         aria-label="Remove priority group"
                       >
-                        <FeatherTrash2 className="text-body text-subtext-color" />
+                        <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
                       </button>
                     )}
                     <button
