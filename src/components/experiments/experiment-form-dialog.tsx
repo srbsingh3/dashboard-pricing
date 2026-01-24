@@ -214,7 +214,7 @@ export function ExperimentFormDialog({
     const newFilter: VendorFilter = {
       id: generateFilterId(),
       field: fieldValue,
-      condition: "contains",
+      condition: "is",
       values: [],
     };
     setPriorityGroups((prev) =>
