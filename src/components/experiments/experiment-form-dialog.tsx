@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X, Split, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -42,23 +43,6 @@ import {
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import { ScrollContainer } from "@/components/ui/scroll-container";
 import {
@@ -102,40 +86,264 @@ interface ExperimentFormDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-// Sortable Priority Card wrapper component
-interface SortablePriorityCardProps {
+// Priority group type
+interface PriorityGroup {
   id: number;
-  children: React.ReactNode;
-  disabled?: boolean;
+  isExpanded: boolean;
+  vendorFilters: VendorFilter[];
+  vendorCount: number;
 }
 
-function SortablePriorityCard({ id, children, disabled }: SortablePriorityCardProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id, disabled });
+// Reorderable Priority Card using Framer Motion's Reorder
+interface ReorderablePriorityCardProps {
+  group: PriorityGroup;
+  index: number;
+  totalGroups: number;
+  onToggleExpanded: (id: number) => void;
+  onDelete: (id: number) => void;
+  onDuplicate: (id: number) => void;
+  onAddFilter: (groupId: number, fieldValue: string) => void;
+  onUpdateFilters: (groupId: number, filters: VendorFilter[]) => void;
+}
 
-  const style = {
-    // Use Translate instead of Transform to prevent scaling/crushing when items have different heights
-    transform: CSS.Translate.toString(transform),
-    transition,
-    zIndex: isDragging ? 10 : undefined,
-    opacity: isDragging ? 0.9 : undefined,
-  };
+function ReorderablePriorityCard({
+  group,
+  index,
+  totalGroups,
+  onToggleExpanded,
+  onDelete,
+  onDuplicate,
+  onAddFilter,
+  onUpdateFilters,
+}: ReorderablePriorityCardProps) {
+  const dragControls = useDragControls();
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
-      {/* Clone children and pass drag handle props */}
-      {typeof children === 'function'
-        ? (children as (props: { listeners: typeof listeners; isDragging: boolean }) => React.ReactNode)({ listeners, isDragging })
-        : children}
-    </div>
+    <Reorder.Item
+      value={group}
+      id={String(group.id)}
+      dragListener={false}
+      dragControls={dragControls}
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+      layout
+      className="flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm"
+      whileDrag={{
+        scale: 1.02,
+        boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+        zIndex: 50,
+      }}
+    >
+      {/* Header */}
+      <div className="group/header flex w-full items-center gap-2 px-6 py-4">
+        {/* Drag Handle */}
+        <div
+          onPointerDown={(e) => dragControls.start(e)}
+          className="-ml-2 flex size-8 cursor-grab items-center justify-center rounded-md transition-colors hover:bg-neutral-100 active:cursor-grabbing"
+          style={{ touchAction: "none" }}
+        >
+          <FeatherGripVertical className="text-body text-subtext-color" />
+        </div>
+        <button
+          type="button"
+          onClick={() => onToggleExpanded(group.id)}
+          className="flex shrink-0 grow basis-0 items-center gap-2"
+        >
+          <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
+            Priority {index + 1}
+          </span>
+        </button>
+        {totalGroups > 1 && (
+          <button
+            type="button"
+            onClick={() => onDelete(group.id)}
+            className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
+            aria-label="Remove priority group"
+          >
+            <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => onDuplicate(group.id)}
+          className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
+          aria-label="Duplicate priority group"
+        >
+          <FeatherCopy className="text-body text-subtext-color" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onToggleExpanded(group.id)}
+          className="-my-1 flex size-8 items-center justify-center rounded-md transition-colors hover:bg-neutral-100"
+        >
+          <FeatherChevronDown
+            className={cn(
+              "text-body text-subtext-color transition-transform duration-200",
+              group.isExpanded && "rotate-180"
+            )}
+          />
+        </button>
+      </div>
+      {/* Divider */}
+      <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
+      {/* List of sections - collapsible */}
+      {group.isExpanded && (
+        <div className="flex w-full flex-col items-start p-2">
+          {/* Target Vendors */}
+          <div className="flex w-full items-center gap-4 p-4">
+            <IconWithBackground
+              size="medium"
+              variant="brand"
+              icon={<Store className="size-4" />}
+            />
+            <div className="flex shrink-0 grow basis-0 items-center gap-2">
+              <span className="text-body-bold text-default-font">
+                Target Vendors
+              </span>
+              {group.vendorFilters.length > 0 && (
+                <Badge variant="brand">{group.vendorCount.toLocaleString()}</Badge>
+              )}
+            </div>
+            <SubframeCore.DropdownMenu.Root>
+              <SubframeCore.DropdownMenu.Trigger asChild>
+                <IconButton
+                  size="small"
+                  icon={<ListFilter className="size-4" />}
+                />
+              </SubframeCore.DropdownMenu.Trigger>
+              <SubframeCore.DropdownMenu.Portal>
+                <SubframeCore.DropdownMenu.Content
+                  side="left"
+                  align="start"
+                  sideOffset={4}
+                  asChild
+                >
+                  <DropdownMenu>
+                    <DropdownMenu.DropdownItem
+                      icon={<Calendar className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "activation_date")}
+                    >
+                      Activation Date
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Power className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "active")}
+                    >
+                      Active
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Link className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "chain_name")}
+                    >
+                      Chain Name
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<MapPin className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "city_names")}
+                    >
+                      City Names
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Users className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "customer_types")}
+                    >
+                      Customer Types
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Truck className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "delivery_types")}
+                    >
+                      Delivery Types
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Crown className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "key_account")}
+                    >
+                      Key Account
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Tag className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "marketing_tags")}
+                    >
+                      Marketing Tags
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Building2 className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "vendor_name")}
+                    >
+                      Vendor Name
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Layers className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "vertical_type")}
+                    >
+                      Vertical Type
+                    </DropdownMenu.DropdownItem>
+                    <DropdownMenu.DropdownItem
+                      icon={<Map className="size-3.5" />}
+                      onClick={() => onAddFilter(group.id, "zone_names")}
+                    >
+                      Zone Names
+                    </DropdownMenu.DropdownItem>
+                  </DropdownMenu>
+                </SubframeCore.DropdownMenu.Content>
+              </SubframeCore.DropdownMenu.Portal>
+            </SubframeCore.DropdownMenu.Root>
+          </div>
+
+          {/* Vendor Filter Rows */}
+          {group.vendorFilters.length > 0 && (
+            <div className="w-full px-4 pb-2">
+              <VendorFilterList
+                filters={group.vendorFilters}
+                onFiltersChange={(filters) => onUpdateFilters(group.id, filters)}
+              />
+            </div>
+          )}
+
+          {/* Conditions */}
+          <div className="flex w-full items-center gap-4 p-4">
+            <IconWithBackground
+              size="medium"
+              variant="warning"
+              icon={<SlidersHorizontal className="size-4" />}
+            />
+            <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+              <span className="w-full text-body-bold text-default-font">
+                Conditions
+              </span>
+            </div>
+            <IconButton
+              size="small"
+              icon={<Plus className="size-4" />}
+            />
+          </div>
+
+          {/* Control and Variation */}
+          <div className="flex w-full items-center gap-4 p-4">
+            <IconWithBackground
+              size="medium"
+              variant="success"
+              icon={<GitBranch className="size-4" />}
+            />
+            <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+              <span className="w-full text-body-bold text-default-font">
+                Control and Variation
+              </span>
+            </div>
+            <IconButton
+              size="small"
+              icon={<Plus className="size-4" />}
+            />
+          </div>
+        </div>
+      )}
+    </Reorder.Item>
   );
 }
+
 
 export function ExperimentFormDialog({
   open,
@@ -149,7 +357,7 @@ export function ExperimentFormDialog({
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
-  const [priorityGroups, setPriorityGroups] = useState<{ id: number; isExpanded: boolean; vendorFilters: VendorFilter[]; vendorCount: number }[]>(() => [
+  const [priorityGroups, setPriorityGroups] = useState<PriorityGroup[]>(() => [
     { id: 1, isExpanded: true, vendorFilters: [], vendorCount: generateRandomVendorCount() }
   ]);
 
@@ -258,35 +466,6 @@ export function ExperimentFormDialog({
       return newGroups;
     });
   }, []);
-
-  // Reorder priority groups after drag and drop
-  const reorderPriorityGroups = useCallback((activeId: number, overId: number) => {
-    setPriorityGroups((prev) => {
-      const oldIndex = prev.findIndex((g) => g.id === activeId);
-      const newIndex = prev.findIndex((g) => g.id === overId);
-      return arrayMove(prev, oldIndex, newIndex);
-    });
-  }, []);
-
-  // Drag and drop sensors
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  // Handle drag end
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      reorderPriorityGroups(active.id as number, over.id as number);
-    }
-  }, [reorderPriorityGroups]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -534,236 +713,29 @@ export function ExperimentFormDialog({
                 </div>
               </div>
 
-              {/* Priority Cards - rendered from state with drag and drop */}
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
+              {/* Priority Cards - using Framer Motion Reorder for drag and drop with animations */}
+              <Reorder.Group
+                axis="y"
+                values={priorityGroups}
+                onReorder={setPriorityGroups}
+                className="flex flex-col gap-4"
               >
-                <SortableContext
-                  items={priorityGroups.map((g) => g.id)}
-                  strategy={verticalListSortingStrategy}
-                >
+                <AnimatePresence initial={false} mode="popLayout">
                   {priorityGroups.map((group, index) => (
-                    <SortablePriorityCard
+                    <ReorderablePriorityCard
                       key={group.id}
-                      id={group.id}
-                    >
-                      {({ listeners, isDragging }: { listeners: Record<string, unknown>; isDragging: boolean }) => (
-                        <div className={cn(
-                          "flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm",
-                          isDragging && "shadow-lg"
-                        )}>
-                          {/* Header */}
-                          <div className="group/header flex w-full items-center gap-2 px-6 py-4">
-                            {/* Drag Handle */}
-                            <div
-                              {...listeners}
-                              className="-ml-2 flex size-8 cursor-grab items-center justify-center rounded-md transition-all hover:bg-neutral-100 active:cursor-grabbing"
-                              aria-label="Drag to reorder"
-                            >
-                              <FeatherGripVertical className="text-body text-subtext-color" />
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => toggleGroupExpanded(group.id)}
-                              className="flex shrink-0 grow basis-0 items-center gap-2"
-                            >
-                              <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
-                                Priority {index + 1}
-                              </span>
-                            </button>
-                            {priorityGroups.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => deletePriorityGroup(group.id)}
-                                className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
-                                aria-label="Remove priority group"
-                              >
-                                <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
-                              </button>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => duplicatePriorityGroup(group.id)}
-                              className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
-                              aria-label="Duplicate priority group"
-                            >
-                              <FeatherCopy className="text-body text-subtext-color" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => toggleGroupExpanded(group.id)}
-                              className="-my-1 flex size-8 items-center justify-center rounded-md transition-colors hover:bg-neutral-100"
-                            >
-                              <FeatherChevronDown
-                                className={cn(
-                                  "text-body text-subtext-color transition-transform duration-200",
-                                  group.isExpanded && "rotate-180"
-                                )}
-                              />
-                            </button>
-                          </div>
-                  {/* Divider */}
-                  <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
-                  {/* List of sections - collapsible */}
-                  {group.isExpanded && (
-                    <div className="flex w-full flex-col items-start p-2">
-                      {/* Target Vendors */}
-                      <div className="flex w-full items-center gap-4 p-4">
-                        <IconWithBackground
-                          size="medium"
-                          variant="brand"
-                          icon={<Store className="size-4" />}
-                        />
-                        <div className="flex shrink-0 grow basis-0 items-center gap-2">
-                          <span className="text-body-bold text-default-font">
-                            Target Vendors
-                          </span>
-                          {group.vendorFilters.length > 0 && (
-                            <Badge variant="brand">{group.vendorCount.toLocaleString()}</Badge>
-                          )}
-                        </div>
-                        <SubframeCore.DropdownMenu.Root>
-                          <SubframeCore.DropdownMenu.Trigger asChild>
-                            <IconButton
-                              size="small"
-                              icon={<ListFilter className="size-4" />}
-                            />
-                          </SubframeCore.DropdownMenu.Trigger>
-                          <SubframeCore.DropdownMenu.Portal>
-                            <SubframeCore.DropdownMenu.Content
-                              side="left"
-                              align="start"
-                              sideOffset={4}
-                              asChild
-                            >
-                              <DropdownMenu>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Calendar className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "activation_date")}
-                                >
-                                  Activation Date
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Power className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "active")}
-                                >
-                                  Active
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Link className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "chain_name")}
-                                >
-                                  Chain Name
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<MapPin className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "city_names")}
-                                >
-                                  City Names
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Users className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "customer_types")}
-                                >
-                                  Customer Types
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Truck className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "delivery_types")}
-                                >
-                                  Delivery Types
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Crown className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "key_account")}
-                                >
-                                  Key Account
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Tag className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "marketing_tags")}
-                                >
-                                  Marketing Tags
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Building2 className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "vendor_name")}
-                                >
-                                  Vendor Name
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Layers className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "vertical_type")}
-                                >
-                                  Vertical Type
-                                </DropdownMenu.DropdownItem>
-                                <DropdownMenu.DropdownItem
-                                  icon={<Map className="size-3.5" />}
-                                  onClick={() => addVendorFilter(group.id, "zone_names")}
-                                >
-                                  Zone Names
-                                </DropdownMenu.DropdownItem>
-                              </DropdownMenu>
-                            </SubframeCore.DropdownMenu.Content>
-                          </SubframeCore.DropdownMenu.Portal>
-                        </SubframeCore.DropdownMenu.Root>
-                      </div>
-
-                      {/* Vendor Filter Rows */}
-                      {group.vendorFilters.length > 0 && (
-                        <div className="w-full px-4 pb-2">
-                          <VendorFilterList
-                            filters={group.vendorFilters}
-                            onFiltersChange={(filters) => updateGroupFilters(group.id, filters)}
-                          />
-                        </div>
-                      )}
-
-                      {/* Conditions */}
-                      <div className="flex w-full items-center gap-4 p-4">
-                        <IconWithBackground
-                          size="medium"
-                          variant="warning"
-                          icon={<SlidersHorizontal className="size-4" />}
-                        />
-                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                          <span className="w-full text-body-bold text-default-font">
-                            Conditions
-                          </span>
-                        </div>
-                        <IconButton
-                          size="small"
-                          icon={<Plus className="size-4" />}
-                        />
-                      </div>
-
-                      {/* Control and Variation */}
-                      <div className="flex w-full items-center gap-4 p-4">
-                        <IconWithBackground
-                          size="medium"
-                          variant="success"
-                          icon={<GitBranch className="size-4" />}
-                        />
-                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                          <span className="w-full text-body-bold text-default-font">
-                            Control and Variation
-                          </span>
-                        </div>
-                        <IconButton
-                          size="small"
-                          icon={<Plus className="size-4" />}
-                        />
-                      </div>
-                    </div>
-                  )}
-                        </div>
-                      )}
-                    </SortablePriorityCard>
+                      group={group}
+                      index={index}
+                      totalGroups={priorityGroups.length}
+                      onToggleExpanded={toggleGroupExpanded}
+                      onDelete={deletePriorityGroup}
+                      onDuplicate={duplicatePriorityGroup}
+                      onAddFilter={addVendorFilter}
+                      onUpdateFilters={updateGroupFilters}
+                    />
                   ))}
-                </SortableContext>
-              </DndContext>
+                </AnimatePresence>
+              </Reorder.Group>
               </div>
             </ScrollContainer>
           </div>
