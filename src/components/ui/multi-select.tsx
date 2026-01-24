@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { X, Check, ChevronDown, Minus } from "lucide-react";
+import { X, Check, Minus } from "lucide-react";
+import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -107,7 +108,7 @@ export function MultiSelect({
             </div>
 
             {/* Right side controls */}
-            <div className="flex shrink-0 items-center gap-1">
+            <div className="flex shrink-0 items-center gap-2">
               {/* Clear button in trigger - only show when there are selections */}
               {value.length > 0 && !disabled && (
                 <button
@@ -131,12 +132,7 @@ export function MultiSelect({
               )}
 
               {/* Chevron */}
-              <ChevronDown
-                className={cn(
-                  "size-4 text-subtext-color transition-transform duration-200",
-                  open && "rotate-180"
-                )}
-              />
+              <FeatherChevronDown className="text-body text-subtext-color" />
             </div>
           </button>
         </PopoverTrigger>
@@ -181,7 +177,7 @@ export function MultiSelect({
                       <Minus className="size-3.5 text-white" strokeWidth={3} />
                     ) : null}
                   </div>
-                  <span className="text-neutral-500">(Select All)</span>
+                  <span className="text-neutral-500">Select All</span>
                 </CommandItem>
               </CommandGroup>
 
