@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X, Split, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,6 +41,11 @@ import {
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
+import {
+  VendorFilterList,
+  VendorFilter,
+  generateFilterId,
+} from "./vendor-filter-row";
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -60,6 +65,18 @@ export function ExperimentFormDialog({
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
   const [isPriorityExpanded, setIsPriorityExpanded] = useState(true);
+  const [vendorFilters, setVendorFilters] = useState<VendorFilter[]>([]);
+
+  // Add a new filter when clicking a dropdown item
+  const addVendorFilter = useCallback((fieldValue: string) => {
+    const newFilter: VendorFilter = {
+      id: generateFilterId(),
+      field: fieldValue,
+      condition: "contains",
+      values: [],
+    };
+    setVendorFilters((prev) => [...prev, newFilter]);
+  }, []);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -74,6 +91,7 @@ export function ExperimentFormDialog({
       setNumberOfVariations("1");
       setParticipantShare("");
       setIsPriorityExpanded(true);
+      setVendorFilters([]);
     }, 200);
   };
 
@@ -330,37 +348,70 @@ export function ExperimentFormDialog({
                             asChild
                           >
                             <DropdownMenu>
-                              <DropdownMenu.DropdownItem icon={<Calendar className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Calendar className="size-3.5" />}
+                                onClick={() => addVendorFilter("activation_date")}
+                              >
                                 Activation Date
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Power className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Power className="size-3.5" />}
+                                onClick={() => addVendorFilter("active")}
+                              >
                                 Active
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Link className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Link className="size-3.5" />}
+                                onClick={() => addVendorFilter("chain_name")}
+                              >
                                 Chain Name
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<MapPin className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<MapPin className="size-3.5" />}
+                                onClick={() => addVendorFilter("city_names")}
+                              >
                                 City Names
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Users className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Users className="size-3.5" />}
+                                onClick={() => addVendorFilter("customer_types")}
+                              >
                                 Customer Types
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Truck className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Truck className="size-3.5" />}
+                                onClick={() => addVendorFilter("delivery_types")}
+                              >
                                 Delivery Types
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Crown className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Crown className="size-3.5" />}
+                                onClick={() => addVendorFilter("key_account")}
+                              >
                                 Key Account
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Tag className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Tag className="size-3.5" />}
+                                onClick={() => addVendorFilter("marketing_tags")}
+                              >
                                 Marketing Tags
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Building2 className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Building2 className="size-3.5" />}
+                                onClick={() => addVendorFilter("vendor_name")}
+                              >
                                 Vendor Name
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Layers className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Layers className="size-3.5" />}
+                                onClick={() => addVendorFilter("vertical_type")}
+                              >
                                 Vertical Type
                               </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem icon={<Map className="size-3.5" />}>
+                              <DropdownMenu.DropdownItem
+                                icon={<Map className="size-3.5" />}
+                                onClick={() => addVendorFilter("zone_names")}
+                              >
                                 Zone Names
                               </DropdownMenu.DropdownItem>
                             </DropdownMenu>
@@ -368,6 +419,16 @@ export function ExperimentFormDialog({
                         </SubframeCore.DropdownMenu.Portal>
                       </SubframeCore.DropdownMenu.Root>
                     </div>
+
+                    {/* Vendor Filter Rows */}
+                    {vendorFilters.length > 0 && (
+                      <div className="w-full px-4 pb-2">
+                        <VendorFilterList
+                          filters={vendorFilters}
+                          onFiltersChange={setVendorFilters}
+                        />
+                      </div>
+                    )}
 
                     {/* Conditions */}
                     <div className="flex w-full items-center gap-4 p-4">

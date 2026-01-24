@@ -178,3 +178,100 @@ export const PARENT_VERTICALS = [
   { value: "electronics", label: "Electronics" },
 ] as const;
 
+// Vendor filter constants
+export const VENDOR_FILTER_CONDITIONS = [
+  { value: "contains", label: "contains" },
+  { value: "does_not_contain", label: "does not contain" },
+  { value: "is", label: "is" },
+  { value: "is_not", label: "is not" },
+] as const;
+
+export const VENDOR_FILTER_FIELDS = [
+  { value: "activation_date", label: "Activation Date", icon: "Calendar" },
+  { value: "active", label: "Active", icon: "Power" },
+  { value: "chain_name", label: "Chain Name", icon: "Link" },
+  { value: "city_names", label: "City Names", icon: "MapPin" },
+  { value: "customer_types", label: "Customer Types", icon: "Users" },
+  { value: "delivery_types", label: "Delivery Types", icon: "Truck" },
+  { value: "key_account", label: "Key Account", icon: "Crown" },
+  { value: "marketing_tags", label: "Marketing Tags", icon: "Tag" },
+  { value: "vendor_name", label: "Vendor Name", icon: "Building2" },
+  { value: "vertical_type", label: "Vertical Type", icon: "Layers" },
+  { value: "zone_names", label: "Zone Names", icon: "Map" },
+] as const;
+
+// Extended city list for vendor filters
+export const VENDOR_CITIES = [
+  { value: "berlin", label: "Berlin" },
+  { value: "munich", label: "Munich" },
+  { value: "hamburg", label: "Hamburg" },
+  { value: "frankfurt", label: "Frankfurt" },
+  { value: "cologne", label: "Cologne" },
+  { value: "stockholm", label: "Stockholm" },
+  { value: "gothenburg", label: "Gothenburg" },
+  { value: "malmö", label: "Malmö" },
+  { value: "london", label: "London" },
+  { value: "manchester", label: "Manchester" },
+  { value: "birmingham", label: "Birmingham" },
+  { value: "buenos_aires", label: "Buenos Aires" },
+  { value: "cordoba", label: "Córdoba" },
+  { value: "singapore", label: "Singapore" },
+] as const;
+
+// Customer types for vendor filters
+export const CUSTOMER_TYPES = [
+  { value: "new", label: "New Customers" },
+  { value: "returning", label: "Returning Customers" },
+  { value: "premium", label: "Premium Members" },
+  { value: "corporate", label: "Corporate Accounts" },
+  { value: "casual", label: "Casual Users" },
+] as const;
+
+// Delivery types for vendor filters
+export const DELIVERY_TYPES = [
+  { value: "express", label: "Express Delivery" },
+  { value: "standard", label: "Standard Delivery" },
+  { value: "scheduled", label: "Scheduled Delivery" },
+  { value: "pickup", label: "Store Pickup" },
+  { value: "dine_in", label: "Dine-in" },
+] as const;
+
+// Marketing tags for vendor filters
+export const MARKETING_TAGS = [
+  { value: "featured", label: "Featured" },
+  { value: "new_partner", label: "New Partner" },
+  { value: "top_rated", label: "Top Rated" },
+  { value: "fast_delivery", label: "Fast Delivery" },
+  { value: "eco_friendly", label: "Eco-Friendly" },
+  { value: "local_favorite", label: "Local Favorite" },
+  { value: "budget_friendly", label: "Budget Friendly" },
+] as const;
+
+// Vendor names for filters
+export const VENDOR_NAMES = [
+  { value: "mcdonalds", label: "McDonald's" },
+  { value: "burger_king", label: "Burger King" },
+  { value: "kfc", label: "KFC" },
+  { value: "subway", label: "Subway" },
+  { value: "dominos", label: "Domino's" },
+  { value: "starbucks", label: "Starbucks" },
+  { value: "pizza_hut", label: "Pizza Hut" },
+  { value: "wendys", label: "Wendy's" },
+  { value: "taco_bell", label: "Taco Bell" },
+  { value: "chipotle", label: "Chipotle" },
+  { value: "five_guys", label: "Five Guys" },
+  { value: "shake_shack", label: "Shake Shack" },
+] as const;
+
+// Active status options
+export const ACTIVE_STATUS = [
+  { value: "true", label: "Yes" },
+  { value: "false", label: "No" },
+] as const;
+
+// Key account options
+export const KEY_ACCOUNT_STATUS = [
+  { value: "true", label: "Yes" },
+  { value: "false", label: "No" },
+] as const;
+
