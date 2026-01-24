@@ -967,7 +967,7 @@ export function ExperimentFormDialog({
                                 ))}
                                 {group.enabledColumns.length === EXPERIMENT_VARIABLE_COLUMNS.length && (
                                   <div className="px-3 py-2 text-caption text-neutral-400">
-                                    All variables added
+                                    All components added
                                   </div>
                                 )}
                               </DropdownMenu>
