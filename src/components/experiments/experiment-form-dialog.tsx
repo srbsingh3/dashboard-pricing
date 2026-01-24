@@ -67,6 +67,15 @@ import {
   generateFilterId,
 } from "./vendor-filter-row";
 import { Badge } from "@/subframe/components/Badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { ChevronRight } from "lucide-react";
 
 // Helper to generate random vendor count between 40 and 2000
 // direction: 'increase' when filter removed, 'decrease' when filter added
@@ -755,6 +764,50 @@ export function ExperimentFormDialog({
                           size="small"
                           icon={<Plus className="size-4" />}
                         />
+                      </div>
+
+                      {/* Control and Variation Table */}
+                      <div className="w-full px-4 pb-4">
+                        <div className="overflow-hidden rounded-md border border-neutral-border">
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-b border-neutral-border hover:bg-transparent">
+                                <TableHead className="h-10 w-28 bg-neutral-50 text-caption-bold text-neutral-500" />
+                                <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
+                                <TableHead className="h-10 bg-neutral-50 text-caption-bold text-neutral-500">Name</TableHead>
+                                <TableHead className="size-10 bg-neutral-50" />
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {/* Control Row */}
+                              <TableRow className="border-b border-neutral-border hover:bg-neutral-50">
+                                <TableCell className="text-body text-neutral-500">Control</TableCell>
+                                <TableCell className="text-body-bold text-neutral-700">—</TableCell>
+                                <TableCell className="text-body-bold text-default-font">—</TableCell>
+                                <TableCell className="w-10">
+                                  <IconButton
+                                    size="small"
+                                    icon={<ChevronRight className="size-4" />}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                              {/* Variation Rows */}
+                              {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
+                                <TableRow key={i} className="border-b border-neutral-border last:border-b-0 hover:bg-neutral-50">
+                                  <TableCell className="text-body text-neutral-500">Variation {i + 1}</TableCell>
+                                  <TableCell className="text-body-bold text-neutral-700">—</TableCell>
+                                  <TableCell className="text-body-bold text-default-font">—</TableCell>
+                                  <TableCell className="w-10">
+                                    <IconButton
+                                      size="small"
+                                      icon={<ChevronRight className="size-4" />}
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </div>
                       </div>
                     </div>
                   )}
