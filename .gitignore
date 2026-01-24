@@ -66,3 +66,9 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# Playwright MCP
+.playwright-mcp/
+
+# Test screenshots
+*.png
