@@ -36,7 +36,10 @@ import {
   Truck,
   Users,
   Crown,
-  Building2
+  Building2,
+  ChevronsDownUp,
+  ChevronsUpDown,
+  Trash2,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown } from "@subframe/core";
@@ -64,18 +67,73 @@ export function ExperimentFormDialog({
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
-  const [isPriorityExpanded, setIsPriorityExpanded] = useState(true);
-  const [vendorFilters, setVendorFilters] = useState<VendorFilter[]>([]);
+  const [priorityGroups, setPriorityGroups] = useState<{ id: number; isExpanded: boolean; vendorFilters: VendorFilter[] }[]>([
+    { id: 1, isExpanded: true, vendorFilters: [] }
+  ]);
 
-  // Add a new filter when clicking a dropdown item
-  const addVendorFilter = useCallback((fieldValue: string) => {
+  // Add a new filter to a specific priority group
+  const addVendorFilter = useCallback((groupId: number, fieldValue: string) => {
     const newFilter: VendorFilter = {
       id: generateFilterId(),
       field: fieldValue,
       condition: "contains",
       values: [],
     };
-    setVendorFilters((prev) => [...prev, newFilter]);
+    setPriorityGroups((prev) =>
+      prev.map((group) =>
+        group.id === groupId
+          ? { ...group, vendorFilters: [...group.vendorFilters, newFilter] }
+          : group
+      )
+    );
+  }, []);
+
+  // Update vendor filters for a specific group
+  const updateGroupFilters = useCallback((groupId: number, filters: VendorFilter[]) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) =>
+        group.id === groupId ? { ...group, vendorFilters: filters } : group
+      )
+    );
+  }, []);
+
+  // Toggle expansion of a single priority group
+  const toggleGroupExpanded = useCallback((groupId: number) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) =>
+        group.id === groupId ? { ...group, isExpanded: !group.isExpanded } : group
+      )
+    );
+  }, []);
+
+  // Add a new priority group
+  const addPriorityGroup = useCallback(() => {
+    setPriorityGroups((prev) => {
+      const newId = Math.max(...prev.map((g) => g.id)) + 1;
+      return [...prev, { id: newId, isExpanded: true, vendorFilters: [] }];
+    });
+  }, []);
+
+  // Collapse all priority groups
+  const collapseAll = useCallback(() => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => ({ ...group, isExpanded: false }))
+    );
+  }, []);
+
+  // Expand all priority groups
+  const expandAll = useCallback(() => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => ({ ...group, isExpanded: true }))
+    );
+  }, []);
+
+  // Delete a priority group (only if more than one exists)
+  const deletePriorityGroup = useCallback((groupId: number) => {
+    setPriorityGroups((prev) => {
+      if (prev.length <= 1) return prev;
+      return prev.filter((group) => group.id !== groupId);
+    });
   }, []);
 
   const handleClose = () => {
@@ -90,8 +148,7 @@ export function ExperimentFormDialog({
       setSelectedVerticals([]);
       setNumberOfVariations("1");
       setParticipantShare("");
-      setIsPriorityExpanded(true);
-      setVendorFilters([]);
+      setPriorityGroups([{ id: 1, isExpanded: true, vendorFilters: [] }]);
     }, 200);
   };
 
@@ -294,180 +351,215 @@ export function ExperimentFormDialog({
           <div className="flex-1 overflow-y-auto bg-neutral-50 p-6">
             <div className="mx-auto max-w-[860px] space-y-4">
               {/* Section Header */}
-              <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+                <div className="flex items-center gap-1">
+                  <IconButton
+                    size="medium"
+                    icon={<ChevronsDownUp className="size-4" />}
+                    onClick={collapseAll}
+                  />
+                  <IconButton
+                    size="medium"
+                    icon={<ChevronsUpDown className="size-4" />}
+                    onClick={expandAll}
+                  />
+                  <IconButton
+                    size="medium"
+                    icon={<Plus className="size-4" />}
+                    onClick={addPriorityGroup}
+                  />
+                </div>
+              </div>
 
-              {/* Priority Card - styled like Subframe To-do box */}
-              <div className="flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
-                {/* Header */}
-                <button
-                  type="button"
-                  onClick={() => setIsPriorityExpanded(!isPriorityExpanded)}
-                  className="flex w-full flex-col items-start gap-2 px-6 py-4"
-                >
-                  <div className="flex w-full items-center gap-2">
-                    <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
-                      Priority 1
-                    </span>
-                    <FeatherChevronDown
-                      className={cn(
-                        "text-body text-subtext-color transition-transform duration-200",
-                        isPriorityExpanded && "rotate-180"
-                      )}
-                    />
-                  </div>
-                </button>
-                {/* Divider */}
-                <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
-                {/* List of sections - collapsible */}
-                {isPriorityExpanded && (
-                  <div className="flex w-full flex-col items-start p-2">
-                    {/* Target Vendors */}
-                    <div className="flex w-full items-center gap-4 p-4">
-                      <IconWithBackground
-                        size="medium"
-                        variant="brand"
-                        icon={<Store className="size-4" />}
+              {/* Priority Cards - rendered from state */}
+              {priorityGroups.map((group, index) => (
+                <div key={group.id} className="flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+                  {/* Header */}
+                  <div className="group/header flex w-full items-center gap-2 px-6 py-4">
+                    <button
+                      type="button"
+                      onClick={() => toggleGroupExpanded(group.id)}
+                      className="flex shrink-0 grow basis-0 items-center gap-2"
+                    >
+                      <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
+                        Priority {index + 1}
+                      </span>
+                    </button>
+                    {priorityGroups.length > 1 && (
+                      <IconButton
+                        size="small"
+                        icon={<Trash2 className="size-4" />}
+                        className="opacity-0 transition-opacity group-hover/header:opacity-100"
+                        onClick={() => deletePriorityGroup(group.id)}
                       />
-                      <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                        <span className="w-full text-body-bold text-default-font">
-                          Target Vendors
-                        </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => toggleGroupExpanded(group.id)}
+                      className="flex items-center"
+                    >
+                      <FeatherChevronDown
+                        className={cn(
+                          "text-body text-subtext-color transition-transform duration-200",
+                          group.isExpanded && "rotate-180"
+                        )}
+                      />
+                    </button>
+                  </div>
+                  {/* Divider */}
+                  <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
+                  {/* List of sections - collapsible */}
+                  {group.isExpanded && (
+                    <div className="flex w-full flex-col items-start p-2">
+                      {/* Target Vendors */}
+                      <div className="flex w-full items-center gap-4 p-4">
+                        <IconWithBackground
+                          size="medium"
+                          variant="brand"
+                          icon={<Store className="size-4" />}
+                        />
+                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                          <span className="w-full text-body-bold text-default-font">
+                            Target Vendors
+                          </span>
+                        </div>
+                        <SubframeCore.DropdownMenu.Root>
+                          <SubframeCore.DropdownMenu.Trigger asChild>
+                            <IconButton
+                              size="small"
+                              icon={<ListFilter className="size-4" />}
+                            />
+                          </SubframeCore.DropdownMenu.Trigger>
+                          <SubframeCore.DropdownMenu.Portal>
+                            <SubframeCore.DropdownMenu.Content
+                              side="left"
+                              align="start"
+                              sideOffset={4}
+                              asChild
+                            >
+                              <DropdownMenu>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Calendar className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "activation_date")}
+                                >
+                                  Activation Date
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Power className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "active")}
+                                >
+                                  Active
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Link className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "chain_name")}
+                                >
+                                  Chain Name
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<MapPin className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "city_names")}
+                                >
+                                  City Names
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Users className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "customer_types")}
+                                >
+                                  Customer Types
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Truck className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "delivery_types")}
+                                >
+                                  Delivery Types
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Crown className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "key_account")}
+                                >
+                                  Key Account
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Tag className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "marketing_tags")}
+                                >
+                                  Marketing Tags
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Building2 className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "vendor_name")}
+                                >
+                                  Vendor Name
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Layers className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "vertical_type")}
+                                >
+                                  Vertical Type
+                                </DropdownMenu.DropdownItem>
+                                <DropdownMenu.DropdownItem
+                                  icon={<Map className="size-3.5" />}
+                                  onClick={() => addVendorFilter(group.id, "zone_names")}
+                                >
+                                  Zone Names
+                                </DropdownMenu.DropdownItem>
+                              </DropdownMenu>
+                            </SubframeCore.DropdownMenu.Content>
+                          </SubframeCore.DropdownMenu.Portal>
+                        </SubframeCore.DropdownMenu.Root>
                       </div>
-                      <SubframeCore.DropdownMenu.Root>
-                        <SubframeCore.DropdownMenu.Trigger asChild>
-                          <IconButton
-                            size="small"
-                            icon={<ListFilter className="size-4" />}
-                          />
-                        </SubframeCore.DropdownMenu.Trigger>
-                        <SubframeCore.DropdownMenu.Portal>
-                          <SubframeCore.DropdownMenu.Content
-                            side="left"
-                            align="start"
-                            sideOffset={4}
-                            asChild
-                          >
-                            <DropdownMenu>
-                              <DropdownMenu.DropdownItem
-                                icon={<Calendar className="size-3.5" />}
-                                onClick={() => addVendorFilter("activation_date")}
-                              >
-                                Activation Date
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Power className="size-3.5" />}
-                                onClick={() => addVendorFilter("active")}
-                              >
-                                Active
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Link className="size-3.5" />}
-                                onClick={() => addVendorFilter("chain_name")}
-                              >
-                                Chain Name
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<MapPin className="size-3.5" />}
-                                onClick={() => addVendorFilter("city_names")}
-                              >
-                                City Names
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Users className="size-3.5" />}
-                                onClick={() => addVendorFilter("customer_types")}
-                              >
-                                Customer Types
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Truck className="size-3.5" />}
-                                onClick={() => addVendorFilter("delivery_types")}
-                              >
-                                Delivery Types
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Crown className="size-3.5" />}
-                                onClick={() => addVendorFilter("key_account")}
-                              >
-                                Key Account
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Tag className="size-3.5" />}
-                                onClick={() => addVendorFilter("marketing_tags")}
-                              >
-                                Marketing Tags
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Building2 className="size-3.5" />}
-                                onClick={() => addVendorFilter("vendor_name")}
-                              >
-                                Vendor Name
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Layers className="size-3.5" />}
-                                onClick={() => addVendorFilter("vertical_type")}
-                              >
-                                Vertical Type
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Map className="size-3.5" />}
-                                onClick={() => addVendorFilter("zone_names")}
-                              >
-                                Zone Names
-                              </DropdownMenu.DropdownItem>
-                            </DropdownMenu>
-                          </SubframeCore.DropdownMenu.Content>
-                        </SubframeCore.DropdownMenu.Portal>
-                      </SubframeCore.DropdownMenu.Root>
-                    </div>
 
-                    {/* Vendor Filter Rows */}
-                    {vendorFilters.length > 0 && (
-                      <div className="w-full px-4 pb-2">
-                        <VendorFilterList
-                          filters={vendorFilters}
-                          onFiltersChange={setVendorFilters}
+                      {/* Vendor Filter Rows */}
+                      {group.vendorFilters.length > 0 && (
+                        <div className="w-full px-4 pb-2">
+                          <VendorFilterList
+                            filters={group.vendorFilters}
+                            onFiltersChange={(filters) => updateGroupFilters(group.id, filters)}
+                          />
+                        </div>
+                      )}
+
+                      {/* Conditions */}
+                      <div className="flex w-full items-center gap-4 p-4">
+                        <IconWithBackground
+                          size="medium"
+                          variant="warning"
+                          icon={<SlidersHorizontal className="size-4" />}
+                        />
+                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                          <span className="w-full text-body-bold text-default-font">
+                            Conditions
+                          </span>
+                        </div>
+                        <IconButton
+                          size="small"
+                          icon={<Plus className="size-4" />}
                         />
                       </div>
-                    )}
 
-                    {/* Conditions */}
-                    <div className="flex w-full items-center gap-4 p-4">
-                      <IconWithBackground
-                        size="medium"
-                        variant="warning"
-                        icon={<SlidersHorizontal className="size-4" />}
-                      />
-                      <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                        <span className="w-full text-body-bold text-default-font">
-                          Conditions
-                        </span>
+                      {/* Control and Variation */}
+                      <div className="flex w-full items-center gap-4 p-4">
+                        <IconWithBackground
+                          size="medium"
+                          variant="success"
+                          icon={<GitBranch className="size-4" />}
+                        />
+                        <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                          <span className="w-full text-body-bold text-default-font">
+                            Control and Variation
+                          </span>
+                        </div>
+                        <IconButton
+                          size="small"
+                          icon={<Plus className="size-4" />}
+                        />
                       </div>
-                      <IconButton
-                        size="small"
-                        icon={<Plus className="size-4" />}
-                      />
                     </div>
-
-                    {/* Control and Variation */}
-                    <div className="flex w-full items-center gap-4 p-4">
-                      <IconWithBackground
-                        size="medium"
-                        variant="success"
-                        icon={<GitBranch className="size-4" />}
-                      />
-                      <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
-                        <span className="w-full text-body-bold text-default-font">
-                          Control and Variation
-                        </span>
-                      </div>
-                      <IconButton
-                        size="small"
-                        icon={<Plus className="size-4" />}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
