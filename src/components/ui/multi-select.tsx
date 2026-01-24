@@ -15,7 +15,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 
 export interface MultiSelectOption {
@@ -31,7 +30,6 @@ interface MultiSelectProps {
   label?: string;
   disabled?: boolean;
   className?: string;
-  maxDisplayedChips?: number;
 }
 
 export function MultiSelect({
@@ -42,7 +40,6 @@ export function MultiSelect({
   label,
   disabled = false,
   className,
-  maxDisplayedChips = 2,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
 
@@ -52,12 +49,6 @@ export function MultiSelect({
         ? value.filter((v) => v !== optionValue)
         : [...value, optionValue]
     );
-  };
-
-  const removeChip = (optionValue: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    onValueChange(value.filter((v) => v !== optionValue));
   };
 
   const clearAll = () => {
@@ -79,10 +70,6 @@ export function MultiSelect({
   const isAllSelected = options.length > 0 && value.length === options.length;
   const isSomeSelected = value.length > 0 && value.length < options.length;
 
-  const selectedOptions = options.filter((opt) => value.includes(opt.value));
-  const displayedChips = selectedOptions.slice(0, maxDisplayedChips);
-  const remainingCount = selectedOptions.length - maxDisplayedChips;
-
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {label && (
@@ -96,48 +83,26 @@ export function MultiSelect({
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              "group flex min-h-9 w-full items-center gap-2 rounded-md border border-neutral-200 bg-white px-3 py-1.5 text-body transition-all duration-150",
-              "hover:border-neutral-300",
-              "focus:border-brand-500 focus:ring-2 focus:ring-brand-100 focus:outline-none",
-              "data-[state=open]:border-brand-500 data-[state=open]:ring-2 data-[state=open]:ring-brand-100",
-              disabled && "cursor-not-allowed bg-neutral-50 opacity-60",
+              "group flex min-h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 py-1 text-body transition-colors",
+              "focus:border-brand-primary focus:outline-none",
+              "data-[state=open]:border-brand-primary",
+              disabled && "cursor-not-allowed bg-neutral-200",
               value.length === 0 && "text-neutral-400"
             )}
           >
-            {/* Selected chips or placeholder */}
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+            {/* Selected count chip or placeholder */}
+            <div className="flex min-w-0 flex-1 items-center">
               {value.length === 0 ? (
-                <span className="truncate py-0.5 text-neutral-400">{placeholder}</span>
+                <span className="truncate text-neutral-400">{placeholder}</span>
               ) : (
-                <>
-                  {displayedChips.map((option, index) => (
-                    <span
-                      key={option.value}
-                      className={cn(
-                        "inline-flex max-w-[140px] items-center gap-1 rounded-md border border-brand-200 bg-brand-50 py-0.5 pr-1 pl-2 text-caption text-brand-700",
-                        "animate-in duration-150 fade-in-0 zoom-in-95",
-                      )}
-                      style={{ animationDelay: `${index * 30}ms` }}
-                    >
-                      <span className="truncate">{option.label}</span>
-                      <button
-                        type="button"
-                        onClick={(e) => removeChip(option.value, e)}
-                        onKeyDown={(e) => e.stopPropagation()}
-                        className="flex size-4 shrink-0 items-center justify-center rounded-sm transition-colors hover:bg-brand-200/60 focus:bg-brand-200/60 focus:outline-none"
-                        disabled={disabled}
-                        aria-label={`Remove ${option.label}`}
-                      >
-                        <X className="size-3" strokeWidth={2.5} />
-                      </button>
-                    </span>
-                  ))}
-                  {remainingCount > 0 && (
-                    <span className="inline-flex items-center rounded-md border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-caption text-neutral-600">
-                      +{remainingCount}
-                    </span>
+                <span
+                  className={cn(
+                    "inline-flex items-center rounded-sm border border-brand-200 bg-brand-50 px-1.5 text-(length:--text-caption) text-brand-700",
+                    "animate-in duration-150 fade-in-0 zoom-in-95",
                   )}
-                </>
+                >
+                  {value.length} {value.length === 1 ? "zone" : "zones"} selected
+                </span>
               )}
             </div>
 
@@ -168,7 +133,7 @@ export function MultiSelect({
               {/* Chevron */}
               <ChevronDown
                 className={cn(
-                  "size-4 text-neutral-400 transition-transform duration-200",
+                  "size-4 text-subtext-color transition-transform duration-200",
                   open && "rotate-180"
                 )}
               />
@@ -177,20 +142,20 @@ export function MultiSelect({
         </PopoverTrigger>
 
         <PopoverContent
-          className="w-(--radix-popover-trigger-width) overflow-hidden rounded-lg border border-neutral-200 p-0 shadow-lg"
+          className="w-(--radix-popover-trigger-width) overflow-hidden rounded-md border border-solid border-neutral-border bg-white p-0 shadow-lg"
           align="start"
           sideOffset={4}
         >
           <Command className="bg-white">
             {/* Search input */}
-            <div className="border-b border-neutral-100 px-1 py-1.5">
+            <div className="px-1 py-1.5">
               <CommandInput
                 placeholder="Search..."
                 className="h-8 text-body"
               />
             </div>
 
-            <CommandList className="max-h-56 overflow-y-auto">
+            <CommandList className="max-h-56 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-track]:bg-transparent">
               <CommandEmpty className="py-6 text-center text-caption text-neutral-400">
                 No results found
               </CommandEmpty>
@@ -220,10 +185,8 @@ export function MultiSelect({
                 </CommandItem>
               </CommandGroup>
 
-              <CommandSeparator className="my-1" />
-
               {/* Options list */}
-              <CommandGroup>
+              <CommandGroup className="pt-1">
                 {options.map((option) => {
                   const isSelected = value.includes(option.value);
                   return (
@@ -267,23 +230,6 @@ export function MultiSelect({
                 })}
               </CommandGroup>
             </CommandList>
-
-            {/* Footer with Clear button */}
-            <div className="border-t border-neutral-100 px-1 py-1.5">
-              <button
-                type="button"
-                onClick={clearAll}
-                disabled={value.length === 0}
-                className={cn(
-                  "rounded-md px-3 py-1.5 text-body transition-colors",
-                  value.length > 0
-                    ? "text-neutral-700 hover:bg-neutral-100"
-                    : "cursor-not-allowed text-neutral-300"
-                )}
-              >
-                Clear
-              </button>
-            </div>
           </Command>
         </PopoverContent>
       </Popover>
