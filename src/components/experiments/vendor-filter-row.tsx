@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Calendar, Power, Link, MapPin, Users, Truck, Crown, Tag, Building2, Layers, Map, Equal } from "lucide-react";
+import { Trash2, Calendar as CalendarIcon, Power, Link, MapPin, Users, Truck, Crown, Tag, Building2, Layers, Map, Equal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -11,6 +11,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MultiSelect } from "@/components/ui/multi-select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/subframe/components/Calendar";
 import {
   VENDOR_FILTER_CONDITIONS,
   VENDOR_FILTER_FIELDS,
@@ -29,7 +35,7 @@ import {
 
 // Icon mapping for filter fields
 const FIELD_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  Calendar,
+  Calendar: CalendarIcon,
   Equal,
   Power,
   Link,
@@ -123,6 +129,81 @@ function getItemLabel(field: string): string {
   }
 }
 
+// Format date for display (e.g., "Jan 15, 2025")
+function formatDateForDisplay(dateString: string): string {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+// Parse date string to Date object
+function parseDateString(dateString: string): Date | undefined {
+  if (!dateString) return undefined;
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? undefined : date;
+}
+
+// Format Date object to ISO date string (YYYY-MM-DD)
+function formatDateToISO(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+// Date picker field component using Calendar with Popover
+interface DatePickerFieldProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+function DatePickerField({ value, onChange }: DatePickerFieldProps) {
+  const [open, setOpen] = React.useState(false);
+  const selectedDate = parseDateString(value);
+
+  const handleSelect = (date: Date | undefined) => {
+    if (date) {
+      onChange(formatDateToISO(date));
+      setOpen(false);
+    }
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className={cn(
+            "flex h-9 w-full items-center justify-between rounded-md border border-neutral-border bg-default-background px-3 text-body",
+            "transition-colors hover:border-neutral-300",
+            "focus:border-brand-primary focus:outline-none",
+            !value && "text-neutral-400"
+          )}
+        >
+          <span>{value ? formatDateForDisplay(value) : "Select date"}</span>
+          <CalendarIcon className="size-4 text-neutral-400" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-auto border-neutral-border bg-white p-4 shadow-lg"
+        align="start"
+        sideOffset={4}
+      >
+        <Calendar
+          mode="single"
+          selected={selectedDate}
+          onSelect={handleSelect}
+          defaultMonth={selectedDate}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export function VendorFilterRow({
   filter,
   onUpdate,
@@ -208,15 +289,9 @@ export function VendorFilterRow({
       {/* Value selector - Date input, binary select, or multi-select */}
       <div className="min-w-48 flex-1">
         {isDateField ? (
-          <input
-            type="date"
+          <DatePickerField
             value={filter.values[0] || ""}
-            onChange={(e) => onUpdate({ ...filter, values: [e.target.value] })}
-            className={cn(
-              "flex h-9 w-full items-center rounded-md border border-neutral-border bg-default-background px-3 text-body",
-              "hover:border-neutral-300",
-              "focus:border-brand-primary focus:outline-none"
-            )}
+            onChange={(value) => onUpdate({ ...filter, values: [value] })}
           />
         ) : isBinaryField(filter.field) ? (
           <Select
