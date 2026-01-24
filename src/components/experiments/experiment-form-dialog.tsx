@@ -16,14 +16,10 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Button as SubframeButton } from "@/subframe/components/Button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
 import {
   Select,
   SelectContent,
@@ -140,44 +136,44 @@ export function ExperimentFormDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0 gap-0 overflow-hidden">
-        {/* Header */}
-        <DialogHeader className="px-6 py-4 border-b">
-          <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold">
-              New Experiment
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={handleClose}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+    <FullscreenDialog open={open} onOpenChange={onOpenChange} className="bg-background">
+      {/* Header */}
+      <div className="w-full px-6 py-4 border-b">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">
+            New Experiment
+          </h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={handleClose}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
 
-          {/* Stepper */}
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <StepIndicator
-              step={1}
-              label="Experiment Details"
-              isActive={currentStep === 1}
-              isCompleted={currentStep > 1}
-            />
-            <div className="w-24 h-0.5 bg-border" />
-            <StepIndicator
-              step={2}
-              label="Target Groups"
-              isActive={currentStep === 2}
-              isCompleted={false}
-            />
-          </div>
-        </DialogHeader>
+        {/* Stepper */}
+        <div className="flex items-center justify-center gap-2 mt-4">
+          <StepIndicator
+            step={1}
+            label="Experiment Details"
+            isActive={currentStep === 1}
+            isCompleted={currentStep > 1}
+          />
+          <div className="w-24 h-0.5 bg-border" />
+          <StepIndicator
+            step={2}
+            label="Target Groups"
+            isActive={currentStep === 2}
+            isCompleted={false}
+          />
+        </div>
+      </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 scrollbar-thin">
+      {/* Content */}
+      <div className="flex-1 w-full overflow-y-auto p-6 scrollbar-thin">
+        <div className="max-w-4xl mx-auto">
           <AnimatePresence mode="wait">
             {currentStep === 1 ? (
               <Step1Content
@@ -203,44 +199,38 @@ export function ExperimentFormDialog({
             )}
           </AnimatePresence>
         </div>
+      </div>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t bg-muted/30">
-          <Button
-            variant="outline"
-            onClick={() => (currentStep === 1 ? handleClose() : setCurrentStep(1))}
-          >
-            {currentStep === 1 ? (
-              <>
-                <X className="h-4 w-4 mr-2" />
-                Back
-              </>
-            ) : (
-              <>
-                <ChevronUp className="h-4 w-4 mr-2 -rotate-90" />
-                Back
-              </>
-            )}
-          </Button>
+      {/* Footer */}
+      <div className="w-full flex items-center justify-between px-6 py-4 border-t bg-muted/30">
+        <SubframeButton
+          variant="neutral-secondary"
+          icon={currentStep === 1 ? <X /> : <ChevronUp className="-rotate-90" />}
+          onClick={() => (currentStep === 1 ? handleClose() : setCurrentStep(1))}
+        >
+          Back
+        </SubframeButton>
 
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={handleClose}>
-              Cancel
-            </Button>
-            {currentStep === 1 ? (
-              <Button onClick={() => setCurrentStep(2)}>
-                Continue
-                <ChevronUp className="h-4 w-4 ml-2 rotate-90" />
-              </Button>
-            ) : (
-              <Button>
-                Save Experiment
-              </Button>
-            )}
-          </div>
+        <div className="flex items-center gap-2">
+          <SubframeButton variant="neutral-secondary" onClick={handleClose}>
+            Cancel
+          </SubframeButton>
+          {currentStep === 1 ? (
+            <SubframeButton
+              variant="brand-primary"
+              iconRight={<ChevronUp className="rotate-90" />}
+              onClick={() => setCurrentStep(2)}
+            >
+              Continue
+            </SubframeButton>
+          ) : (
+            <SubframeButton variant="brand-primary">
+              Save Experiment
+            </SubframeButton>
+          )}
         </div>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </FullscreenDialog>
   );
 }
 

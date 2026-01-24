@@ -404,12 +404,24 @@
    FOCUS STATES
    ============================================ */
 
+/* Global focus ring for interactive elements without their own focus styling */
 *:focus-visible {
   outline: none;
+}
+
+/* Only apply box-shadow focus to elements that don't have their own focus styles */
+a:focus-visible,
+summary:focus-visible,
+[role="button"]:not(button):focus-visible {
   box-shadow: 0 0 0 2px var(--color-background), 0 0 0 4px var(--color-ring);
 }
 
-/* Remove focus ring from dropdown/popover content and triggers */
+/* Form elements and buttons use their own focus styles from components */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+[data-slot="input"]:focus-visible,
 [data-radix-popper-content-wrapper] *:focus-visible,
 [data-slot="dropdown-menu-content"]:focus-visible,
 [data-slot="dropdown-menu-trigger"]:focus-visible,
