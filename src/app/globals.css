@@ -259,7 +259,13 @@
     font-size: var(--text-body);
     line-height: var(--text-body--line-height);
   }
+}
 
+/* ============================================
+   UTILITIES
+   ============================================ */
+
+@layer utilities {
   /* Typography Utilities */
   .text-caption {
     font-size: var(--text-caption);
@@ -317,13 +323,7 @@
     line-height: var(--text-monospace-body--line-height);
     letter-spacing: var(--text-monospace-body--letter-spacing);
   }
-}
 
-/* ============================================
-   UTILITIES
-   ============================================ */
-
-@layer utilities {
   /* Custom Scrollbar */
   .scrollbar-thin {
     scrollbar-width: thin;
