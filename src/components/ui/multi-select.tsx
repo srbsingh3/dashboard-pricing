@@ -31,6 +31,8 @@ interface MultiSelectProps {
   label?: string;
   /** Label for selected items (e.g., "zone" becomes "3 zones selected") */
   itemLabel?: string;
+  /** Whether the field is optional (shows "(optional)" after label) */
+  optional?: boolean;
   disabled?: boolean;
   className?: string;
 }
@@ -42,6 +44,7 @@ export function MultiSelect({
   placeholder = "Select...",
   label,
   itemLabel = "zone",
+  optional = false,
   disabled = false,
   className,
 }: MultiSelectProps) {
@@ -77,7 +80,14 @@ export function MultiSelect({
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {label && (
-        <span className="text-caption-bold text-neutral-700">{label}</span>
+        <div className="flex items-center justify-between">
+          <span className="text-caption-bold text-neutral-700">{label}</span>
+          {optional && (
+            <span className="rounded bg-neutral-100 px-1.5 py-0.5 text-caption text-neutral-400">
+              Optional
+            </span>
+          )}
+        </div>
       )}
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>

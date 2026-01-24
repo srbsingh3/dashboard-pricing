@@ -189,6 +189,7 @@ export function ExperimentFormDialog({
                 onValueChange={setSelectedVerticals}
                 placeholder="Select verticals..."
                 itemLabel="vertical"
+                optional
               />
 
             </div>
