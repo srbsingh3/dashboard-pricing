@@ -201,8 +201,9 @@ export function VendorFilterRow({
             onChange={(e) => onUpdate({ ...filter, values: [e.target.value] })}
             className={cn(
               "flex h-9 w-full items-center rounded-md border border-neutral-border bg-default-background px-3 text-body",
+              "hover:border-neutral-300",
               "focus:border-brand-primary focus:outline-none",
-              "transition-colors"
+              "transition-[border-color] duration-150"
             )}
           />
         ) : (

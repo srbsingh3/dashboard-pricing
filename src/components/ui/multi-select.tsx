@@ -95,10 +95,11 @@ export function MultiSelect({
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              "group flex min-h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 py-1 text-body transition-colors",
+              "group flex min-h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 py-1 text-body transition-[border-color] duration-150",
+              "hover:border-neutral-300",
               "focus:border-brand-primary focus:outline-none",
               "data-[state=open]:border-brand-primary",
-              disabled && "cursor-not-allowed bg-neutral-200",
+              disabled && "cursor-not-allowed bg-neutral-200 hover:border-neutral-border",
               value.length === 0 && "text-neutral-400"
             )}
           >

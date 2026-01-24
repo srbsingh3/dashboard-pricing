@@ -486,3 +486,19 @@ button:focus-visible,
 .group\/bb88f90b button svg:last-child {
   transition: transform 300ms ease;
 }
+
+/* ============================================
+   HOVER STATES FOR FORM INPUTS
+   ============================================ */
+
+/* Subframe TextField hover state */
+.group\/be48ca43:hover > div:first-of-type:not(:focus-within) {
+  border-color: var(--color-neutral-300);
+  transition: border-color 150ms ease;
+}
+
+/* Subframe Select hover state */
+.group\/bb88f90b:hover > div:first-of-type:not(:focus-within) {
+  border-color: var(--color-neutral-300);
+  transition: border-color 150ms ease;
+}
