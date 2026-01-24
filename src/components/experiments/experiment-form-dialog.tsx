@@ -1008,7 +1008,7 @@ export function ExperimentFormDialog({
                               {group.enabledColumns.includes("fleet_delay") && (
                                 <TableHead className={cn(
                                   "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                  group.enabledColumns[group.enabledColumns.length - 1] === "fleet_delay" && "rounded-r-md border-r"
+                                  !group.enabledColumns.includes("basket_value") && !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
                                   <div className="flex items-center gap-1.5">
                                     <Clock className="size-3.5" />
@@ -1019,7 +1019,7 @@ export function ExperimentFormDialog({
                               {group.enabledColumns.includes("basket_value") && (
                                 <TableHead className={cn(
                                   "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                  group.enabledColumns[group.enabledColumns.length - 1] === "basket_value" && "rounded-r-md border-r"
+                                  !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
                                   <div className="flex items-center gap-1.5">
                                     <ShoppingBasket className="size-3.5" />
@@ -1030,7 +1030,7 @@ export function ExperimentFormDialog({
                               {group.enabledColumns.includes("service_fee") && (
                                 <TableHead className={cn(
                                   "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                  group.enabledColumns[group.enabledColumns.length - 1] === "service_fee" && "rounded-r-md border-r"
+                                  !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
                                 )}>
                                   <div className="flex items-center gap-1.5">
                                     <Receipt className="size-3.5" />
