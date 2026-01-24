@@ -177,3 +177,4 @@ export const PARENT_VERTICALS = [
   { value: "convenience", label: "Convenience" },
   { value: "electronics", label: "Electronics" },
 ] as const;
+

@@ -17,6 +17,9 @@ import {
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS } from "@/lib/constants";
+import { IconWithBackground } from "@/subframe/components/IconWithBackground";
+import { Store, SlidersHorizontal, GitBranch, Plus, ChevronUp } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ExperimentFormDialogProps {
   open: boolean;
@@ -35,6 +38,7 @@ export function ExperimentFormDialog({
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
+  const [isPriorityExpanded, setIsPriorityExpanded] = useState(true);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -48,12 +52,14 @@ export function ExperimentFormDialog({
       setSelectedVerticals([]);
       setNumberOfVariations("1");
       setParticipantShare("");
+      setIsPriorityExpanded(true);
     }, 200);
   };
 
   // Prevent dialog from closing when interacting with Chrome extensions
   const preventOutsideClose = (e: Event) => e.preventDefault();
 
+  
   return (
     <FullscreenDialog
       open={open}
@@ -247,7 +253,83 @@ export function ExperimentFormDialog({
 
           {/* Right Panel */}
           <div className="flex-1 overflow-y-auto p-6">
-            {/* Content will be added here */}
+            <div className="space-y-4">
+              {/* Section Header */}
+              <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+
+              {/* Priority Card - styled like Subframe To-do box */}
+              <div className="flex w-full flex-col items-start rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+                {/* Header */}
+                <button
+                  type="button"
+                  onClick={() => setIsPriorityExpanded(!isPriorityExpanded)}
+                  className="flex w-full flex-col items-start gap-2 px-6 py-4"
+                >
+                  <div className="flex w-full items-center gap-2">
+                    <span className="shrink-0 grow basis-0 text-left text-body-bold text-default-font">
+                      Priority 1
+                    </span>
+                    <ChevronUp
+                      className={cn(
+                        "size-4 text-default-font transition-transform duration-200",
+                        !isPriorityExpanded && "rotate-180"
+                      )}
+                    />
+                  </div>
+                </button>
+                {/* Divider */}
+                <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
+                {/* List of sections - collapsible */}
+                {isPriorityExpanded && (
+                  <div className="flex w-full flex-col items-start p-2">
+                    {/* Target Vendors */}
+                    <div className="flex w-full items-center gap-4 p-4">
+                      <IconWithBackground
+                        size="medium"
+                        variant="brand"
+                        icon={<Store className="size-4" />}
+                      />
+                      <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                        <span className="w-full text-body-bold text-default-font">
+                          Target Vendors
+                        </span>
+                      </div>
+                      <Plus className="size-4 text-default-font" />
+                    </div>
+
+                    {/* Conditions */}
+                    <div className="flex w-full items-center gap-4 p-4">
+                      <IconWithBackground
+                        size="medium"
+                        variant="warning"
+                        icon={<SlidersHorizontal className="size-4" />}
+                      />
+                      <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                        <span className="w-full text-body-bold text-default-font">
+                          Conditions
+                        </span>
+                      </div>
+                      <Plus className="size-4 text-default-font" />
+                    </div>
+
+                    {/* Control and Variation */}
+                    <div className="flex w-full items-center gap-4 p-4">
+                      <IconWithBackground
+                        size="medium"
+                        variant="success"
+                        icon={<GitBranch className="size-4" />}
+                      />
+                      <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
+                        <span className="w-full text-body-bold text-default-font">
+                          Control and Variation
+                        </span>
+                      </div>
+                      <Plus className="size-4 text-default-font" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
