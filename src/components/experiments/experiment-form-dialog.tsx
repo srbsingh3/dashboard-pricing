@@ -771,23 +771,43 @@ export function ExperimentFormDialog({
                           <TableHeader>
                             <TableRow className="hover:bg-transparent">
                               <TableHead className="h-10 w-28 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
-                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
+                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 pl-12 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
                               <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {/* Control Row */}
-                            <TableRow className="border-0 hover:bg-neutral-50">
+                            <TableRow className="group border-0 hover:bg-neutral-50">
                               <TableCell className="py-3 text-body text-neutral-500">Control</TableCell>
-                              <TableCell className="py-3 text-body text-neutral-400">Select component</TableCell>
-                              <TableCell className="py-3 text-body text-neutral-400">Select component</TableCell>
+                              <TableCell className="py-3 pl-12">
+                                <span className="mr-24 flex items-center justify-between">
+                                  <span className="text-body text-neutral-400">Select component</span>
+                                  <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
+                                </span>
+                              </TableCell>
+                              <TableCell className="py-3">
+                                <span className="mr-24 flex items-center justify-between">
+                                  <span className="text-body text-neutral-400">Select component</span>
+                                  <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
+                                </span>
+                              </TableCell>
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
-                              <TableRow key={i} className="border-0 hover:bg-neutral-50">
+                              <TableRow key={i} className="group border-0 hover:bg-neutral-50">
                                 <TableCell className="py-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
-                                <TableCell className="py-3 text-body text-default-font">Same as control</TableCell>
-                                <TableCell className="py-3 text-body text-default-font">Same as control</TableCell>
+                                <TableCell className="py-3 pl-12">
+                                  <span className="mr-24 flex items-center justify-between">
+                                    <span className="text-body text-default-font">Same as control</span>
+                                    <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
+                                  </span>
+                                </TableCell>
+                                <TableCell className="py-3">
+                                  <span className="mr-24 flex items-center justify-between">
+                                    <span className="text-body text-default-font">Same as control</span>
+                                    <FeatherChevronDown className="size-4 text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100" />
+                                  </span>
+                                </TableCell>
                               </TableRow>
                             ))}
                           </TableBody>
