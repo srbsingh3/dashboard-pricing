@@ -36,12 +36,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -51,6 +45,52 @@ import {
 
 type SortKey = keyof Experiment | null;
 type SortDirection = "asc" | "desc";
+
+// Helper components defined outside render to avoid recreation
+function SortIcon({
+  columnKey,
+  sortKey,
+  sortDirection,
+}: {
+  columnKey: SortKey;
+  sortKey: SortKey;
+  sortDirection: SortDirection;
+}) {
+  if (sortKey !== columnKey) return null;
+  return sortDirection === "asc" ? (
+    <ChevronUp className="size-4" />
+  ) : (
+    <ChevronDown className="size-4" />
+  );
+}
+
+function StatusBadge({ status }: { status: ExperimentStatus }) {
+  return (
+    <Badge
+      variant="outline"
+      className={cn("font-medium capitalize", STATUS_COLORS[status])}
+    >
+      {status}
+    </Badge>
+  );
+}
+
+function AlreadyStartedIcon({ started }: { started: boolean }) {
+  return (
+    <div
+      className={cn(
+        "flex size-5 items-center justify-center rounded-full",
+        started ? "text-success-600" : "text-neutral-400"
+      )}
+    >
+      {started ? (
+        <Check className="size-4" strokeWidth={2.5} />
+      ) : (
+        <X className="size-4" strokeWidth={2.5} />
+      )}
+    </div>
+  );
+}
 
 export function ExperimentsTable() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -88,40 +128,6 @@ export function ExperimentsTable() {
       setSortDirection("asc");
     }
   };
-
-  const SortIcon = ({ columnKey }: { columnKey: SortKey }) => {
-    if (sortKey !== columnKey) return null;
-    return sortDirection === "asc" ? (
-      <ChevronUp className="size-4" />
-    ) : (
-      <ChevronDown className="size-4" />
-    );
-  };
-
-  const StatusBadge = ({ status }: { status: ExperimentStatus }) => (
-    <Badge
-      variant="outline"
-      className={cn(
-        "font-medium capitalize",
-        STATUS_COLORS[status]
-      )}
-    >
-      {status}
-    </Badge>
-  );
-
-  const AlreadyStartedIcon = ({ started }: { started: boolean }) => (
-    <div className={cn(
-      "flex size-5 items-center justify-center rounded-full",
-      started ? "text-success-600" : "text-neutral-400"
-    )}>
-      {started ? (
-        <Check className="size-4" strokeWidth={2.5} />
-      ) : (
-        <X className="size-4" strokeWidth={2.5} />
-      )}
-    </div>
-  );
 
   return (
     <div className="space-y-4">
@@ -164,7 +170,7 @@ export function ExperimentsTable() {
               >
                 <div className="flex items-center gap-1">
                   ID
-                  <SortIcon columnKey="id" />
+                  <SortIcon columnKey="id" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead
@@ -173,7 +179,7 @@ export function ExperimentsTable() {
               >
                 <div className="flex items-center gap-1">
                   Name
-                  <SortIcon columnKey="name" />
+                  <SortIcon columnKey="name" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead
@@ -182,7 +188,7 @@ export function ExperimentsTable() {
               >
                 <div className="flex items-center gap-1">
                   Status
-                  <SortIcon columnKey="status" />
+                  <SortIcon columnKey="status" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead className="w-[120px] text-center">Already Started</TableHead>
@@ -194,7 +200,7 @@ export function ExperimentsTable() {
               >
                 <div className="flex items-center gap-1">
                   Created On
-                  <SortIcon columnKey="createdOn" />
+                  <SortIcon columnKey="createdOn" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead className="w-[200px]">Created By</TableHead>
