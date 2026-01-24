@@ -294,3 +294,43 @@ export const MOV_COMPONENTS = [
   { value: "mov_promotional", label: "Promotional MOV" },
 ] as const;
 
+// Additional experiment variable columns (for Control and Variation table)
+export const EXPERIMENT_VARIABLE_COLUMNS = [
+  { value: "fleet_delay", label: "Fleet Delay", icon: "Clock" },
+  { value: "basket_value", label: "Basket Value", icon: "ShoppingBasket" },
+  { value: "service_fee", label: "Service Fee", icon: "Receipt" },
+  { value: "priority_fee", label: "Priority Fee", icon: "Zap" },
+] as const;
+
+// Fleet Delay component options
+export const FLEET_DELAY_COMPONENTS = [
+  { value: "fd_standard", label: "Standard Delay" },
+  { value: "fd_express", label: "Express Delay" },
+  { value: "fd_peak", label: "Peak Hour Delay" },
+  { value: "fd_scheduled", label: "Scheduled Delay" },
+] as const;
+
+// Basket Value component options
+export const BASKET_VALUE_COMPONENTS = [
+  { value: "bv_minimum", label: "Minimum Basket" },
+  { value: "bv_standard", label: "Standard Basket" },
+  { value: "bv_premium", label: "Premium Basket" },
+  { value: "bv_promotional", label: "Promotional Basket" },
+] as const;
+
+// Service Fee component options
+export const SERVICE_FEE_COMPONENTS = [
+  { value: "sf_standard", label: "Standard Service Fee" },
+  { value: "sf_premium", label: "Premium Service Fee" },
+  { value: "sf_promotional", label: "Promotional Service Fee" },
+  { value: "sf_waived", label: "Waived Service Fee" },
+] as const;
+
+// Priority Fee component options
+export const PRIORITY_FEE_COMPONENTS = [
+  { value: "pf_standard", label: "Standard Priority" },
+  { value: "pf_express", label: "Express Priority" },
+  { value: "pf_vip", label: "VIP Priority" },
+  { value: "pf_none", label: "No Priority" },
+] as const;
+

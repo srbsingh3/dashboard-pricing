@@ -17,7 +17,7 @@ import {
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { SearchSelect } from "@/components/ui/search-select";
-import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS } from "@/lib/constants";
+import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
 import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
@@ -40,6 +40,12 @@ import {
   Building2,
   ChevronsDownUp,
   ChevronsUpDown,
+  Clock,
+  ShoppingBasket,
+  Receipt,
+  Zap,
+  Banknote,
+  ShoppingCart,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
@@ -165,7 +171,19 @@ export function ExperimentFormDialog({
     vendorCount: number;
     controlDeliveryFee: string | null;
     controlMov: string | null;
-    variations: Array<{ deliveryFee: string | null; mov: string | null }>;
+    controlFleetDelay: string | null;
+    controlBasketValue: string | null;
+    controlServiceFee: string | null;
+    controlPriorityFee: string | null;
+    enabledColumns: string[];
+    variations: Array<{
+      deliveryFee: string | null;
+      mov: string | null;
+      fleetDelay: string | null;
+      basketValue: string | null;
+      serviceFee: string | null;
+      priorityFee: string | null;
+    }>;
   }[]>(() => [
     {
       id: 1,
@@ -174,7 +192,19 @@ export function ExperimentFormDialog({
       vendorCount: generateRandomVendorCount(),
       controlDeliveryFee: null,
       controlMov: null,
-      variations: Array.from({ length: 1 }, () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })),
+      controlFleetDelay: null,
+      controlBasketValue: null,
+      controlServiceFee: null,
+      controlPriorityFee: null,
+      enabledColumns: [],
+      variations: Array.from({ length: 1 }, () => ({
+        deliveryFee: "same_as_control",
+        mov: "same_as_control",
+        fleetDelay: "same_as_control",
+        basketValue: "same_as_control",
+        serviceFee: "same_as_control",
+        priorityFee: "same_as_control",
+      })),
     }
   ]);
 
@@ -246,7 +276,19 @@ export function ExperimentFormDialog({
         vendorCount: generateRandomVendorCount(),
         controlDeliveryFee: null,
         controlMov: null,
-        variations: Array.from({ length: parseInt(numberOfVariations, 10) }, () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })),
+        controlFleetDelay: null,
+        controlBasketValue: null,
+        controlServiceFee: null,
+        controlPriorityFee: null,
+        enabledColumns: [],
+        variations: Array.from({ length: parseInt(numberOfVariations, 10) }, () => ({
+          deliveryFee: "same_as_control",
+          mov: "same_as_control",
+          fleetDelay: "same_as_control",
+          basketValue: "same_as_control",
+          serviceFee: "same_as_control",
+          priorityFee: "same_as_control",
+        })),
       }, ...prev];
     });
   }, [numberOfVariations]);
@@ -287,6 +329,11 @@ export function ExperimentFormDialog({
         vendorCount: groupToDuplicate.vendorCount,
         controlDeliveryFee: groupToDuplicate.controlDeliveryFee,
         controlMov: groupToDuplicate.controlMov,
+        controlFleetDelay: groupToDuplicate.controlFleetDelay,
+        controlBasketValue: groupToDuplicate.controlBasketValue,
+        controlServiceFee: groupToDuplicate.controlServiceFee,
+        controlPriorityFee: groupToDuplicate.controlPriorityFee,
+        enabledColumns: [...groupToDuplicate.enabledColumns],
         variations: groupToDuplicate.variations.map((v) => ({ ...v })),
       };
       const newGroups = [...prev];
@@ -296,21 +343,25 @@ export function ExperimentFormDialog({
   }, []);
 
   // Update control selection for a priority group
-  const updateControlSelection = useCallback((groupId: number, field: 'deliveryFee' | 'mov', value: string | null) => {
+  const updateControlSelection = useCallback((groupId: number, field: 'deliveryFee' | 'mov' | 'fleetDelay' | 'basketValue' | 'serviceFee' | 'priorityFee', value: string | null) => {
     setPriorityGroups((prev) =>
       prev.map((group) => {
         if (group.id !== groupId) return group;
-        if (field === 'deliveryFee') {
-          return { ...group, controlDeliveryFee: value };
-        } else {
-          return { ...group, controlMov: value };
-        }
+        const fieldMapping: Record<string, string> = {
+          deliveryFee: 'controlDeliveryFee',
+          mov: 'controlMov',
+          fleetDelay: 'controlFleetDelay',
+          basketValue: 'controlBasketValue',
+          serviceFee: 'controlServiceFee',
+          priorityFee: 'controlPriorityFee',
+        };
+        return { ...group, [fieldMapping[field]]: value };
       })
     );
   }, []);
 
   // Update variation selection for a priority group
-  const updateVariationSelection = useCallback((groupId: number, variationIndex: number, field: 'deliveryFee' | 'mov', value: string | null) => {
+  const updateVariationSelection = useCallback((groupId: number, variationIndex: number, field: 'deliveryFee' | 'mov' | 'fleetDelay' | 'basketValue' | 'serviceFee' | 'priorityFee', value: string | null) => {
     setPriorityGroups((prev) =>
       prev.map((group) => {
         if (group.id !== groupId) return group;
@@ -322,6 +373,17 @@ export function ExperimentFormDialog({
           };
         }
         return { ...group, variations: newVariations };
+      })
+    );
+  }, []);
+
+  // Add a column to a priority group's Control and Variation table
+  const addVariableColumn = useCallback((groupId: number, columnValue: string) => {
+    setPriorityGroups((prev) =>
+      prev.map((group) => {
+        if (group.id !== groupId) return group;
+        if (group.enabledColumns.includes(columnValue)) return group;
+        return { ...group, enabledColumns: [...group.enabledColumns, columnValue] };
       })
     );
   }, []);
@@ -370,7 +432,14 @@ export function ExperimentFormDialog({
             ...group.variations,
             ...Array.from(
               { length: numVariations - currentLength },
-              () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })
+              () => ({
+                deliveryFee: "same_as_control",
+                mov: "same_as_control",
+                fleetDelay: "same_as_control",
+                basketValue: "same_as_control",
+                serviceFee: "same_as_control",
+                priorityFee: "same_as_control",
+              })
             ),
           ];
           return { ...group, variations: newVariations };
@@ -401,7 +470,19 @@ export function ExperimentFormDialog({
         vendorCount: generateRandomVendorCount(),
         controlDeliveryFee: null,
         controlMov: null,
-        variations: Array.from({ length: 1 }, () => ({ deliveryFee: "same_as_control", mov: "same_as_control" })),
+        controlFleetDelay: null,
+        controlBasketValue: null,
+        controlServiceFee: null,
+        controlPriorityFee: null,
+        enabledColumns: [],
+        variations: Array.from({ length: 1 }, () => ({
+          deliveryFee: "same_as_control",
+          mov: "same_as_control",
+          fleetDelay: "same_as_control",
+          basketValue: "same_as_control",
+          serviceFee: "same_as_control",
+          priorityFee: "same_as_control",
+        })),
       }]);
     }, 200);
   };
@@ -853,10 +934,46 @@ export function ExperimentFormDialog({
                             Control and Variation
                           </span>
                         </div>
-                        <IconButton
-                          size="small"
-                          icon={<Plus className="size-4" />}
-                        />
+                        <SubframeCore.DropdownMenu.Root>
+                          <SubframeCore.DropdownMenu.Trigger asChild>
+                            <IconButton
+                              size="small"
+                              icon={<Plus className="size-4" />}
+                            />
+                          </SubframeCore.DropdownMenu.Trigger>
+                          <SubframeCore.DropdownMenu.Portal>
+                            <SubframeCore.DropdownMenu.Content
+                              side="left"
+                              align="start"
+                              sideOffset={4}
+                              asChild
+                            >
+                              <DropdownMenu>
+                                {EXPERIMENT_VARIABLE_COLUMNS.filter(
+                                  (col) => !group.enabledColumns.includes(col.value)
+                                ).map((column) => (
+                                  <DropdownMenu.DropdownItem
+                                    key={column.value}
+                                    icon={
+                                      column.value === "fleet_delay" ? <Clock className="size-3.5" /> :
+                                      column.value === "basket_value" ? <ShoppingBasket className="size-3.5" /> :
+                                      column.value === "service_fee" ? <Receipt className="size-3.5" /> :
+                                      <Zap className="size-3.5" />
+                                    }
+                                    onClick={() => addVariableColumn(group.id, column.value)}
+                                  >
+                                    {column.label}
+                                  </DropdownMenu.DropdownItem>
+                                ))}
+                                {group.enabledColumns.length === EXPERIMENT_VARIABLE_COLUMNS.length && (
+                                  <div className="px-3 py-2 text-caption text-neutral-400">
+                                    All variables added
+                                  </div>
+                                )}
+                              </DropdownMenu>
+                            </SubframeCore.DropdownMenu.Content>
+                          </SubframeCore.DropdownMenu.Portal>
+                        </SubframeCore.DropdownMenu.Root>
                       </div>
 
                       {/* Control and Variation Table */}
@@ -865,8 +982,62 @@ export function ExperimentFormDialog({
                           <TableHeader>
                             <TableRow className="hover:bg-transparent">
                               <TableHead className="h-10 w-28 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
-                              <TableHead className="h-10 w-1/2 border-y border-neutral-border bg-neutral-50 pl-12 text-caption-bold text-neutral-500">Delivery Fee</TableHead>
-                              <TableHead className="h-10 w-1/2 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">MOV</TableHead>
+                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 pl-12 text-caption-bold text-neutral-500">
+                                <div className="flex items-center gap-1.5">
+                                  <Banknote className="size-3.5" />
+                                  Delivery Fee
+                                </div>
+                              </TableHead>
+                              <TableHead className={cn(
+                                "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                group.enabledColumns.length === 0 && "rounded-r-md border-r"
+                              )}>
+                                <div className="flex items-center gap-1.5">
+                                  <ShoppingCart className="size-3.5" />
+                                  MOV
+                                </div>
+                              </TableHead>
+                              {group.enabledColumns.includes("fleet_delay") && (
+                                <TableHead className={cn(
+                                  "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                  group.enabledColumns[group.enabledColumns.length - 1] === "fleet_delay" && "rounded-r-md border-r"
+                                )}>
+                                  <div className="flex items-center gap-1.5">
+                                    <Clock className="size-3.5" />
+                                    Fleet Delay
+                                  </div>
+                                </TableHead>
+                              )}
+                              {group.enabledColumns.includes("basket_value") && (
+                                <TableHead className={cn(
+                                  "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                  group.enabledColumns[group.enabledColumns.length - 1] === "basket_value" && "rounded-r-md border-r"
+                                )}>
+                                  <div className="flex items-center gap-1.5">
+                                    <ShoppingBasket className="size-3.5" />
+                                    Basket Value
+                                  </div>
+                                </TableHead>
+                              )}
+                              {group.enabledColumns.includes("service_fee") && (
+                                <TableHead className={cn(
+                                  "h-10 border-y border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500",
+                                  group.enabledColumns[group.enabledColumns.length - 1] === "service_fee" && "rounded-r-md border-r"
+                                )}>
+                                  <div className="flex items-center gap-1.5">
+                                    <Receipt className="size-3.5" />
+                                    Service Fee
+                                  </div>
+                                </TableHead>
+                              )}
+                              {group.enabledColumns.includes("priority_fee") && (
+                                <TableHead className="h-10 rounded-r-md border-y border-r border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500">
+                                  <div className="flex items-center gap-1.5">
+                                    <Zap className="size-3.5" />
+                                    Priority Fee
+                                  </div>
+                                </TableHead>
+                              )}
                             </TableRow>
                           </TableHeader>
                           <TableBody>
@@ -891,6 +1062,50 @@ export function ExperimentFormDialog({
                                   variant="ghost"
                                 />
                               </TableCell>
+                              {group.enabledColumns.includes("fleet_delay") && (
+                                <TableCell className="py-2">
+                                  <SearchSelect
+                                    options={FLEET_DELAY_COMPONENTS}
+                                    value={group.controlFleetDelay}
+                                    onValueChange={(value) => updateControlSelection(group.id, 'fleetDelay', value)}
+                                    placeholder="Select component"
+                                    variant="ghost"
+                                  />
+                                </TableCell>
+                              )}
+                              {group.enabledColumns.includes("basket_value") && (
+                                <TableCell className="py-2">
+                                  <SearchSelect
+                                    options={BASKET_VALUE_COMPONENTS}
+                                    value={group.controlBasketValue}
+                                    onValueChange={(value) => updateControlSelection(group.id, 'basketValue', value)}
+                                    placeholder="Select component"
+                                    variant="ghost"
+                                  />
+                                </TableCell>
+                              )}
+                              {group.enabledColumns.includes("service_fee") && (
+                                <TableCell className="py-2">
+                                  <SearchSelect
+                                    options={SERVICE_FEE_COMPONENTS}
+                                    value={group.controlServiceFee}
+                                    onValueChange={(value) => updateControlSelection(group.id, 'serviceFee', value)}
+                                    placeholder="Select component"
+                                    variant="ghost"
+                                  />
+                                </TableCell>
+                              )}
+                              {group.enabledColumns.includes("priority_fee") && (
+                                <TableCell className="py-2">
+                                  <SearchSelect
+                                    options={PRIORITY_FEE_COMPONENTS}
+                                    value={group.controlPriorityFee}
+                                    onValueChange={(value) => updateControlSelection(group.id, 'priorityFee', value)}
+                                    placeholder="Select component"
+                                    variant="ghost"
+                                  />
+                                </TableCell>
+                              )}
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
@@ -920,6 +1135,62 @@ export function ExperimentFormDialog({
                                     variant="ghost"
                                   />
                                 </TableCell>
+                                {group.enabledColumns.includes("fleet_delay") && (
+                                  <TableCell className="py-2">
+                                    <SearchSelect
+                                      options={[
+                                        { value: "same_as_control", label: "Same as control" },
+                                        ...FLEET_DELAY_COMPONENTS,
+                                      ]}
+                                      value={group.variations[i]?.fleetDelay ?? null}
+                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'fleetDelay', value)}
+                                      placeholder="Same as control"
+                                      variant="ghost"
+                                    />
+                                  </TableCell>
+                                )}
+                                {group.enabledColumns.includes("basket_value") && (
+                                  <TableCell className="py-2">
+                                    <SearchSelect
+                                      options={[
+                                        { value: "same_as_control", label: "Same as control" },
+                                        ...BASKET_VALUE_COMPONENTS,
+                                      ]}
+                                      value={group.variations[i]?.basketValue ?? null}
+                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'basketValue', value)}
+                                      placeholder="Same as control"
+                                      variant="ghost"
+                                    />
+                                  </TableCell>
+                                )}
+                                {group.enabledColumns.includes("service_fee") && (
+                                  <TableCell className="py-2">
+                                    <SearchSelect
+                                      options={[
+                                        { value: "same_as_control", label: "Same as control" },
+                                        ...SERVICE_FEE_COMPONENTS,
+                                      ]}
+                                      value={group.variations[i]?.serviceFee ?? null}
+                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'serviceFee', value)}
+                                      placeholder="Same as control"
+                                      variant="ghost"
+                                    />
+                                  </TableCell>
+                                )}
+                                {group.enabledColumns.includes("priority_fee") && (
+                                  <TableCell className="py-2">
+                                    <SearchSelect
+                                      options={[
+                                        { value: "same_as_control", label: "Same as control" },
+                                        ...PRIORITY_FEE_COMPONENTS,
+                                      ]}
+                                      value={group.variations[i]?.priorityFee ?? null}
+                                      onValueChange={(value) => updateVariationSelection(group.id, i, 'priorityFee', value)}
+                                      placeholder="Same as control"
+                                      variant="ghost"
+                                    />
+                                  </TableCell>
+                                )}
                               </TableRow>
                             ))}
                           </TableBody>
