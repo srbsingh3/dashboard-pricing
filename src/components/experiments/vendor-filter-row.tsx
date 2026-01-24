@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Calendar as CalendarIcon, Power, Link, MapPin, Users, Truck, Crown, Tag, Building2, Layers, Map, Equal } from "lucide-react";
+import { Calendar as CalendarIcon, Power, Link, MapPin, Users, Truck, Crown, Tag, Building2, Layers, Map, Equal } from "lucide-react";
+import { FeatherTrash2 } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -336,14 +337,10 @@ export function VendorFilterRow({
       <button
         type="button"
         onClick={onDelete}
-        className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-md text-neutral-400",
-          "transition-colors hover:bg-error-50 hover:text-error-600",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-error-500/30"
-        )}
+        className="group/delete flex size-8 shrink-0 items-center justify-center rounded-md transition-all hover:bg-error-50"
         aria-label="Remove filter"
       >
-        <Trash2 className="size-4" />
+        <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
       </button>
     </div>
   );
