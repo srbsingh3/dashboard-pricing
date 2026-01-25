@@ -145,8 +145,7 @@ export function ParticipantSplitChart({
                       "transition-[filter] duration-200 ease-out",
                       "hover:brightness-[0.92]",
                       segment.color,
-                      index === 0 && "rounded-l-md",
-                      index === experimentSegments.length - 1 && "rounded-r-md"
+                      index === 0 && "rounded-l-md"
                     )}
                     style={{
                       width: `${(segment.percentage / totalExperimentWidth) * 100}%`,
