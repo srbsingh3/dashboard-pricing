@@ -124,19 +124,26 @@ export function MultiSelect({
             <div className="flex shrink-0 items-center gap-2">
               {/* Clear button in trigger - only show when there are selections */}
               {value.length > 0 && !disabled && (
-                <button
-                  type="button"
+                <div
+                  role="button"
+                  tabIndex={0}
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     clearAll();
                   }}
-                  onKeyDown={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      clearAll();
+                    }
+                  }}
                   className="flex size-5 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-600 focus:outline-none"
                   aria-label="Clear all selections"
                 >
                   <X className="size-3.5" strokeWidth={2} />
-                </button>
+                </div>
               )}
 
               {/* Separator */}
