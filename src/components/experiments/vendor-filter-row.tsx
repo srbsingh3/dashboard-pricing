@@ -150,14 +150,14 @@ function DatePickerField({ value, onChange }: DatePickerFieldProps) {
         <button
           type="button"
           className={cn(
-            "flex h-9 w-full items-center justify-between rounded-md border border-neutral-border bg-default-background px-3 text-body",
+            "flex h-9 w-full items-center justify-between rounded-md border border-neutral-border bg-default-background px-2 text-body",
             "transition-colors hover:border-neutral-300",
             "focus:border-brand-primary focus:outline-none",
             !value && "text-neutral-400"
           )}
         >
           <span>{value ? formatDateForDisplay(value) : "Select date"}</span>
-          <CalendarIcon className="size-4 text-neutral-400" />
+          <CalendarIcon className="size-4 text-subtext-color" />
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -272,9 +272,9 @@ export function VendorFilterRow({
           >
             <SelectTrigger
               size="sm"
-              className="h-9 w-full border-neutral-border bg-default-background text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color"
+              className="h-9 w-full border-neutral-border bg-default-background px-2 text-body shadow-none focus:border-brand-primary focus:ring-0 focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color"
             >
-              <SelectValue placeholder="Select values..." />
+              <SelectValue placeholder="Select values" />
             </SelectTrigger>
             <SelectContent
               position="popper"
