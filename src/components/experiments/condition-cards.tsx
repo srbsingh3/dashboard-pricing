@@ -489,7 +489,7 @@ export function ConditionsGrid({
   return (
     <div
       className={cn(
-        "grid rounded-md border border-solid border-neutral-border bg-default-background shadow-sm",
+        "grid rounded-md bg-default-background shadow-sm ring-1 ring-neutral-border",
         widthClass,
         gridColsClass
       )}
