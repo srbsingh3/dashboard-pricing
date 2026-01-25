@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X, Split, RefreshCw } from "lucide-react";
+import { X, Split, RefreshCw, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Button as SubframeButton } from "@/subframe/components/Button";
 import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
@@ -1626,17 +1626,54 @@ export function ExperimentFormDialog({
       <div className="w-full bg-white">
         {/* Divider line like Figma */}
         <div className="h-px bg-neutral-200" />
-        <div className="flex items-center justify-between px-6 py-3">
-          <SubframeButton
-            variant="neutral-secondary"
-            onClick={handleClose}
-          >
-            Cancel
-          </SubframeButton>
+        <div className="px-6 py-3">
+          {/* Align with the cards container */}
+          <div className="mx-auto flex items-center justify-end gap-3" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
+            <SubframeButton
+              variant="neutral-secondary"
+              onClick={handleClose}
+            >
+              Cancel
+            </SubframeButton>
 
-          <SubframeButton variant="brand-primary">
-            Save Experiment
-          </SubframeButton>
+            {/* Split Button: Save Experiment with dropdown for Save & Activate */}
+            <SubframeCore.DropdownMenu.Root>
+              <div className="flex h-8 items-center rounded-md bg-brand-600">
+                <button
+                  type="button"
+                  className="flex h-full cursor-pointer items-center justify-center rounded-l-md border-none bg-transparent px-3 hover:bg-brand-500 active:bg-brand-600"
+                >
+                  <span className="text-body-bold whitespace-nowrap text-white">
+                    Save Experiment
+                  </span>
+                </button>
+                {/* Vertical divider */}
+                <div className="my-2 h-[calc(100%-16px)] w-px bg-brand-400" />
+                <SubframeCore.DropdownMenu.Trigger asChild>
+                  <button
+                    type="button"
+                    className="flex h-full cursor-pointer items-center justify-center rounded-r-md border-none bg-transparent px-2 hover:bg-brand-500 active:bg-brand-600"
+                  >
+                    <ChevronDown className="size-4 text-white" />
+                  </button>
+                </SubframeCore.DropdownMenu.Trigger>
+              </div>
+              <SubframeCore.DropdownMenu.Portal>
+                <SubframeCore.DropdownMenu.Content
+                  side="bottom"
+                  align="end"
+                  sideOffset={4}
+                  asChild
+                >
+                  <DropdownMenu>
+                    <DropdownMenu.DropdownItem icon={null}>
+                      Save and Activate Experiment
+                    </DropdownMenu.DropdownItem>
+                  </DropdownMenu>
+                </SubframeCore.DropdownMenu.Content>
+              </SubframeCore.DropdownMenu.Portal>
+            </SubframeCore.DropdownMenu.Root>
+          </div>
         </div>
       </div>
     </FullscreenDialog>
