@@ -17,7 +17,7 @@ import {
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { SearchSelect } from "@/components/ui/search-select";
-import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
+import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import {
@@ -634,20 +634,13 @@ export function ExperimentFormDialog({
               {/* Objective */}
               <div className="flex w-full flex-col gap-2">
                 <span className="text-caption-bold text-neutral-700">Objective</span>
-                <Select
-                  value={experimentObjective}
-                  onValueChange={setExperimentObjective}
-                >
-                  <SelectTrigger size="sm" className="w-full border-neutral-border bg-default-background text-body shadow-none focus-visible:border-brand-primary focus-visible:ring-0 data-placeholder:text-neutral-400 [&>svg]:text-subtext-color">
-                    <SelectValue placeholder="Select objective" />
-                  </SelectTrigger>
-                  <SelectContent position="popper" sideOffset={4} className="border-neutral-border bg-white shadow-lg">
-                    <SelectItem value="increase_conversion" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Increase Conversion</SelectItem>
-                    <SelectItem value="reduce_costs" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Reduce Costs</SelectItem>
-                    <SelectItem value="improve_experience" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Improve Experience</SelectItem>
-                    <SelectItem value="optimize_pricing" className="h-8 cursor-pointer text-body hover:bg-neutral-100 focus:bg-brand-50 data-[state=checked]:text-brand-600">Optimize Pricing</SelectItem>
-                  </SelectContent>
-                </Select>
+                <SearchSelect
+                  options={OBJECTIVE_OPTIONS}
+                  value={experimentObjective || null}
+                  onValueChange={(value) => setExperimentObjective(value || "")}
+                  placeholder="Select objective"
+                  showSearch={false}
+                />
               </div>
 
               {/* Experiment Type */}

@@ -167,6 +167,14 @@ export const VARIATION_OPTIONS = [
   { value: "10", label: "10" },
 ] as const;
 
+// Experiment objectives
+export const OBJECTIVE_OPTIONS = [
+  { value: "increase_conversion", label: "Increase Conversion" },
+  { value: "reduce_costs", label: "Reduce Costs" },
+  { value: "improve_experience", label: "Improve Experience" },
+  { value: "optimize_pricing", label: "Optimize Pricing" },
+] as const;
+
 // Parent verticals for experiments
 export const PARENT_VERTICALS = [
   { value: "shops", label: "Shops" },

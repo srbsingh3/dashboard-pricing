@@ -24,6 +24,8 @@ interface SearchSelectProps {
   className?: string;
   /** Style variant - 'default' has border, 'ghost' is borderless for table cells */
   variant?: "default" | "ghost";
+  /** Whether to show the search input - defaults to true */
+  showSearch?: boolean;
 }
 
 export function SearchSelect({
@@ -34,6 +36,7 @@ export function SearchSelect({
   disabled = false,
   className,
   variant = "default",
+  showSearch = true,
 }: SearchSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -106,26 +109,28 @@ export function SearchSelect({
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-64 overflow-hidden rounded-md border border-solid border-neutral-border bg-white p-0 shadow-lg"
+        className="w-(--radix-popover-trigger-width) overflow-hidden rounded-md border border-solid border-neutral-border bg-white p-0 shadow-lg"
         align="start"
         sideOffset={4}
       >
         {/* Search input */}
-        <div className="border-b border-neutral-border p-2">
-          <div className="flex h-8 items-center gap-2 rounded-md border border-neutral-border bg-default-background px-2">
-            <Search className="size-4 text-neutral-400" />
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 bg-transparent text-body text-default-font placeholder:text-neutral-400 focus:outline-none"
-            />
+        {showSearch && (
+          <div className="p-2">
+            <div className="flex h-8 items-center gap-2 rounded-md border border-neutral-border bg-default-background px-2">
+              <Search className="size-4 text-neutral-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent text-body text-default-font placeholder:text-neutral-400 focus:outline-none"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Options list */}
-        <div className="max-h-56 overflow-y-auto py-1 [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-track]:bg-transparent">
+        <div className={cn("max-h-56 overflow-y-auto [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-track]:bg-transparent", showSearch ? "pb-1" : "py-1")}>
           {filteredOptions.length === 0 ? (
             <div className="py-6 text-center text-caption text-neutral-400">
               No results found
