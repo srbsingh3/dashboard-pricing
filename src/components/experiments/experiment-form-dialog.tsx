@@ -970,24 +970,28 @@ export function ExperimentFormDialog({
                       onOpenAutoFocus={(e) => e.preventDefault()}
                       onCloseAutoFocus={(e) => e.preventDefault()}
                     >
-                      <div className="flex flex-col gap-3">
-                        <ChipMultiSelect
-                          label="Import Target Groups"
-                          options={ASSIGNMENT_NAMES}
-                          value={selectedTargetGroups}
-                          onValueChange={setSelectedTargetGroups}
-                          placeholder="Select assignments"
-                          showCountOnly
-                          preventAutoFocus
-                        />
-                        <SubframeButton
-                          variant="brand-primary"
-                          disabled={selectedTargetGroups.length === 0}
-                          className="w-full"
-                          onClick={handleImportTargetGroups}
-                        >
-                          Import
-                        </SubframeButton>
+                      <div className="flex flex-col gap-2">
+                        <span className="text-caption-bold text-neutral-700">Import Target Groups</span>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1">
+                            <ChipMultiSelect
+                              options={ASSIGNMENT_NAMES}
+                              value={selectedTargetGroups}
+                              onValueChange={setSelectedTargetGroups}
+                              placeholder="Select assignments"
+                              showCountOnly
+                              preventAutoFocus
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            disabled={selectedTargetGroups.length === 0}
+                            onClick={handleImportTargetGroups}
+                            className="flex size-9 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
+                          >
+                            <Import className="size-4" />
+                          </button>
+                        </div>
                       </div>
                     </PopoverContent>
                   </Popover>
