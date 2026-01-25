@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { X, Check, Search } from "lucide-react";
+import { X, Search } from "lucide-react";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/subframe/components/Badge";
@@ -14,6 +14,8 @@ import {
 export interface ChipMultiSelectOption {
   value: string;
   label: string;
+  /** Optional ID to display on the right side of dropdown items */
+  id?: string;
 }
 
 interface ChipMultiSelectProps {
@@ -52,8 +54,10 @@ export function ChipMultiSelect({
 
   const filteredOptions = React.useMemo(() => {
     if (!searchQuery) return options;
+    const query = searchQuery.toLowerCase();
     return options.filter((opt) =>
-      opt.label.toLowerCase().includes(searchQuery.toLowerCase())
+      opt.label.toLowerCase().includes(query) ||
+      (opt.id && opt.id.toLowerCase().includes(query))
     );
   }, [options, searchQuery]);
 
@@ -311,9 +315,6 @@ export function ChipMultiSelect({
                   )}
                 >
                   <span className="flex-1 text-left text-neutral-500">Select All</span>
-                  {isAllSelected && (
-                    <Check className="size-4 shrink-0 text-brand-600" />
-                  )}
                 </button>
               )}
 
@@ -334,8 +335,11 @@ export function ChipMultiSelect({
                     <span className="flex-1 truncate text-left">
                       {option.label}
                     </span>
-                    {isSelected && (
-                      <Check className="size-4 shrink-0 text-brand-600" />
+                    {/* ID on right - shows when option has an ID */}
+                    {option.id && (
+                      <span className="shrink-0 text-caption text-neutral-400">
+                        {option.id}
+                      </span>
                     )}
                   </button>
                 );

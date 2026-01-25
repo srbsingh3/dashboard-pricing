@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, Search, Eye } from "lucide-react";
+import { Search, Eye } from "lucide-react";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import {
@@ -13,6 +13,8 @@ import {
 export interface SearchSelectOption {
   value: string;
   label: string;
+  /** Optional ID to display on the right side of dropdown items */
+  id?: string;
 }
 
 interface SearchSelectProps {
@@ -51,8 +53,10 @@ export function SearchSelect({
 
   const filteredOptions = React.useMemo(() => {
     if (!searchQuery) return options;
+    const query = searchQuery.toLowerCase();
     return options.filter((opt) =>
-      opt.label.toLowerCase().includes(searchQuery.toLowerCase())
+      opt.label.toLowerCase().includes(query) ||
+      (opt.id && opt.id.toLowerCase().includes(query))
     );
   }, [options, searchQuery]);
 
@@ -183,8 +187,11 @@ export function SearchSelect({
                   <span className="flex-1 truncate text-left">
                     {option.label}
                   </span>
-                  {isSelected && (
-                    <Check className="size-4 shrink-0 text-brand-600" />
+                  {/* ID on right - shows when option has an ID */}
+                  {option.id && (
+                    <span className="shrink-0 text-caption text-neutral-400">
+                      {option.id}
+                    </span>
                   )}
                 </button>
               );

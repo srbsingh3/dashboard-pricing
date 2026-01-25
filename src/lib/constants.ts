@@ -176,31 +176,31 @@ export const VERTICAL_TYPES = [
 
 // Zones for experiments (Berlin neighborhoods)
 export const ZONES = [
-  { value: "mitte", label: "Mitte" },
-  { value: "kreuzberg", label: "Kreuzberg" },
-  { value: "friedrichshain", label: "Friedrichshain" },
-  { value: "prenzlauer_berg", label: "Prenzlauer Berg" },
-  { value: "neukoelln", label: "Neukölln" },
-  { value: "charlottenburg", label: "Charlottenburg" },
-  { value: "schoeneberg", label: "Schöneberg" },
-  { value: "wilmersdorf", label: "Wilmersdorf" },
-  { value: "tempelhof", label: "Tempelhof" },
-  { value: "wedding", label: "Wedding" },
-  { value: "moabit", label: "Moabit" },
-  { value: "tiergarten", label: "Tiergarten" },
-  { value: "steglitz", label: "Steglitz" },
-  { value: "zehlendorf", label: "Zehlendorf" },
-  { value: "spandau", label: "Spandau" },
-  { value: "reinickendorf", label: "Reinickendorf" },
-  { value: "pankow", label: "Pankow" },
-  { value: "lichtenberg", label: "Lichtenberg" },
-  { value: "treptow", label: "Treptow" },
-  { value: "koepenick", label: "Köpenick" },
-  { value: "marzahn", label: "Marzahn" },
-  { value: "hellersdorf", label: "Hellersdorf" },
-  { value: "weissensee", label: "Weißensee" },
-  { value: "hohenschoenhausen", label: "Hohenschönhausen" },
-  { value: "grunewald", label: "Grunewald" },
+  { value: "mitte", label: "Mitte", id: "967" },
+  { value: "kreuzberg", label: "Kreuzberg", id: "934" },
+  { value: "friedrichshain", label: "Friedrichshain", id: "891" },
+  { value: "prenzlauer_berg", label: "Prenzlauer Berg", id: "847" },
+  { value: "neukoelln", label: "Neukölln", id: "812" },
+  { value: "charlottenburg", label: "Charlottenburg", id: "768" },
+  { value: "schoeneberg", label: "Schöneberg", id: "725" },
+  { value: "wilmersdorf", label: "Wilmersdorf", id: "683" },
+  { value: "tempelhof", label: "Tempelhof", id: "641" },
+  { value: "wedding", label: "Wedding", id: "597" },
+  { value: "moabit", label: "Moabit", id: "554" },
+  { value: "tiergarten", label: "Tiergarten", id: "512" },
+  { value: "steglitz", label: "Steglitz", id: "468" },
+  { value: "zehlendorf", label: "Zehlendorf", id: "423" },
+  { value: "spandau", label: "Spandau", id: "381" },
+  { value: "reinickendorf", label: "Reinickendorf", id: "339" },
+  { value: "pankow", label: "Pankow", id: "294" },
+  { value: "lichtenberg", label: "Lichtenberg", id: "251" },
+  { value: "treptow", label: "Treptow", id: "208" },
+  { value: "koepenick", label: "Köpenick", id: "167" },
+  { value: "marzahn", label: "Marzahn", id: "124" },
+  { value: "hellersdorf", label: "Hellersdorf", id: "89" },
+  { value: "weissensee", label: "Weißensee", id: "56" },
+  { value: "hohenschoenhausen", label: "Hohenschönhausen", id: "34" },
+  { value: "grunewald", label: "Grunewald", id: "12" },
 ] as const;
 
 // Number of variations for experiments (1-10)
@@ -449,21 +449,21 @@ export const ASSIGNMENT_NAMES = [
 
 // Delivery fee component options for experiments
 export const DELIVERY_FEE_COMPONENTS = [
-  { value: "df_standard", label: "Standard Delivery Fee" },
-  { value: "df_express", label: "Express Delivery Fee" },
-  { value: "df_scheduled", label: "Scheduled Delivery Fee" },
-  { value: "df_peak", label: "Peak Hour Fee" },
-  { value: "df_distance_based", label: "Distance-Based Fee" },
-  { value: "df_flat_rate", label: "Flat Rate Fee" },
+  { value: "df_standard", label: "Standard Delivery Fee", id: "847" },
+  { value: "df_express", label: "Express Delivery Fee", id: "731" },
+  { value: "df_scheduled", label: "Scheduled Delivery Fee", id: "592" },
+  { value: "df_peak", label: "Peak Hour Fee", id: "486" },
+  { value: "df_distance_based", label: "Distance-Based Fee", id: "253" },
+  { value: "df_flat_rate", label: "Flat Rate Fee", id: "118" },
 ] as const;
 
 // MOV (Minimum Order Value) component options for experiments
 export const MOV_COMPONENTS = [
-  { value: "mov_standard", label: "Standard MOV" },
-  { value: "mov_express", label: "Express MOV" },
-  { value: "mov_free_delivery", label: "Free Delivery MOV" },
-  { value: "mov_premium", label: "Premium MOV" },
-  { value: "mov_promotional", label: "Promotional MOV" },
+  { value: "mov_standard", label: "Standard MOV", id: "924" },
+  { value: "mov_express", label: "Express MOV", id: "756" },
+  { value: "mov_free_delivery", label: "Free Delivery MOV", id: "612" },
+  { value: "mov_premium", label: "Premium MOV", id: "483" },
+  { value: "mov_promotional", label: "Promotional MOV", id: "291" },
 ] as const;
 
 // Additional experiment variable columns (for Control and Variation table)
@@ -476,34 +476,34 @@ export const EXPERIMENT_VARIABLE_COLUMNS = [
 
 // Fleet Delay component options
 export const FLEET_DELAY_COMPONENTS = [
-  { value: "fd_standard", label: "Standard Delay" },
-  { value: "fd_express", label: "Express Delay" },
-  { value: "fd_peak", label: "Peak Hour Delay" },
-  { value: "fd_scheduled", label: "Scheduled Delay" },
+  { value: "fd_standard", label: "Standard Delay", id: "738" },
+  { value: "fd_express", label: "Express Delay", id: "594" },
+  { value: "fd_peak", label: "Peak Hour Delay", id: "427" },
+  { value: "fd_scheduled", label: "Scheduled Delay", id: "263" },
 ] as const;
 
 // Basket Value component options
 export const BASKET_VALUE_COMPONENTS = [
-  { value: "bv_minimum", label: "Minimum Basket" },
-  { value: "bv_standard", label: "Standard Basket" },
-  { value: "bv_premium", label: "Premium Basket" },
-  { value: "bv_promotional", label: "Promotional Basket" },
+  { value: "bv_minimum", label: "Minimum Basket", id: "856" },
+  { value: "bv_standard", label: "Standard Basket", id: "642" },
+  { value: "bv_premium", label: "Premium Basket", id: "471" },
+  { value: "bv_promotional", label: "Promotional Basket", id: "318" },
 ] as const;
 
 // Service Fee component options
 export const SERVICE_FEE_COMPONENTS = [
-  { value: "sf_standard", label: "Standard Service Fee" },
-  { value: "sf_premium", label: "Premium Service Fee" },
-  { value: "sf_promotional", label: "Promotional Service Fee" },
-  { value: "sf_waived", label: "Waived Service Fee" },
+  { value: "sf_standard", label: "Standard Service Fee", id: "793" },
+  { value: "sf_premium", label: "Premium Service Fee", id: "651" },
+  { value: "sf_promotional", label: "Promotional Service Fee", id: "429" },
+  { value: "sf_waived", label: "Waived Service Fee", id: "287" },
 ] as const;
 
 // Priority Fee component options
 export const PRIORITY_FEE_COMPONENTS = [
-  { value: "pf_standard", label: "Standard Priority" },
-  { value: "pf_express", label: "Express Priority" },
-  { value: "pf_vip", label: "VIP Priority" },
-  { value: "pf_none", label: "No Priority" },
+  { value: "pf_standard", label: "Standard Priority", id: "682" },
+  { value: "pf_express", label: "Express Priority", id: "514" },
+  { value: "pf_vip", label: "VIP Priority", id: "376" },
+  { value: "pf_none", label: "No Priority", id: "198" },
 ] as const;
 
 // Weekdays for time condition
