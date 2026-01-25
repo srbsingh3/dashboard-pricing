@@ -175,7 +175,7 @@ export function TimeConditionCard({
                   type="button"
                   onClick={() => toggleDay(day.value)}
                   className={cn(
-                    "flex size-8 items-center justify-center rounded-md text-caption font-medium transition-all duration-200",
+                    "flex h-8 flex-1 items-center justify-center rounded-md text-caption font-medium transition-all duration-200",
                     isSelected
                       ? "bg-default-background text-neutral-600 shadow-sm"
                       : "text-neutral-400 hover:text-neutral-500"
