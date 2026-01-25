@@ -122,7 +122,7 @@ function ConditionCardHeader({
       <button
         type="button"
         onClick={onDelete}
-        className="group/delete flex size-8 items-center justify-center rounded-md transition-all hover:bg-error-50"
+        className="group/delete flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/card:opacity-100 hover:bg-error-50"
         aria-label={`Remove ${title}`}
       >
         <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
@@ -154,7 +154,7 @@ export function TimeConditionCard({
   };
 
   return (
-    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+    <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<Clock className="size-4 text-brand-600" />}
         title="Time Recurrence"
@@ -243,7 +243,7 @@ export function NewCustomerConditionCard({
   onDelete,
 }: NewCustomerConditionCardProps) {
   return (
-    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+    <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<UserPlus className="size-4 text-success-600" />}
         title="New Customer Condition"
@@ -369,7 +369,7 @@ export function CustomerLocationCard({
   };
 
   return (
-    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+    <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<MapPinned className="size-4 text-warning-600" />}
         title="Customer Location"
