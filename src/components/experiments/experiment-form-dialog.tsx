@@ -223,7 +223,7 @@ interface ExperimentFormDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-// Sortable Priority Card wrapper component
+// Sortable Priority Card wrapper component with enter/exit animations
 interface SortablePriorityCardProps {
   id: number;
   children: React.ReactNode;
@@ -240,21 +240,40 @@ function SortablePriorityCard({ id, children, disabled }: SortablePriorityCardPr
     isDragging,
   } = useSortable({ id, disabled });
 
+  // Combine dnd-kit transforms with base styles
   const style = {
     // Use Translate instead of Transform to prevent scaling/crushing when items have different heights
     transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 10 : undefined,
-    opacity: isDragging ? 0.9 : undefined,
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes}>
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      layout
+      layoutId={`priority-card-${id}`}
+      initial={{ opacity: 0, scale: 0.96, y: -8 }}
+      animate={{
+        opacity: isDragging ? 0.9 : 1,
+        scale: 1,
+        y: 0,
+      }}
+      exit={{ opacity: 0, scale: 0.96, y: -8 }}
+      transition={{
+        layout: { duration: 0.25, ease: [0.25, 1, 0.5, 1] },
+        opacity: { duration: 0.2 },
+        scale: { duration: 0.2 },
+        y: { duration: 0.2 },
+      }}
+    >
       {/* Clone children and pass drag handle props */}
       {typeof children === 'function'
         ? (children as (props: { listeners: typeof listeners; isDragging: boolean }) => React.ReactNode)({ listeners, isDragging })
         : children}
-    </div>
+    </motion.div>
   );
 }
 
@@ -1028,6 +1047,7 @@ export function ExperimentFormDialog({
                   items={priorityGroups.map((g) => g.id)}
                   strategy={verticalListSortingStrategy}
                 >
+                  <AnimatePresence initial={false} mode="popLayout">
                   {priorityGroups.map((group, index) => (
                     <SortablePriorityCard
                       key={group.id}
@@ -1613,6 +1633,7 @@ export function ExperimentFormDialog({
                       )}
                     </SortablePriorityCard>
                   ))}
+                  </AnimatePresence>
                 </SortableContext>
               </DndContext>
               </div>
