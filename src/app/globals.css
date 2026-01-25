@@ -656,29 +656,3 @@ button:focus-visible,
   border-color: var(--color-neutral-300);
 }
 
-/* ============================================
-   ACCORDION EXPAND/COLLAPSE ANIMATION
-   ============================================ */
-
-/* Grid-based height animation for smooth expand/collapse */
-@utility accordion-content {
-  display: grid;
-  grid-template-rows: 0fr;
-  opacity: 0;
-  transition:
-    grid-template-rows 200ms cubic-bezier(0.25, 1, 0.5, 1),
-    opacity 150ms cubic-bezier(0.25, 1, 0.5, 1);
-
-  &[data-state="open"] {
-    grid-template-rows: 1fr;
-    opacity: 1;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
-}
-
-@utility accordion-content-inner {
-  overflow: hidden;
-}

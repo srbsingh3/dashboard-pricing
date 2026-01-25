@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X, Split, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -1090,11 +1091,15 @@ export function ExperimentFormDialog({
                   {/* Divider */}
                   <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
                   {/* List of sections - collapsible with animation */}
-                  <div
-                    className="accordion-content w-full"
-                    data-state={group.isExpanded ? "open" : "closed"}
-                  >
-                    <div className="accordion-content-inner">
+                  <AnimatePresence initial={false}>
+                  {group.isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
+                      className="w-full overflow-hidden"
+                    >
                     <div className="flex w-full flex-col items-start p-2">
                       {/* Target Vendors */}
                       <div className="flex w-full items-center gap-4 p-4">
@@ -1601,8 +1606,9 @@ export function ExperimentFormDialog({
                         </Table>
                       </div>
                     </div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  )}
+                  </AnimatePresence>
                         </div>
                       )}
                     </SortablePriorityCard>
