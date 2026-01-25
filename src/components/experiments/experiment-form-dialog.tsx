@@ -773,6 +773,15 @@ export function ExperimentFormDialog({
                 showCountOnly
               />
 
+              {/* Import Button */}
+              <SubframeButton
+                variant="neutral-secondary"
+                disabled={selectedTargetGroups.length === 0}
+                className="w-full"
+              >
+                Import
+              </SubframeButton>
+
             </div>
           </div>
 
