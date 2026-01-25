@@ -78,6 +78,17 @@ export const SLIDE_IN_RIGHT = {
   exit: { opacity: 0, x: 20 },
 } as const;
 
+export const SLIDE_DOWN = {
+  initial: { opacity: 0, y: -8, scaleY: 0.95 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scaleY: 1,
+    transition: { duration: 0.15, ease: [0.25, 0.1, 0.25, 1] }
+  },
+  exit: { opacity: 0, y: -8, scaleY: 0.95 },
+} as const;
+
 export const STAGGER_CHILDREN = {
   animate: {
     transition: {

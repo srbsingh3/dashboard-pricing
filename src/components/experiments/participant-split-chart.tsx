@@ -1,7 +1,9 @@
 "use client";
 
 import { useMemo, useState, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { SLIDE_DOWN } from "@/lib/constants";
 
 interface ParticipantSplitChartProps {
   participantShare: number;
@@ -85,97 +87,95 @@ export function ParticipantSplitChart({
     setHoveredSegmentIndex(index);
   };
 
-  if (participantShare <= 0) {
-    return (
-      <div className="flex h-8 w-full items-center justify-center rounded-md bg-neutral-100">
-        <span className="text-caption text-neutral-400">
-          Enter participant share
-        </span>
-      </div>
-    );
-  }
-
   const totalExperimentWidth = experimentSegments.reduce(
     (acc, seg) => acc + seg.percentage,
     0
   );
 
+  if (participantShare <= 0) {
+    return null;
+  }
+
   return (
     <div className="relative w-full overflow-visible rounded-md">
-      <div className="flex h-8 w-full overflow-hidden rounded-md">
-        {/* In-experiment section */}
-        {experimentSegments.length > 0 && (
-          <div
-            ref={experimentRef}
-            className="relative flex h-full cursor-default"
-            style={{ width: `${totalExperimentWidth}%` }}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => {
-              setIsHovering(false);
-              setHoveredSegmentIndex(null);
-            }}
+      <AnimatePresence mode="wait">
+        <motion.div
+            key="chart"
+            {...SLIDE_DOWN}
+            className="flex h-8 w-full overflow-hidden rounded-md"
+            style={{ transformOrigin: "top" }}
           >
-            {experimentSegments.map((segment, index) => (
+            {/* In-experiment section */}
+            {experimentSegments.length > 0 && (
               <div
-                key={`segment-${index}`}
-                className={cn(
-                  "relative flex h-full items-center justify-center",
-                  "transition-[filter] duration-200 ease-out",
-                  "hover:brightness-[0.92]",
-                  segment.color,
-                  index === 0 && "rounded-l-md",
-                  index === experimentSegments.length - 1 &&
-                    excludedPercentage <= 0 &&
-                    "rounded-r-md"
-                )}
-                style={{
-                  width: `${(segment.percentage / totalExperimentWidth) * 100}%`,
+                ref={experimentRef}
+                className="relative flex h-full cursor-default"
+                style={{ width: `${totalExperimentWidth}%` }}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => {
+                  setIsHovering(false);
+                  setHoveredSegmentIndex(null);
                 }}
-                onMouseEnter={() => handleSegmentHover(index)}
               >
-                {segment.percentage >= 12 && (
-                  <span
+                {experimentSegments.map((segment, index) => (
+                  <div
+                    key={`segment-${index}`}
                     className={cn(
-                      "text-caption",
-                      segment.textColor
+                      "relative flex h-full items-center justify-center",
+                      "transition-[filter] duration-200 ease-out",
+                      "hover:brightness-[0.92]",
+                      segment.color,
+                      index === 0 && "rounded-l-md",
+                      index === experimentSegments.length - 1 &&
+                        excludedPercentage <= 0 &&
+                        "rounded-r-md"
                     )}
+                    style={{
+                      width: `${(segment.percentage / totalExperimentWidth) * 100}%`,
+                    }}
+                    onMouseEnter={() => handleSegmentHover(index)}
+                  >
+                    {segment.percentage >= 12 && (
+                      <span
+                        className={cn("text-caption", segment.textColor)}
+                        style={{ fontSize: "var(--text-caption)" }}
+                      >
+                        {formatPercent(segment.percentage)}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Not in experiment section */}
+            {excludedPercentage > 0 && (
+              <div
+                className={cn(
+                  "relative flex h-full cursor-default items-center justify-center",
+                  "transition-[filter] duration-200 ease-out",
+                  "hover:brightness-[0.95]",
+                  "bg-neutral-100",
+                  experimentSegments.length === 0 && "rounded-l-md",
+                  "rounded-r-md"
+                )}
+                style={{ width: `${excludedPercentage}%` }}
+              >
+                {excludedPercentage >= 12 && (
+                  <span
+                    className="text-caption text-neutral-500"
                     style={{ fontSize: "var(--text-caption)" }}
                   >
-                    {formatPercent(segment.percentage)}
+                    {formatPercent(excludedPercentage)}
                   </span>
                 )}
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* Not in experiment section */}
-        {excludedPercentage > 0 && (
-          <div
-            className={cn(
-              "relative flex h-full cursor-default items-center justify-center",
-              "transition-[filter] duration-200 ease-out",
-              "hover:brightness-[0.95]",
-              "bg-neutral-100",
-              experimentSegments.length === 0 && "rounded-l-md",
-              "rounded-r-md"
             )}
-            style={{ width: `${excludedPercentage}%` }}
-          >
-            {excludedPercentage >= 12 && (
-              <span
-                className="text-caption text-neutral-500"
-                style={{ fontSize: "var(--text-caption)" }}
-              >
-                {formatPercent(excludedPercentage)}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+        </motion.div>
+      </AnimatePresence>
 
       {/* Custom tooltip above the bar */}
-      {experimentSegments.length > 0 && (
+      {participantShare > 0 && experimentSegments.length > 0 && (
         <div
           className={cn(
             "pointer-events-none absolute bottom-full left-0 z-50 mb-1",
