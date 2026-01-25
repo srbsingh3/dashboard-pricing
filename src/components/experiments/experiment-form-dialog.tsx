@@ -17,6 +17,16 @@ import {
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { ChipMultiSelect } from "@/components/ui/chip-multi-select";
 import { SearchSelect } from "@/components/ui/search-select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ZONES, PARENT_VERTICALS, ASSIGNMENT_NAMES, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
@@ -48,6 +58,7 @@ import {
   Equal,
   UserPlus,
   MapPinned,
+  Import,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
@@ -176,6 +187,7 @@ export function ExperimentFormDialog({
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
   const [allExpanded, setAllExpanded] = useState(true);
+  const [importPopoverOpen, setImportPopoverOpen] = useState(false);
   const [priorityGroups, setPriorityGroups] = useState<{
     id: number;
     isExpanded: boolean;
@@ -538,6 +550,7 @@ export function ExperimentFormDialog({
       setNumberOfVariations("1");
       setParticipantShare("");
       setAllExpanded(true);
+      setImportPopoverOpen(false);
       setPriorityGroups([{
         id: 1,
         isExpanded: true,
@@ -759,29 +772,6 @@ export function ExperimentFormDialog({
                 numberOfVariations={parseInt(numberOfVariations, 10)}
               />
 
-              {/* Divider */}
-              <div className="my-6 w-full border-t border-neutral-border" />
-
-              {/* Import Target Groups Multi-Select */}
-              <ChipMultiSelect
-                label="Import Target Groups"
-                options={ASSIGNMENT_NAMES}
-                value={selectedTargetGroups}
-                onValueChange={setSelectedTargetGroups}
-                placeholder="Select assignments to import"
-                optional
-                showCountOnly
-              />
-
-              {/* Import Button */}
-              <SubframeButton
-                variant="neutral-secondary"
-                disabled={selectedTargetGroups.length === 0}
-                className="w-full"
-              >
-                Import
-              </SubframeButton>
-
             </div>
           </div>
 
@@ -817,6 +807,46 @@ export function ExperimentFormDialog({
                       )}
                     />
                   </button>
+                  {/* Import Target Groups Popover */}
+                  <Popover open={importPopoverOpen} onOpenChange={setImportPopoverOpen}>
+                    <Tooltip open={importPopoverOpen ? false : undefined}>
+                      <TooltipTrigger asChild>
+                        <PopoverTrigger asChild>
+                          <IconButton
+                            size="medium"
+                            icon={<Import className="size-4 text-subtext-color" />}
+                          />
+                        </PopoverTrigger>
+                      </TooltipTrigger>
+                      <TooltipContent side="top" sideOffset={4}>
+                        Import Target Groups
+                      </TooltipContent>
+                    </Tooltip>
+                    <PopoverContent
+                      align="end"
+                      sideOffset={4}
+                      className="w-80 rounded-md border border-neutral-border bg-white p-4 shadow-lg"
+                    >
+                      <div className="flex flex-col gap-3">
+                        <ChipMultiSelect
+                          label="Import Target Groups"
+                          options={ASSIGNMENT_NAMES}
+                          value={selectedTargetGroups}
+                          onValueChange={setSelectedTargetGroups}
+                          placeholder="Select assignments"
+                          showCountOnly
+                        />
+                        <SubframeButton
+                          variant="brand-primary"
+                          disabled={selectedTargetGroups.length === 0}
+                          className="w-full"
+                          onClick={() => setImportPopoverOpen(false)}
+                        >
+                          Import
+                        </SubframeButton>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
                   <IconButton
                     size="medium"
                     icon={<Plus className="size-4 text-subtext-color" />}
