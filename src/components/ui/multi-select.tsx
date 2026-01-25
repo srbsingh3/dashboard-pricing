@@ -1,23 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { X, Check, Minus } from "lucide-react";
+import { X, Check, Search } from "lucide-react";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/subframe/components/Badge";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 
 export interface MultiSelectOption {
   value: string;
@@ -50,6 +41,21 @@ export function MultiSelect({
   className,
 }: MultiSelectProps) {
   const [open, setOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const filteredOptions = React.useMemo(() => {
+    if (!searchQuery) return options;
+    return options.filter((opt) =>
+      opt.label.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [options, searchQuery]);
+
+  // Reset search when closing
+  React.useEffect(() => {
+    if (!open) {
+      setSearchQuery("");
+    }
+  }, [open]);
 
   const toggleOption = (optionValue: string) => {
     onValueChange(
@@ -76,7 +82,6 @@ export function MultiSelect({
   };
 
   const isAllSelected = options.length > 0 && value.length === options.length;
-  const isSomeSelected = value.length > 0 && value.length < options.length;
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
@@ -96,7 +101,7 @@ export function MultiSelect({
             aria-expanded={open}
             disabled={disabled}
             className={cn(
-              "group flex min-h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 py-1 text-body",
+              "group flex h-8 w-full items-center gap-2 rounded-md border border-solid border-neutral-border bg-default-background px-3 text-body",
               "hover:border-neutral-300",
               "focus:border-brand-primary focus:outline-none",
               "data-[state=open]:border-brand-primary",
@@ -104,14 +109,14 @@ export function MultiSelect({
               value.length === 0 && "text-neutral-400"
             )}
           >
-            {/* Selected count chip or placeholder */}
+            {/* Selected count or placeholder */}
             <div className="flex min-w-0 flex-1 items-center">
               {value.length === 0 ? (
                 <span className="truncate text-neutral-400">{placeholder}</span>
               ) : (
-                <Badge variant="brand" className="animate-in duration-150 fade-in-0 zoom-in-95">
+                <span className="truncate text-default-font">
                   {value.length} {value.length === 1 ? itemLabel : `${itemLabel}s`} selected
-                </Badge>
+                </span>
               )}
             </div>
 
@@ -150,91 +155,72 @@ export function MultiSelect({
           align="start"
           sideOffset={4}
         >
-          <Command className="bg-white">
-            {/* Search input */}
-            <div className="px-1 py-1.5">
-              <CommandInput
+          {/* Search input */}
+          <div className="p-2">
+            <div className="flex h-8 items-center gap-2 rounded-md border border-neutral-border bg-default-background px-2">
+              <Search className="size-4 text-neutral-400" />
+              <input
+                type="text"
                 placeholder="Search..."
-                className="h-8 text-body"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 bg-transparent text-body text-default-font placeholder:text-neutral-400 focus:outline-none"
               />
             </div>
+          </div>
 
-            <CommandList className="max-h-56 overflow-y-auto [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-track]:bg-transparent">
-              <CommandEmpty className="py-6 text-center text-caption text-neutral-400">
+          {/* Options list */}
+          <div className="max-h-56 overflow-y-auto pb-1 [&::-webkit-scrollbar]:w-3 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:border-4 [&::-webkit-scrollbar-thumb]:border-transparent [&::-webkit-scrollbar-thumb]:bg-neutral-300 [&::-webkit-scrollbar-thumb]:bg-clip-padding [&::-webkit-scrollbar-track]:bg-transparent">
+            {filteredOptions.length === 0 ? (
+              <div className="py-6 text-center text-caption text-neutral-400">
                 No results found
-              </CommandEmpty>
-
-              {/* Select All option */}
-              <CommandGroup>
-                <CommandItem
-                  onSelect={toggleSelectAll}
-                  className="mt-1 ml-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors aria-selected:bg-neutral-50"
-                >
-                  {/* Subframe-style checkbox with indeterminate state */}
-                  <div
+              </div>
+            ) : (
+              <>
+                {/* Select All option - only show when not searching */}
+                {!searchQuery && (
+                  <button
+                    type="button"
+                    onClick={toggleSelectAll}
                     className={cn(
-                      "flex size-4 shrink-0 items-center justify-center rounded-sm border-2 border-solid transition-all duration-150",
-                      isAllSelected || isSomeSelected
-                        ? "border-brand-600 bg-brand-600"
-                        : "border-neutral-300 bg-default-background"
+                      "flex h-8 w-full cursor-pointer items-center gap-2 px-3 text-body transition-colors",
+                      "hover:bg-neutral-100",
+                      isAllSelected && "bg-brand-50 text-brand-600"
                     )}
                   >
-                    {isAllSelected ? (
-                      <Check className="size-3.5 text-white" strokeWidth={3} />
-                    ) : isSomeSelected ? (
-                      <Minus className="size-3.5 text-white" strokeWidth={3} />
-                    ) : null}
-                  </div>
-                  <span className="text-neutral-500">Select All</span>
-                </CommandItem>
-              </CommandGroup>
+                    <span className="flex-1 text-left text-neutral-500">Select All</span>
+                    {isAllSelected && (
+                      <Check className="size-4 shrink-0 text-brand-600" />
+                    )}
+                  </button>
+                )}
 
-              {/* Options list */}
-              <CommandGroup className="pt-1">
-                {options.map((option) => {
+                {/* Options */}
+                {filteredOptions.map((option) => {
                   const isSelected = value.includes(option.value);
                   return (
-                    <CommandItem
+                    <button
                       key={option.value}
-                      value={option.label}
-                      onSelect={() => toggleOption(option.value)}
+                      type="button"
+                      onClick={() => toggleOption(option.value)}
                       className={cn(
-                        "ml-1 flex cursor-pointer items-center gap-2 rounded-md p-2 text-body transition-colors",
-                        "aria-selected:bg-neutral-50",
-                        isSelected && "bg-brand-50/50"
+                        "flex h-8 w-full cursor-pointer items-center gap-2 px-3 text-body transition-colors",
+                        "hover:bg-neutral-100",
+                        isSelected && "bg-brand-50 text-brand-600"
                       )}
                     >
-                      {/* Subframe-style checkbox */}
-                      <div
-                        className={cn(
-                          "flex size-4 shrink-0 items-center justify-center rounded-sm border-2 border-solid transition-all duration-150",
-                          isSelected
-                            ? "border-brand-600 bg-brand-600"
-                            : "border-neutral-300 bg-default-background"
-                        )}
-                      >
-                        <Check
-                          className={cn(
-                            "size-3.5 text-white transition-all duration-150",
-                            isSelected ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                          )}
-                          strokeWidth={3}
-                        />
-                      </div>
-
-                      {/* Option label */}
-                      <span className={cn(
-                        "flex-1 truncate",
-                        isSelected && "font-medium text-brand-700"
-                      )}>
+                      <span className="flex-1 truncate text-left">
                         {option.label}
                       </span>
-                    </CommandItem>
+                      {isSelected && (
+                        <Check className="size-4 shrink-0 text-brand-600" />
+                      )}
+                    </button>
                   );
                 })}
-              </CommandGroup>
-            </CommandList>
-          </Command>
+              </>
+            )}
+          </div>
         </PopoverContent>
       </Popover>
     </div>

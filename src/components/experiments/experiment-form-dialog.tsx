@@ -692,7 +692,7 @@ export function ExperimentFormDialog({
                 options={ZONES}
                 value={selectedZones}
                 onValueChange={setSelectedZones}
-                placeholder="Select zones..."
+                placeholder="Select zones"
               />
 
               {/* Parent Verticals Multi-Select */}
@@ -701,7 +701,7 @@ export function ExperimentFormDialog({
                 options={PARENT_VERTICALS}
                 value={selectedVerticals}
                 onValueChange={setSelectedVerticals}
-                placeholder="Select verticals..."
+                placeholder="Select verticals"
                 itemLabel="vertical"
                 optional
               />
