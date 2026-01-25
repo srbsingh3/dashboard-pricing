@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MultiSelect } from "@/components/ui/multi-select";
+import { ChipMultiSelect } from "@/components/ui/chip-multi-select";
 import {
   Popover,
   PopoverContent,
@@ -98,35 +98,6 @@ function getFieldOptions(field: string) {
       return ASSIGNMENT_NAMES;
     default:
       return [];
-  }
-}
-
-// Get item label for multi-select display
-function getItemLabel(field: string): string {
-  switch (field) {
-    case "city_names":
-      return "city";
-    case "zone_names":
-      return "zone";
-    case "customer_types":
-      return "type";
-    case "delivery_types":
-      return "type";
-    case "marketing_tags":
-      return "tag";
-    case "vendor_name":
-      return "vendor";
-    case "chain_name":
-      return "chain";
-    case "vertical_type":
-      return "vertical";
-    case "active":
-    case "key_account":
-      return "option";
-    case "assignment":
-      return "assignment";
-    default:
-      return "item";
   }
 }
 
@@ -322,13 +293,11 @@ export function VendorFilterRow({
             </SelectContent>
           </Select>
         ) : (
-          <MultiSelect
+          <ChipMultiSelect
             options={[...fieldOptions]}
             value={filter.values}
             onValueChange={(values) => onUpdate({ ...filter, values })}
-            placeholder="Select values..."
-            itemLabel={getItemLabel(filter.field)}
-            className="[&>div:first-child]:hidden"
+            placeholder="Select values"
           />
         )}
       </div>

@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
-import { MultiSelect } from "@/components/ui/multi-select";
+import { ChipMultiSelect } from "@/components/ui/chip-multi-select";
 import { SearchSelect } from "@/components/ui/search-select";
 import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
 import { IconButton } from "@/subframe/components/IconButton";
@@ -687,7 +687,7 @@ export function ExperimentFormDialog({
               <div className="my-6 w-full border-t border-neutral-border" />
 
               {/* Target Zones Multi-Select */}
-              <MultiSelect
+              <ChipMultiSelect
                 label="Target Zones"
                 options={ZONES}
                 value={selectedZones}
@@ -696,13 +696,12 @@ export function ExperimentFormDialog({
               />
 
               {/* Parent Verticals Multi-Select */}
-              <MultiSelect
+              <ChipMultiSelect
                 label="Parent Verticals"
                 options={PARENT_VERTICALS}
                 value={selectedVerticals}
                 onValueChange={setSelectedVerticals}
                 placeholder="Select verticals"
-                itemLabel="vertical"
                 optional
               />
 
