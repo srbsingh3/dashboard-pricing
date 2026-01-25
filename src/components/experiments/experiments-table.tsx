@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
   X,
@@ -21,8 +20,9 @@ import {
 import { cn } from "@/lib/utils";
 import { experiments } from "@/lib/mock-data";
 import type { Experiment, ExperimentStatus } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/subframe/components/Button";
+import { IconButton } from "@/subframe/components/IconButton";
+import { TextField } from "@/subframe/components/TextField";
 import { Badge } from "@/subframe/components/Badge";
 import { Avatar } from "@/subframe/components/Avatar";
 import {
@@ -235,7 +235,7 @@ export function ExperimentsTable() {
     <div className="space-y-6">
       {/* Status Summary Cards */}
       <div>
-        <p className="mb-3 text-caption font-medium tracking-wide text-neutral-500 uppercase">
+        <p className="mb-3 text-caption-bold tracking-wide text-neutral-500 uppercase">
           Quick Filters
         </p>
         <div className="flex gap-3">
@@ -268,35 +268,37 @@ export function ExperimentsTable() {
 
       {/* Filters Section */}
       <div>
-        <p className="mb-3 text-caption font-medium tracking-wide text-neutral-500 uppercase">
+        <p className="mb-3 text-caption-bold tracking-wide text-neutral-500 uppercase">
           Filters
         </p>
         <div className="flex items-center gap-3">
-          <div className="relative max-w-md flex-1">
-            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-neutral-400" />
-            <Input
-              placeholder="Search experiments..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="h-10 border-neutral-200 bg-white pl-10"
-            />
+          <div className="max-w-md flex-1">
+            <TextField
+              className="w-full"
+              iconLeft={<Search className="size-4" />}
+            >
+              <TextField.Input
+                placeholder="Search experiments..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+            </TextField>
           </div>
           <span className="text-body text-neutral-400">or</span>
-          <Button variant="outline" className="gap-2 border-neutral-200">
-            <SlidersHorizontal className="size-4" />
+          <Button
+            variant="neutral-secondary"
+            icon={<SlidersHorizontal className="size-4" />}
+          >
             Add filters
           </Button>
         </div>
       </div>
 
       {/* Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
+      <div>
         <table className="w-full">
           <thead>
             <tr className="border-b border-neutral-200">
@@ -346,14 +348,9 @@ export function ExperimentsTable() {
             </tr>
           </thead>
           <tbody>
-            <AnimatePresence mode="popLayout">
-              {paginatedExperiments.map((experiment, index) => (
-                <motion.tr
+              {paginatedExperiments.map((experiment) => (
+                <tr
                   key={experiment.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: index * 0.02 }}
                   className="group border-b border-neutral-100 transition-colors hover:bg-neutral-50"
                 >
                   <td className="p-4">
@@ -393,44 +390,47 @@ export function ExperimentsTable() {
                     <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-neutral-900">
-                            <BarChart3 className="size-4" />
-                          </Button>
+                          <IconButton
+                            size="medium"
+                            icon={<BarChart3 className="size-4 text-subtext-color" />}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>View Results</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-neutral-900">
-                            <Pencil className="size-4" />
-                          </Button>
+                          <IconButton
+                            size="medium"
+                            icon={<Pencil className="size-4 text-subtext-color" />}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>Edit</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-neutral-900">
-                            <Copy className="size-4" />
-                          </Button>
+                          <IconButton
+                            size="medium"
+                            icon={<Copy className="size-4 text-subtext-color" />}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>Duplicate</TooltipContent>
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-error-600">
-                            <Trash2 className="size-4" />
-                          </Button>
+                          <IconButton
+                            size="medium"
+                            icon={<Trash2 className="size-4 text-subtext-color hover:text-error-600" />}
+                          />
                         </TooltipTrigger>
                         <TooltipContent>Delete</TooltipContent>
                       </Tooltip>
                     </div>
                   </td>
-                </motion.tr>
+                </tr>
               ))}
-            </AnimatePresence>
           </tbody>
         </table>
-      </motion.div>
+      </div>
 
       {/* Pagination */}
       <div className="flex items-center justify-between">
@@ -443,7 +443,7 @@ export function ExperimentsTable() {
               setCurrentPage(1);
             }}
           >
-            <SelectTrigger className="h-8 w-[70px] border-neutral-200">
+            <SelectTrigger className="h-8 w-[70px] border-neutral-border">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -461,24 +461,18 @@ export function ExperimentsTable() {
             {sortedExperiments.length}
           </span>
           <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-8 border-neutral-200"
+            <IconButton
+              size="medium"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => p - 1)}
-            >
-              <ChevronDown className="size-4 rotate-90" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="size-8 border-neutral-200"
+              icon={<ChevronDown className="size-4 rotate-90 text-subtext-color" />}
+            />
+            <IconButton
+              size="medium"
               disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage((p) => p + 1)}
-            >
-              <ChevronDown className="size-4 -rotate-90" />
-            </Button>
+              icon={<ChevronDown className="size-4 -rotate-90 text-subtext-color" />}
+            />
           </div>
         </div>
       </div>

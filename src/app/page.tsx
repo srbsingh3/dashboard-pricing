@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { KPICard } from "@/components/dashboard/kpi-card";
 import { FilterBar } from "@/components/dashboard/filter-bar";
 import { ActiveExperimentsCard, ActiveCampaignsCard } from "@/components/dashboard/active-lists";
@@ -24,15 +23,11 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-[1600px] space-y-6 p-6">
       {/* Page Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between"
-      >
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+          <h1 className="text-heading-2 text-neutral-900">Dashboard</h1>
         </div>
-      </motion.div>
+      </div>
 
       {/* Filter Bar */}
       <FilterBar filters={filters} onFilterChange={handleFilterChange} />
