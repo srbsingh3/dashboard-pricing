@@ -101,7 +101,7 @@ export function ParticipantSplitChart({
   );
 
   return (
-    <div className="relative w-full overflow-visible rounded-md pb-8">
+    <div className="relative w-full overflow-visible rounded-md">
       <div className="flex h-8 w-full overflow-hidden rounded-md">
         {/* In-experiment section */}
         {experimentSegments.length > 0 && (
@@ -174,29 +174,16 @@ export function ParticipantSplitChart({
         )}
       </div>
 
-      {/* Custom tooltip outside overflow-hidden container */}
+      {/* Custom tooltip above the bar */}
       {experimentSegments.length > 0 && (
         <div
           className={cn(
-            "pointer-events-none absolute top-8 left-0 z-50 mt-1",
+            "pointer-events-none absolute bottom-full left-0 z-50 mb-1",
             "transition-opacity duration-150 ease-out",
             isHovering ? "opacity-100" : "opacity-0"
           )}
           style={{ width: `${totalExperimentWidth}%` }}
         >
-          {/* Upward-pointing triangle chevron using border trick */}
-          <div
-            className="absolute -top-[5px] transition-[left] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)]"
-            style={{
-              left: `${hoveredSegmentIndex !== null ? getSegmentCenterPercent(hoveredSegmentIndex) : 50}%`,
-              transform: "translateX(-50%)",
-              width: 0,
-              height: 0,
-              borderLeft: "6px solid transparent",
-              borderRight: "6px solid transparent",
-              borderBottom: "6px solid rgb(23 23 23)", // neutral-900
-            }}
-          />
           {/* Tooltip body */}
           <div
             className="relative w-full rounded-md bg-neutral-900 px-3 py-1.5 text-center text-caption text-white"
@@ -204,6 +191,19 @@ export function ParticipantSplitChart({
           >
             {formatPercent(sharePerGroup)}
           </div>
+          {/* Downward-pointing triangle chevron using border trick */}
+          <div
+            className="absolute -bottom-[5px] transition-[left] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            style={{
+              left: `${hoveredSegmentIndex !== null ? getSegmentCenterPercent(hoveredSegmentIndex) : 50}%`,
+              transform: "translateX(-50%)",
+              width: 0,
+              height: 0,
+              borderLeft: "6px solid transparent",
+              borderRight: "6px solid transparent",
+              borderTop: "6px solid rgb(23 23 23)", // neutral-900
+            }}
+          />
         </div>
       )}
     </div>
