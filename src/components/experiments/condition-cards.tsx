@@ -288,7 +288,7 @@ export function NewCustomerConditionCard({
             className="flex-1"
           />
           <ChevronLeft className="size-4 text-neutral-400" />
-          <TextField className="w-14">
+          <TextField className="w-18">
             <TextField.Input
               type="number"
               min="0"
@@ -313,7 +313,7 @@ export function NewCustomerConditionCard({
             className="flex-1"
           />
           <ChevronLeft className="size-4 text-neutral-400" />
-          <TextField className="w-14">
+          <TextField className="w-18">
             <TextField.Input
               type="number"
               min="0"
