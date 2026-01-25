@@ -92,25 +92,45 @@ export function ParticipantSplitChart({
     0
   );
 
-  if (participantShare <= 0) {
-    return null;
-  }
+  const widthTransition = { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] };
 
   return (
     <div className="relative w-full overflow-visible rounded-md">
       <AnimatePresence mode="wait">
-        <motion.div
+        {participantShare > 0 && (
+          <motion.div
             key="chart"
             {...SLIDE_DOWN}
-            className="flex h-8 w-full overflow-hidden rounded-md"
+            className="relative h-8 w-full overflow-hidden rounded-md"
             style={{ transformOrigin: "top" }}
           >
-            {/* In-experiment section */}
+            {/* Gray background - always full width as base layer */}
+            <div
+              className={cn(
+                "absolute inset-0 flex cursor-default items-center justify-end",
+                "transition-[filter] duration-200 ease-out",
+                "hover:brightness-[0.95]",
+                "bg-neutral-100",
+                "rounded-md"
+              )}
+            >
+              {excludedPercentage >= 12 && (
+                <span
+                  className="pr-3 text-caption text-neutral-500"
+                  style={{ fontSize: "var(--text-caption)" }}
+                >
+                  {formatPercent(excludedPercentage)}
+                </span>
+              )}
+            </div>
+
+            {/* In-experiment section - overlays on top, animates from left */}
             {experimentSegments.length > 0 && (
-              <div
+              <motion.div
                 ref={experimentRef}
-                className="relative flex h-full cursor-default"
-                style={{ width: `${totalExperimentWidth}%` }}
+                className="absolute top-0 left-0 z-10 flex h-full cursor-default"
+                animate={{ width: `${totalExperimentWidth}%` }}
+                transition={widthTransition}
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => {
                   setIsHovering(false);
@@ -126,9 +146,7 @@ export function ParticipantSplitChart({
                       "hover:brightness-[0.92]",
                       segment.color,
                       index === 0 && "rounded-l-md",
-                      index === experimentSegments.length - 1 &&
-                        excludedPercentage <= 0 &&
-                        "rounded-r-md"
+                      index === experimentSegments.length - 1 && "rounded-r-md"
                     )}
                     style={{
                       width: `${(segment.percentage / totalExperimentWidth) * 100}%`,
@@ -145,44 +163,22 @@ export function ParticipantSplitChart({
                     )}
                   </div>
                 ))}
-              </div>
+              </motion.div>
             )}
-
-            {/* Not in experiment section */}
-            {excludedPercentage > 0 && (
-              <div
-                className={cn(
-                  "relative flex h-full cursor-default items-center justify-center",
-                  "transition-[filter] duration-200 ease-out",
-                  "hover:brightness-[0.95]",
-                  "bg-neutral-100",
-                  experimentSegments.length === 0 && "rounded-l-md",
-                  "rounded-r-md"
-                )}
-                style={{ width: `${excludedPercentage}%` }}
-              >
-                {excludedPercentage >= 12 && (
-                  <span
-                    className="text-caption text-neutral-500"
-                    style={{ fontSize: "var(--text-caption)" }}
-                  >
-                    {formatPercent(excludedPercentage)}
-                  </span>
-                )}
-              </div>
-            )}
-        </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Custom tooltip above the bar */}
       {participantShare > 0 && experimentSegments.length > 0 && (
-        <div
+        <motion.div
           className={cn(
             "pointer-events-none absolute bottom-full left-0 z-50 mb-1",
             "transition-opacity duration-150 ease-out",
             isHovering ? "opacity-100" : "opacity-0"
           )}
-          style={{ width: `${totalExperimentWidth}%` }}
+          animate={{ width: `${totalExperimentWidth}%` }}
+          transition={widthTransition}
         >
           {/* Tooltip body */}
           <div
@@ -204,7 +200,7 @@ export function ParticipantSplitChart({
               borderTop: "6px solid rgb(23 23 23)", // neutral-900
             }}
           />
-        </div>
+        </motion.div>
       )}
     </div>
   );
