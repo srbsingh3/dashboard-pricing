@@ -968,6 +968,7 @@ export function ExperimentFormDialog({
                       sideOffset={4}
                       className="w-80 rounded-md border border-neutral-border bg-white p-4 shadow-lg"
                       onOpenAutoFocus={(e) => e.preventDefault()}
+                      onCloseAutoFocus={(e) => e.preventDefault()}
                     >
                       <div className="flex flex-col gap-3">
                         <ChipMultiSelect
