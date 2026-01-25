@@ -74,15 +74,15 @@ function Switch({ checked, onCheckedChange, disabled }: SwitchProps) {
       disabled={disabled}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        "relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200",
+        "relative inline-flex h-4 w-7 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200",
         checked ? "bg-brand-600" : "bg-neutral-200",
         disabled && "cursor-not-allowed opacity-50"
       )}
     >
       <span
         className={cn(
-          "pointer-events-none inline-block size-4 transform rounded-full bg-white shadow-sm transition-transform duration-200",
-          checked ? "translate-x-[18px]" : "translate-x-0.5"
+          "pointer-events-none inline-block size-3 transform rounded-full bg-white shadow-sm transition-transform duration-200",
+          checked ? "translate-x-[14px]" : "translate-x-0.5"
         )}
       />
     </button>
@@ -163,6 +163,31 @@ export function TimeConditionCard({
       />
 
       <div className="flex flex-col gap-4 p-4">
+        {/* Day Selection */}
+        <div className="flex flex-col gap-2">
+          <span className="text-caption-bold text-neutral-700">Repeat on</span>
+          <div className="flex flex-wrap gap-2">
+            {WEEKDAYS.map((day) => {
+              const isSelected = condition.selectedDays.includes(day.value);
+              return (
+                <button
+                  key={day.value}
+                  type="button"
+                  onClick={() => toggleDay(day.value)}
+                  className={cn(
+                    "flex size-9 items-center justify-center rounded-lg text-caption-bold transition-all",
+                    isSelected
+                      ? "bg-brand-600 text-white"
+                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                  )}
+                >
+                  {day.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* All Day Toggle */}
         <div className="flex items-center justify-between">
           <span className="text-body text-default-font">All Day</span>
@@ -197,31 +222,6 @@ export function TimeConditionCard({
             </TextField>
           </div>
         )}
-
-        {/* Day Selection */}
-        <div className="flex flex-col gap-2">
-          <span className="text-caption-bold text-neutral-700">Repeat on</span>
-          <div className="flex flex-wrap gap-2">
-            {WEEKDAYS.map((day) => {
-              const isSelected = condition.selectedDays.includes(day.value);
-              return (
-                <button
-                  key={day.value}
-                  type="button"
-                  onClick={() => toggleDay(day.value)}
-                  className={cn(
-                    "flex size-9 items-center justify-center rounded-lg text-caption-bold transition-all",
-                    isSelected
-                      ? "bg-brand-600 text-white"
-                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
-                  )}
-                >
-                  {day.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </div>
   );
