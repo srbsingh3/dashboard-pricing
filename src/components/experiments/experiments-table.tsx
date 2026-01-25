@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -12,24 +12,19 @@ import {
   ChevronDown,
   ChevronUp,
   Search,
-  Columns3,
-  Filter,
+  SlidersHorizontal,
+  CheckCircle,
+  XCircle,
+  PencilLine,
+  Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { experiments } from "@/lib/mock-data";
-import { STATUS_COLORS } from "@/lib/constants";
 import type { Experiment, ExperimentStatus } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Badge } from "@/subframe/components/Badge";
+import { Avatar } from "@/subframe/components/Avatar";
 import {
   Tooltip,
   TooltipContent,
@@ -46,31 +41,52 @@ import {
 type SortKey = keyof Experiment | null;
 type SortDirection = "asc" | "desc";
 
-// Helper components defined outside render to avoid recreation
-function SortIcon({
-  columnKey,
-  sortKey,
-  sortDirection,
-}: {
-  columnKey: SortKey;
-  sortKey: SortKey;
-  sortDirection: SortDirection;
-}) {
-  if (sortKey !== columnKey) return null;
-  return sortDirection === "asc" ? (
-    <ChevronUp className="size-4" />
-  ) : (
-    <ChevronDown className="size-4" />
-  );
-}
+// Status configuration for badges and cards
+const STATUS_CONFIG: Record<
+  ExperimentStatus,
+  {
+    variant: "success" | "neutral" | "warning" | "brand";
+    icon: React.ReactNode;
+    label: string;
+    cardBg: string;
+    cardBorder: string;
+  }
+> = {
+  enabled: {
+    variant: "success",
+    icon: <CheckCircle className="size-3.5" />,
+    label: "Enabled",
+    cardBg: "bg-success-50",
+    cardBorder: "border-success-200",
+  },
+  disabled: {
+    variant: "neutral",
+    icon: <XCircle className="size-3.5" />,
+    label: "Disabled",
+    cardBg: "bg-neutral-50",
+    cardBorder: "border-neutral-200",
+  },
+  draft: {
+    variant: "warning",
+    icon: <PencilLine className="size-3.5" />,
+    label: "Draft",
+    cardBg: "bg-warning-50",
+    cardBorder: "border-warning-200",
+  },
+  completed: {
+    variant: "brand",
+    icon: <Clock className="size-3.5" />,
+    label: "Completed",
+    cardBg: "bg-brand-50",
+    cardBorder: "border-brand-200",
+  },
+};
 
 function StatusBadge({ status }: { status: ExperimentStatus }) {
+  const config = STATUS_CONFIG[status];
   return (
-    <Badge
-      variant="outline"
-      className={cn("font-medium capitalize", STATUS_COLORS[status])}
-    >
-      {status}
+    <Badge variant={config.variant} icon={config.icon}>
+      {config.label}
     </Badge>
   );
 }
@@ -92,18 +108,99 @@ function AlreadyStartedIcon({ started }: { started: boolean }) {
   );
 }
 
+function getInitials(email: string): string {
+  const username = email.split("@")[0];
+  const parts = username.split(".");
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return username.slice(0, 2).toUpperCase();
+}
+
+function formatName(email: string): string {
+  const username = email.split("@")[0];
+  return username
+    .split(".")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+// Status summary card component
+function StatusCard({
+  status,
+  count,
+  isActive,
+  onClick,
+}: {
+  status: ExperimentStatus;
+  count: number;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const config = STATUS_CONFIG[status];
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex flex-1 items-center gap-3 rounded-lg border px-4 py-3 text-left transition-all",
+        config.cardBg,
+        config.cardBorder,
+        isActive && "ring-2 ring-brand-500 ring-offset-1"
+      )}
+    >
+      <span className="text-heading-2 text-neutral-900">{count}</span>
+      <div className="flex items-center gap-1.5 text-neutral-700">
+        {config.icon}
+        <span className="text-body">{config.label}</span>
+      </div>
+    </button>
+  );
+}
+
+// Sort indicator component
+function SortIndicator({
+  columnKey,
+  sortKey,
+  sortDirection,
+}: {
+  columnKey: SortKey;
+  sortKey: SortKey;
+  sortDirection: SortDirection;
+}) {
+  if (sortKey !== columnKey) return null;
+  return sortDirection === "asc" ? (
+    <ChevronUp className="size-3.5" />
+  ) : (
+    <ChevronDown className="size-3.5" />
+  );
+}
+
 export function ExperimentsTable() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("createdOn");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<ExperimentStatus | null>(null);
+
+  // Calculate status counts
+  const statusCounts = useMemo(() => {
+    return {
+      enabled: experiments.filter((e) => e.status === "enabled").length,
+      disabled: experiments.filter((e) => e.status === "disabled").length,
+      draft: experiments.filter((e) => e.status === "draft").length,
+      completed: experiments.filter((e) => e.status === "completed").length,
+    };
+  }, []);
 
   // Filter and sort experiments
-  const filteredExperiments = experiments.filter((exp) =>
-    exp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    exp.createdBy.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredExperiments = experiments.filter((exp) => {
+    const matchesSearch =
+      exp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      exp.createdBy.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter ? exp.status === statusFilter : true;
+    return matchesSearch && matchesStatus;
+  });
 
   const sortedExperiments = [...filteredExperiments].sort((a, b) => {
     if (!sortKey) return 0;
@@ -129,29 +226,69 @@ export function ExperimentsTable() {
     }
   };
 
-  return (
-    <div className="space-y-4">
-      {/* Table Controls */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-2">
-            <Columns3 className="size-4" />
-            Columns
-          </Button>
-          <Button variant="outline" size="sm" className="gap-2">
-            <Filter className="size-4" />
-            Filters
-          </Button>
-        </div>
+  const handleStatusClick = (status: ExperimentStatus) => {
+    setStatusFilter(statusFilter === status ? null : status);
+    setCurrentPage(1);
+  };
 
-        <div className="relative w-64">
-          <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="h-9 pl-9"
+  return (
+    <div className="space-y-6">
+      {/* Status Summary Cards */}
+      <div>
+        <p className="mb-3 text-caption font-medium tracking-wide text-neutral-500 uppercase">
+          Quick Filters
+        </p>
+        <div className="flex gap-3">
+          <StatusCard
+            status="enabled"
+            count={statusCounts.enabled}
+            isActive={statusFilter === "enabled"}
+            onClick={() => handleStatusClick("enabled")}
           />
+          <StatusCard
+            status="disabled"
+            count={statusCounts.disabled}
+            isActive={statusFilter === "disabled"}
+            onClick={() => handleStatusClick("disabled")}
+          />
+          <StatusCard
+            status="draft"
+            count={statusCounts.draft}
+            isActive={statusFilter === "draft"}
+            onClick={() => handleStatusClick("draft")}
+          />
+          <StatusCard
+            status="completed"
+            count={statusCounts.completed}
+            isActive={statusFilter === "completed"}
+            onClick={() => handleStatusClick("completed")}
+          />
+        </div>
+      </div>
+
+      {/* Filters Section */}
+      <div>
+        <p className="mb-3 text-caption font-medium tracking-wide text-neutral-500 uppercase">
+          Filters
+        </p>
+        <div className="flex items-center gap-3">
+          <div className="relative max-w-md flex-1">
+            <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-neutral-400" />
+            <Input
+              placeholder="Search experiments..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="h-10 border-neutral-200 bg-white pl-10"
+            />
+          </div>
+          <span className="text-body text-neutral-400">or</span>
+          <Button variant="outline" className="gap-2 border-neutral-200">
+            <SlidersHorizontal className="size-4" />
+            Add filters
+          </Button>
         </div>
       </div>
 
@@ -159,55 +296,56 @@ export function ExperimentsTable() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="overflow-hidden rounded-lg border border-border bg-card"
       >
-        <Table>
-          <TableHeader>
-            <TableRow className="bg-muted/30 hover:bg-muted/30">
-              <TableHead
-                className="w-[80px] cursor-pointer select-none"
-                onClick={() => handleSort("id")}
-              >
-                <div className="flex items-center gap-1">
-                  ID
-                  <SortIcon columnKey="id" sortKey={sortKey} sortDirection={sortDirection} />
-                </div>
-              </TableHead>
-              <TableHead
-                className="cursor-pointer select-none"
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-neutral-200">
+              <th
+                className="cursor-pointer px-4 py-3 text-left select-none"
                 onClick={() => handleSort("name")}
               >
-                <div className="flex items-center gap-1">
-                  Name
-                  <SortIcon columnKey="name" sortKey={sortKey} sortDirection={sortDirection} />
+                <div className="flex items-center gap-1 text-caption font-medium tracking-wide text-neutral-500 uppercase">
+                  Experiment
+                  <SortIndicator columnKey="name" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
-              </TableHead>
-              <TableHead
-                className="w-[100px] cursor-pointer select-none"
+              </th>
+              <th
+                className="cursor-pointer px-4 py-3 text-left select-none"
                 onClick={() => handleSort("status")}
               >
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 text-caption font-medium tracking-wide text-neutral-500 uppercase">
                   Status
-                  <SortIcon columnKey="status" sortKey={sortKey} sortDirection={sortDirection} />
+                  <SortIndicator columnKey="status" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
-              </TableHead>
-              <TableHead className="w-[120px] text-center">Already Started</TableHead>
-              <TableHead className="w-[110px] text-center">Target Groups</TableHead>
-              <TableHead className="w-[120px] text-center">No. of Variations</TableHead>
-              <TableHead
-                className="w-[110px] cursor-pointer select-none"
+              </th>
+              <th className="px-4 py-3 text-left">
+                <span className="text-caption font-medium tracking-wide text-neutral-500 uppercase">
+                  Owner
+                </span>
+              </th>
+              <th className="px-4 py-3 text-center">
+                <span className="text-caption font-medium tracking-wide text-neutral-500 uppercase">
+                  Target Groups
+                </span>
+              </th>
+              <th className="px-4 py-3 text-center">
+                <span className="text-caption font-medium tracking-wide text-neutral-500 uppercase">
+                  Started
+                </span>
+              </th>
+              <th
+                className="cursor-pointer px-4 py-3 text-left select-none"
                 onClick={() => handleSort("createdOn")}
               >
-                <div className="flex items-center gap-1">
-                  Created On
-                  <SortIcon columnKey="createdOn" sortKey={sortKey} sortDirection={sortDirection} />
+                <div className="flex items-center gap-1 text-caption font-medium tracking-wide text-neutral-500 uppercase">
+                  Created
+                  <SortIndicator columnKey="createdOn" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
-              </TableHead>
-              <TableHead className="w-[200px]">Created By</TableHead>
-              <TableHead className="w-[140px] text-center">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+              </th>
+              <th className="w-[120px] px-4 py-3"></th>
+            </tr>
+          </thead>
+          <tbody>
             <AnimatePresence mode="popLayout">
               {paginatedExperiments.map((experiment, index) => (
                 <motion.tr
@@ -215,40 +353,47 @@ export function ExperimentsTable() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ delay: index * 0.03 }}
-                  className="group transition-colors hover:bg-muted/30"
+                  transition={{ delay: index * 0.02 }}
+                  className="group border-b border-neutral-100 transition-colors hover:bg-neutral-50"
                 >
-                  <TableCell className="font-medium text-muted-foreground">
-                    {experiment.id}
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {experiment.name}
-                  </TableCell>
-                  <TableCell>
+                  <td className="p-4">
+                    <span className="text-body-bold text-neutral-900">
+                      {experiment.name}
+                    </span>
+                  </td>
+                  <td className="p-4">
                     <StatusBadge status={experiment.status} />
-                  </TableCell>
-                  <TableCell className="text-center">
+                  </td>
+                  <td className="p-4">
+                    <div className="flex items-center gap-2">
+                      <Avatar size="small" variant="brand">
+                        {getInitials(experiment.email)}
+                      </Avatar>
+                      <span className="text-body text-neutral-700">
+                        {formatName(experiment.email)}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-center">
+                    <span className="text-body text-neutral-600 tabular-nums">
+                      {experiment.targetGroups}
+                    </span>
+                  </td>
+                  <td className="p-4">
                     <div className="flex justify-center">
                       <AlreadyStartedIcon started={experiment.alreadyStarted} />
                     </div>
-                  </TableCell>
-                  <TableCell className="text-center tabular-nums">
-                    {experiment.targetGroups}
-                  </TableCell>
-                  <TableCell className="text-center tabular-nums">
-                    {experiment.variations}
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {experiment.createdOn}
-                  </TableCell>
-                  <TableCell className="max-w-[200px] truncate text-muted-foreground">
-                    {experiment.email}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                  </td>
+                  <td className="p-4">
+                    <span className="text-body text-neutral-500">
+                      {experiment.createdOn}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8">
+                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-neutral-900">
                             <BarChart3 className="size-4" />
                           </Button>
                         </TooltipTrigger>
@@ -256,7 +401,7 @@ export function ExperimentsTable() {
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8">
+                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-neutral-900">
                             <Pencil className="size-4" />
                           </Button>
                         </TooltipTrigger>
@@ -264,7 +409,7 @@ export function ExperimentsTable() {
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8">
+                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-neutral-900">
                             <Copy className="size-4" />
                           </Button>
                         </TooltipTrigger>
@@ -272,24 +417,24 @@ export function ExperimentsTable() {
                       </Tooltip>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="ghost" size="icon" className="size-8 text-destructive hover:text-destructive">
+                          <Button variant="ghost" size="icon" className="size-8 text-neutral-500 hover:text-error-600">
                             <Trash2 className="size-4" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>Delete</TooltipContent>
                       </Tooltip>
                     </div>
-                  </TableCell>
+                  </td>
                 </motion.tr>
               ))}
             </AnimatePresence>
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </motion.div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-body text-neutral-500">
           <span>Rows per page:</span>
           <Select
             value={rowsPerPage.toString()}
@@ -298,7 +443,7 @@ export function ExperimentsTable() {
               setCurrentPage(1);
             }}
           >
-            <SelectTrigger className="h-8 w-[70px]">
+            <SelectTrigger className="h-8 w-[70px] border-neutral-200">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -309,7 +454,7 @@ export function ExperimentsTable() {
           </Select>
         </div>
 
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-4 text-body text-neutral-500">
           <span>
             {(currentPage - 1) * rowsPerPage + 1}-
             {Math.min(currentPage * rowsPerPage, sortedExperiments.length)} of{" "}
@@ -319,7 +464,7 @@ export function ExperimentsTable() {
             <Button
               variant="outline"
               size="icon"
-              className="size-8"
+              className="size-8 border-neutral-200"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => p - 1)}
             >
@@ -328,8 +473,8 @@ export function ExperimentsTable() {
             <Button
               variant="outline"
               size="icon"
-              className="size-8"
-              disabled={currentPage === totalPages}
+              className="size-8 border-neutral-200"
+              disabled={currentPage === totalPages || totalPages === 0}
               onClick={() => setCurrentPage((p) => p + 1)}
             >
               <ChevronDown className="size-4 -rotate-90" />
