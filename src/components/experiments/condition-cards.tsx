@@ -90,42 +90,33 @@ function Switch({ checked, onCheckedChange, disabled }: SwitchProps) {
 }
 
 // ============================================
-// CARD HEADER COMPONENT
+// CARD HEADER COMPONENT (for unified card layout)
 // ============================================
 
 interface ConditionCardHeaderProps {
   icon: React.ReactNode;
   title: string;
-  iconBgClass: string;
   onDelete: () => void;
 }
 
 function ConditionCardHeader({
   icon,
   title,
-  iconBgClass,
   onDelete,
 }: ConditionCardHeaderProps) {
   return (
-    <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-3">
-      <div className="flex items-center gap-3">
-        <div
-          className={cn(
-            "flex size-8 items-center justify-center rounded-lg",
-            iconBgClass
-          )}
-        >
-          {icon}
-        </div>
+    <div className="flex items-center justify-between px-4 pt-3 pb-4">
+      <div className="flex items-center gap-2">
+        {icon}
         <span className="text-body-bold text-default-font">{title}</span>
       </div>
       <button
         type="button"
         onClick={onDelete}
-        className="group/delete flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/card:opacity-100 hover:bg-error-50"
+        className="group/delete flex size-6 items-center justify-center rounded-md opacity-0 transition-all group-hover/item:opacity-100 hover:bg-error-50"
         aria-label={`Remove ${title}`}
       >
-        <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
+        <FeatherTrash2 className="text-caption text-subtext-color group-hover/delete:text-error-600" />
       </button>
     </div>
   );
@@ -154,15 +145,14 @@ export function TimeConditionCard({
   };
 
   return (
-    <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+    <div className="group/item flex min-w-[280px] shrink-0 grow basis-0 flex-col">
       <ConditionCardHeader
-        icon={<Clock className="size-4 text-brand-600" />}
+        icon={<Clock className="size-4 text-default-font" />}
         title="Time Recurrence"
-        iconBgClass="bg-brand-50"
         onDelete={onDelete}
       />
 
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 px-4 pb-4">
         {/* Day Selection - Soft Neumorphic Tray */}
         <div className="flex flex-col gap-2">
           <span className="text-caption-bold text-neutral-700">Repeat on</span>
@@ -175,11 +165,12 @@ export function TimeConditionCard({
                   type="button"
                   onClick={() => toggleDay(day.value)}
                   className={cn(
-                    "flex h-8 flex-1 items-center justify-center rounded-md text-caption font-medium transition-all duration-200",
+                    "flex h-8 flex-1 items-center justify-center rounded-md font-medium transition-all duration-200",
                     isSelected
                       ? "bg-default-background text-neutral-600 shadow-sm"
                       : "text-neutral-400 hover:text-neutral-500"
                   )}
+                  style={{ fontSize: "var(--text-caption)" }}
                 >
                   {day.label}
                 </button>
@@ -243,15 +234,14 @@ export function NewCustomerConditionCard({
   onDelete,
 }: NewCustomerConditionCardProps) {
   return (
-    <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+    <div className="group/item flex min-w-[280px] shrink-0 grow basis-0 flex-col">
       <ConditionCardHeader
-        icon={<UserPlus className="size-4 text-success-600" />}
+        icon={<UserPlus className="size-4 text-default-font" />}
         title="New Customer"
-        iconBgClass="bg-success-50"
         onDelete={onDelete}
       />
 
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 px-4 pb-4">
         {/* Customer Type Dropdown */}
         <div className="flex flex-col gap-1.5">
           <span className="text-caption-bold text-neutral-700">
@@ -367,15 +357,14 @@ export function CustomerLocationCard({
   };
 
   return (
-    <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+    <div className="group/item flex min-w-[280px] shrink-0 grow basis-0 flex-col">
       <ConditionCardHeader
-        icon={<MapPinned className="size-4 text-warning-600" />}
+        icon={<MapPinned className="size-4 text-default-font" />}
         title="Customer Location"
-        iconBgClass="bg-warning-50"
         onDelete={onDelete}
       />
 
-      <div className="flex flex-col gap-4 p-4">
+      <div className="flex flex-col gap-4 px-4 pb-4">
         {/* Location Multi-Select */}
         <MultiSelect
           options={CUSTOMER_LOCATIONS}
@@ -418,7 +407,7 @@ export function CustomerLocationCard({
 }
 
 // ============================================
-// CONDITIONS GRID CONTAINER
+// CONDITIONS GRID CONTAINER (Unified Card)
 // ============================================
 
 interface ConditionsGridProps {
@@ -426,6 +415,9 @@ interface ConditionsGridProps {
   onUpdateCondition: (index: number, data: Condition["data"]) => void;
   onDeleteCondition: (index: number) => void;
 }
+
+// Number of cards per row
+const CARDS_PER_ROW = 3;
 
 export function ConditionsGrid({
   conditions,
@@ -436,40 +428,75 @@ export function ConditionsGrid({
     return null;
   }
 
+  // Group conditions into rows of CARDS_PER_ROW
+  const rows: Condition[][] = [];
+  for (let i = 0; i < conditions.length; i += CARDS_PER_ROW) {
+    rows.push(conditions.slice(i, i + CARDS_PER_ROW));
+  }
+
+  const renderConditionCard = (condition: Condition, globalIndex: number) => {
+    switch (condition.type) {
+      case "time":
+        return (
+          <TimeConditionCard
+            key={condition.data.id}
+            condition={condition.data as TimeCondition}
+            onUpdate={(data) => onUpdateCondition(globalIndex, data)}
+            onDelete={() => onDeleteCondition(globalIndex)}
+          />
+        );
+      case "new_customer":
+        return (
+          <NewCustomerConditionCard
+            key={condition.data.id}
+            condition={condition.data as NewCustomerCondition}
+            onUpdate={(data) => onUpdateCondition(globalIndex, data)}
+            onDelete={() => onDeleteCondition(globalIndex)}
+          />
+        );
+      case "customer_location":
+        return (
+          <CustomerLocationCard
+            key={condition.data.id}
+            condition={condition.data as CustomerLocationCondition}
+            onUpdate={(data) => onUpdateCondition(globalIndex, data)}
+            onDelete={() => onDeleteCondition(globalIndex)}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {conditions.map((condition, index) => {
-        switch (condition.type) {
-          case "time":
-            return (
-              <TimeConditionCard
-                key={condition.data.id}
-                condition={condition.data as TimeCondition}
-                onUpdate={(data) => onUpdateCondition(index, data)}
-                onDelete={() => onDeleteCondition(index)}
-              />
-            );
-          case "new_customer":
-            return (
-              <NewCustomerConditionCard
-                key={condition.data.id}
-                condition={condition.data as NewCustomerCondition}
-                onUpdate={(data) => onUpdateCondition(index, data)}
-                onDelete={() => onDeleteCondition(index)}
-              />
-            );
-          case "customer_location":
-            return (
-              <CustomerLocationCard
-                key={condition.data.id}
-                condition={condition.data as CustomerLocationCondition}
-                onUpdate={(data) => onUpdateCondition(index, data)}
-                onDelete={() => onDeleteCondition(index)}
-              />
-            );
-          default:
-            return null;
-        }
+    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
+      {rows.map((row, rowIndex) => {
+        // Calculate global index offset for this row
+        const rowStartIndex = rowIndex * CARDS_PER_ROW;
+
+        return (
+          <React.Fragment key={rowIndex}>
+            {/* Horizontal divider between rows */}
+            {rowIndex > 0 && (
+              <div className="h-px w-full bg-neutral-border" />
+            )}
+            {/* Row of cards */}
+            <div className="flex flex-wrap items-stretch">
+              {row.map((condition, indexInRow) => {
+                const globalIndex = rowStartIndex + indexInRow;
+                return (
+                  <React.Fragment key={condition.data.id}>
+                    {/* Vertical divider between cards in same row */}
+                    {indexInRow > 0 && (
+                      <div className="w-px self-stretch bg-neutral-border" />
+                    )}
+                    {renderConditionCard(condition, globalIndex)}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          </React.Fragment>
+        );
       })}
     </div>
   );
