@@ -1089,8 +1089,12 @@ export function ExperimentFormDialog({
                           </div>
                   {/* Divider */}
                   <div className="flex h-px w-full flex-none flex-col items-center gap-2 bg-neutral-border" />
-                  {/* List of sections - collapsible */}
-                  {group.isExpanded && (
+                  {/* List of sections - collapsible with animation */}
+                  <div
+                    className="accordion-content w-full"
+                    data-state={group.isExpanded ? "open" : "closed"}
+                  >
+                    <div className="accordion-content-inner">
                     <div className="flex w-full flex-col items-start p-2">
                       {/* Target Vendors */}
                       <div className="flex w-full items-center gap-4 p-4">
@@ -1597,7 +1601,8 @@ export function ExperimentFormDialog({
                         </Table>
                       </div>
                     </div>
-                  )}
+                    </div>
+                  </div>
                         </div>
                       )}
                     </SortablePriorityCard>
