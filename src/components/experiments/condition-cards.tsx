@@ -145,7 +145,7 @@ export function TimeConditionCard({
   };
 
   return (
-    <div className="group/item flex min-w-[280px] shrink-0 grow basis-0 flex-col">
+    <div className="group/item flex min-w-0 flex-col">
       <ConditionCardHeader
         icon={<Clock className="size-4 text-default-font" />}
         title="Time Recurrence"
@@ -234,7 +234,7 @@ export function NewCustomerConditionCard({
   onDelete,
 }: NewCustomerConditionCardProps) {
   return (
-    <div className="group/item flex min-w-[280px] shrink-0 grow basis-0 flex-col">
+    <div className="group/item flex min-w-0 flex-col">
       <ConditionCardHeader
         icon={<UserPlus className="size-4 text-default-font" />}
         title="New Customer"
@@ -357,7 +357,7 @@ export function CustomerLocationCard({
   };
 
   return (
-    <div className="group/item flex min-w-[280px] shrink-0 grow basis-0 flex-col">
+    <div className="group/item flex min-w-0 flex-col">
       <ConditionCardHeader
         icon={<MapPinned className="size-4 text-default-font" />}
         title="Customer Location"
@@ -428,12 +428,6 @@ export function ConditionsGrid({
     return null;
   }
 
-  // Group conditions into rows of CARDS_PER_ROW
-  const rows: Condition[][] = [];
-  for (let i = 0; i < conditions.length; i += CARDS_PER_ROW) {
-    rows.push(conditions.slice(i, i + CARDS_PER_ROW));
-  }
-
   const renderConditionCard = (condition: Condition, globalIndex: number) => {
     switch (condition.type) {
       case "time":
@@ -468,36 +462,61 @@ export function ConditionsGrid({
     }
   };
 
+  // Calculate columns for first row (determines container width)
+  const numColumns = Math.min(conditions.length, CARDS_PER_ROW);
+  // Width: 1 card = 1/3, 2 cards = 2/3, 3+ cards = full
+  const widthClass =
+    numColumns === 1
+      ? "w-1/3"
+      : numColumns === 2
+        ? "w-2/3"
+        : "w-full";
+  // Grid columns: match the number of columns in use
+  const gridColsClass =
+    numColumns === 1
+      ? "grid-cols-1"
+      : numColumns === 2
+        ? "grid-cols-2"
+        : "grid-cols-3";
+
+  // For 3+ cards, calculate empty cells needed to complete last row
+  const remainder = conditions.length % CARDS_PER_ROW;
+  const emptyCellsNeeded =
+    numColumns === CARDS_PER_ROW && remainder !== 0
+      ? CARDS_PER_ROW - remainder
+      : 0;
+
   return (
-    <div className="flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
-      {rows.map((row, rowIndex) => {
-        // Calculate global index offset for this row
-        const rowStartIndex = rowIndex * CARDS_PER_ROW;
+    <div
+      className={cn(
+        "grid rounded-md border border-solid border-neutral-border bg-default-background shadow-sm",
+        widthClass,
+        gridColsClass
+      )}
+    >
+      {conditions.map((condition, index) => {
+        const isNotFirstColumn = index % numColumns !== 0;
+        const isNotFirstRow = index >= numColumns;
 
         return (
-          <React.Fragment key={rowIndex}>
-            {/* Horizontal divider between rows */}
-            {rowIndex > 0 && (
-              <div className="h-px w-full bg-neutral-border" />
+          <div
+            key={condition.data.id}
+            className={cn(
+              isNotFirstColumn && "border-l border-neutral-border",
+              isNotFirstRow && "border-t border-neutral-border"
             )}
-            {/* Row of cards */}
-            <div className="flex flex-wrap items-stretch">
-              {row.map((condition, indexInRow) => {
-                const globalIndex = rowStartIndex + indexInRow;
-                return (
-                  <React.Fragment key={condition.data.id}>
-                    {/* Vertical divider between cards in same row */}
-                    {indexInRow > 0 && (
-                      <div className="w-px self-stretch bg-neutral-border" />
-                    )}
-                    {renderConditionCard(condition, globalIndex)}
-                  </React.Fragment>
-                );
-              })}
-            </div>
-          </React.Fragment>
+          >
+            {renderConditionCard(condition, index)}
+          </div>
         );
       })}
+      {/* Empty filler cells to complete the last row */}
+      {Array.from({ length: emptyCellsNeeded }).map((_, index) => (
+        <div
+          key={`empty-${index}`}
+          className="border-t border-l border-neutral-border"
+        />
+      ))}
     </div>
   );
 }
