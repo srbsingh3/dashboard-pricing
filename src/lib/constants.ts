@@ -409,16 +409,31 @@ export const KEY_ACCOUNT_STATUS = [
 
 // Assignment names for vendor filters
 export const ASSIGNMENT_NAMES = [
-  { value: "premium_tier", label: "Premium Tier Assignment" },
-  { value: "standard_tier", label: "Standard Tier Assignment" },
-  { value: "new_vendor_onboarding", label: "New Vendor Onboarding" },
-  { value: "seasonal_promotion", label: "Seasonal Promotion" },
-  { value: "loyalty_program", label: "Loyalty Program" },
-  { value: "regional_campaign", label: "Regional Campaign" },
-  { value: "ab_test_group_a", label: "A/B Test Group A" },
-  { value: "ab_test_group_b", label: "A/B Test Group B" },
-  { value: "control_group", label: "Control Group" },
-  { value: "pilot_program", label: "Pilot Program" },
+  // Restaurant assignments
+  { value: "mitte_kreuzberg_restaurant", label: "Mitte / Kreuzberg Restaurant" },
+  { value: "prenzlauer_berg_restaurant", label: "Prenzlauer Berg Restaurant" },
+  { value: "friedrichshain_restaurant", label: "Friedrichshain Restaurant" },
+  { value: "charlottenburg_restaurant", label: "Charlottenburg Restaurant" },
+  { value: "neukoelln_early_surge", label: "Neukölln Early Surge Restaurants" },
+  { value: "schoeneberg_high_df_zones", label: "Schöneberg High DF Zones" },
+  // Shops assignments
+  { value: "shops_citywide_vendors", label: "Shops Citywide Vendors" },
+  { value: "shops_others_high_ps", label: "Shops Others, High PS Zones" },
+  { value: "shops_premium_partners", label: "Shops Premium Partners" },
+  { value: "shops_new_onboarding", label: "Shops New Onboarding" },
+  // Grocery assignments
+  { value: "grocery_mitte_express", label: "Grocery Mitte Express" },
+  { value: "grocery_west_berlin", label: "Grocery West Berlin" },
+  { value: "grocery_late_night", label: "Grocery Late Night Vendors" },
+  // Zone-based assignments
+  { value: "wedding_moabit_all", label: "Wedding / Moabit All Verticals" },
+  { value: "tempelhof_steglitz", label: "Tempelhof / Steglitz" },
+  { value: "east_berlin_surge", label: "East Berlin Peak Surge" },
+  { value: "central_zones_premium", label: "Central Zones Premium" },
+  // Special assignments
+  { value: "key_accounts_berlin", label: "Key Accounts Berlin" },
+  { value: "new_vendor_pilot", label: "New Vendor Pilot Program" },
+  { value: "high_value_partners", label: "High Value Partners" },
 ] as const;
 
 // Delivery fee component options for experiments

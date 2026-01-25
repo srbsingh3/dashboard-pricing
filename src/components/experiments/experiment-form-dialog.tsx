@@ -17,7 +17,7 @@ import {
 import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { ChipMultiSelect } from "@/components/ui/chip-multi-select";
 import { SearchSelect } from "@/components/ui/search-select";
-import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
+import { ZONES, PARENT_VERTICALS, ASSIGNMENT_NAMES, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import {
@@ -172,6 +172,7 @@ export function ExperimentFormDialog({
   const [experimentType, setExperimentType] = useState("ab_test");
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
+  const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
   const [allExpanded, setAllExpanded] = useState(true);
@@ -533,6 +534,7 @@ export function ExperimentFormDialog({
       setExperimentType("ab_test");
       setSelectedZones([]);
       setSelectedVerticals([]);
+      setSelectedTargetGroups([]);
       setNumberOfVariations("1");
       setParticipantShare("");
       setAllExpanded(true);
@@ -755,6 +757,19 @@ export function ExperimentFormDialog({
               <ParticipantSplitChart
                 participantShare={Number(participantShare) || 0}
                 numberOfVariations={parseInt(numberOfVariations, 10)}
+              />
+
+              {/* Divider */}
+              <div className="my-6 w-full border-t border-neutral-border" />
+
+              {/* Import Target Groups Multi-Select */}
+              <ChipMultiSelect
+                label="Import Target Groups"
+                options={ASSIGNMENT_NAMES}
+                value={selectedTargetGroups}
+                onValueChange={setSelectedTargetGroups}
+                placeholder="Select assignments to import"
+                optional
               />
 
             </div>
