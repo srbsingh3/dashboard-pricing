@@ -770,6 +770,7 @@ export function ExperimentFormDialog({
                 onValueChange={setSelectedTargetGroups}
                 placeholder="Select assignments to import"
                 optional
+                showCountOnly
               />
 
             </div>

@@ -26,6 +26,8 @@ interface ChipMultiSelectProps {
   optional?: boolean;
   disabled?: boolean;
   className?: string;
+  /** When true, shows "X selected" badge instead of individual chips (useful for narrow containers) */
+  showCountOnly?: boolean;
 }
 
 export function ChipMultiSelect({
@@ -37,6 +39,7 @@ export function ChipMultiSelect({
   optional = false,
   disabled = false,
   className,
+  showCountOnly = false,
 }: ChipMultiSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -193,6 +196,27 @@ export function ChipMultiSelect({
           <div ref={containerRef} className="flex min-w-0 flex-1 items-center gap-1.5 overflow-hidden">
             {value.length === 0 ? (
               <span className="truncate text-neutral-400">{placeholder}</span>
+            ) : showCountOnly ? (
+              /* Count-only display mode: show "X assignments selected" badge with clear button */
+              <Badge
+                variant="brand"
+                className="shrink-0"
+                iconRight={
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      onValueChange([]);
+                    }}
+                    className="ml-0.5 rounded-sm hover:bg-brand-200"
+                  >
+                    <X className="size-3" />
+                  </button>
+                }
+              >
+                {value.length} assignments selected
+              </Badge>
             ) : (
               <>
                 {/* Hidden measurement container - render all chips for measurement */}
