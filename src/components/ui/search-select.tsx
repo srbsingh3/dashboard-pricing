@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Check, Search } from "lucide-react";
+import { Check, Search, Eye } from "lucide-react";
 import { FeatherChevronDown } from "@subframe/core";
 import { cn } from "@/lib/utils";
 import {
@@ -26,6 +26,10 @@ interface SearchSelectProps {
   variant?: "default" | "ghost";
   /** Whether to show the search input - defaults to true */
   showSearch?: boolean;
+  /** Show details icon when a value is selected (appears on hover next to chevron) */
+  showDetailsIcon?: boolean;
+  /** Callback when the details icon is clicked */
+  onDetailsClick?: () => void;
 }
 
 export function SearchSelect({
@@ -37,6 +41,8 @@ export function SearchSelect({
   className,
   variant = "default",
   showSearch = true,
+  showDetailsIcon = false,
+  onDetailsClick,
 }: SearchSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -96,6 +102,31 @@ export function SearchSelect({
           >
             {selectedOption ? selectedOption.label : placeholder}
           </span>
+
+          {/* Details icon - shows on hover when enabled and a value is selected */}
+          {showDetailsIcon && selectedOption && (
+            <span
+              role="button"
+              tabIndex={0}
+              onClick={(e) => {
+                e.stopPropagation();
+                onDetailsClick?.();
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.stopPropagation();
+                  onDetailsClick?.();
+                }
+              }}
+              className={cn(
+                "flex size-6 shrink-0 items-center justify-center rounded-sm transition-opacity hover:bg-neutral-200",
+                variant === "ghost" && "opacity-0 group-hover:opacity-100 group-hover/row:opacity-100"
+              )}
+              aria-label="View details"
+            >
+              <Eye className="size-3.5 text-neutral-500" />
+            </span>
+          )}
 
           <FeatherChevronDown
             className={cn(

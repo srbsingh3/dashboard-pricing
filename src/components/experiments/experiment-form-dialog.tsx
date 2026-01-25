@@ -1439,6 +1439,7 @@ export function ExperimentFormDialog({
                                   onValueChange={(value) => updateControlSelection(group.id, 'deliveryFee', value)}
                                   placeholder="Select component"
                                   variant="ghost"
+                                  showDetailsIcon={Boolean(group.controlDeliveryFee)}
                                 />
                               </TableCell>
                               <TableCell className="px-3 py-2">
@@ -1448,6 +1449,7 @@ export function ExperimentFormDialog({
                                   onValueChange={(value) => updateControlSelection(group.id, 'mov', value)}
                                   placeholder="Select component"
                                   variant="ghost"
+                                  showDetailsIcon={Boolean(group.controlMov)}
                                 />
                               </TableCell>
                               {group.enabledColumns.includes("fleet_delay") && (
@@ -1458,6 +1460,7 @@ export function ExperimentFormDialog({
                                     onValueChange={(value) => updateControlSelection(group.id, 'fleetDelay', value)}
                                     placeholder="Select component"
                                     variant="ghost"
+                                    showDetailsIcon={Boolean(group.controlFleetDelay)}
                                   />
                                 </TableCell>
                               )}
@@ -1469,6 +1472,7 @@ export function ExperimentFormDialog({
                                     onValueChange={(value) => updateControlSelection(group.id, 'basketValue', value)}
                                     placeholder="Select component"
                                     variant="ghost"
+                                    showDetailsIcon={Boolean(group.controlBasketValue)}
                                   />
                                 </TableCell>
                               )}
@@ -1480,6 +1484,7 @@ export function ExperimentFormDialog({
                                     onValueChange={(value) => updateControlSelection(group.id, 'serviceFee', value)}
                                     placeholder="Select component"
                                     variant="ghost"
+                                    showDetailsIcon={Boolean(group.controlServiceFee)}
                                   />
                                 </TableCell>
                               )}
@@ -1491,6 +1496,7 @@ export function ExperimentFormDialog({
                                     onValueChange={(value) => updateControlSelection(group.id, 'priorityFee', value)}
                                     placeholder="Select component"
                                     variant="ghost"
+                                    showDetailsIcon={Boolean(group.controlPriorityFee)}
                                   />
                                 </TableCell>
                               )}
@@ -1509,6 +1515,7 @@ export function ExperimentFormDialog({
                                     onValueChange={(value) => updateVariationSelection(group.id, i, 'deliveryFee', value)}
                                     placeholder="Same as control"
                                     variant="ghost"
+                                    showDetailsIcon={Boolean(group.variations[i]?.deliveryFee) && group.variations[i]?.deliveryFee !== "same_as_control"}
                                   />
                                 </TableCell>
                                 <TableCell className="px-3 py-2">
@@ -1521,6 +1528,7 @@ export function ExperimentFormDialog({
                                     onValueChange={(value) => updateVariationSelection(group.id, i, 'mov', value)}
                                     placeholder="Same as control"
                                     variant="ghost"
+                                    showDetailsIcon={Boolean(group.variations[i]?.mov) && group.variations[i]?.mov !== "same_as_control"}
                                   />
                                 </TableCell>
                                 {group.enabledColumns.includes("fleet_delay") && (
@@ -1534,6 +1542,7 @@ export function ExperimentFormDialog({
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'fleetDelay', value)}
                                       placeholder="Same as control"
                                       variant="ghost"
+                                      showDetailsIcon={Boolean(group.variations[i]?.fleetDelay) && group.variations[i]?.fleetDelay !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
@@ -1548,6 +1557,7 @@ export function ExperimentFormDialog({
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'basketValue', value)}
                                       placeholder="Same as control"
                                       variant="ghost"
+                                      showDetailsIcon={Boolean(group.variations[i]?.basketValue) && group.variations[i]?.basketValue !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
@@ -1562,6 +1572,7 @@ export function ExperimentFormDialog({
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'serviceFee', value)}
                                       placeholder="Same as control"
                                       variant="ghost"
+                                      showDetailsIcon={Boolean(group.variations[i]?.serviceFee) && group.variations[i]?.serviceFee !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
@@ -1576,6 +1587,7 @@ export function ExperimentFormDialog({
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'priorityFee', value)}
                                       placeholder="Same as control"
                                       variant="ghost"
+                                      showDetailsIcon={Boolean(group.variations[i]?.priorityFee) && group.variations[i]?.priorityFee !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
