@@ -168,27 +168,21 @@ export function ParticipantSplitChart({
         )}
       </AnimatePresence>
 
-      {/* Custom tooltip above the bar */}
+      {/* Custom tooltip below the bar */}
       {participantShare > 0 && experimentSegments.length > 0 && (
         <motion.div
           className={cn(
-            "pointer-events-none absolute bottom-full left-0 z-50 mb-1",
+            "pointer-events-none absolute top-full left-0 z-50 mt-1",
             "transition-opacity duration-150 ease-out",
             isHovering ? "opacity-100" : "opacity-0"
           )}
-          animate={{ width: `${totalExperimentWidth}%` }}
+          style={{ minWidth: "3.5rem" }}
+          animate={{ width: `${Math.max(totalExperimentWidth, 15)}%` }}
           transition={widthTransition}
         >
-          {/* Tooltip body */}
+          {/* Upward-pointing triangle chevron using border trick */}
           <div
-            className="relative w-full rounded-md bg-neutral-900 px-3 py-1.5 text-center text-caption text-white"
-            style={{ fontSize: "var(--text-caption)" }}
-          >
-            {formatPercent(sharePerGroup)}
-          </div>
-          {/* Downward-pointing triangle chevron using border trick */}
-          <div
-            className="absolute -bottom-[5px] transition-[left] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            className="absolute -top-[5px] transition-[left] duration-200 ease-[cubic-bezier(0.25,1,0.5,1)]"
             style={{
               left: `${hoveredSegmentIndex !== null ? getSegmentCenterPercent(hoveredSegmentIndex) : 50}%`,
               transform: "translateX(-50%)",
@@ -196,9 +190,16 @@ export function ParticipantSplitChart({
               height: 0,
               borderLeft: "6px solid transparent",
               borderRight: "6px solid transparent",
-              borderTop: "6px solid rgb(23 23 23)", // neutral-900
+              borderBottom: "6px solid rgb(23 23 23)", // neutral-900
             }}
           />
+          {/* Tooltip body */}
+          <div
+            className="relative w-full rounded-md bg-neutral-900 px-3 py-1.5 text-center text-caption text-white"
+            style={{ fontSize: "var(--text-caption)", minWidth: "3.5rem" }}
+          >
+            {formatPercent(sharePerGroup)}
+          </div>
         </motion.div>
       )}
     </div>
