@@ -770,7 +770,7 @@ export function ExperimentFormDialog({
           {/* Right Panel */}
           <div className="flex-1 bg-neutral-50">
             <ScrollContainer className="p-6">
-              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(860, 860 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
+              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
               {/* Section Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
