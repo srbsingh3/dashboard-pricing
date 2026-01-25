@@ -108,13 +108,8 @@ function AlreadyStartedIcon({ started }: { started: boolean }) {
   );
 }
 
-function getInitials(email: string): string {
-  const username = email.split("@")[0];
-  const parts = username.split(".");
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-  return username.slice(0, 2).toUpperCase();
+function getAvatarUrl(email: string): string {
+  return `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${encodeURIComponent(email)}`;
 }
 
 function formatName(email: string): string {
@@ -363,9 +358,10 @@ export function ExperimentsTable() {
                   </td>
                   <td className="p-4">
                     <div className="flex items-center gap-2">
-                      <Avatar size="small" variant="brand">
-                        {getInitials(experiment.email)}
-                      </Avatar>
+                      <Avatar
+                        size="small"
+                        image={getAvatarUrl(experiment.email)}
+                      />
                       <span className="text-body text-neutral-700">
                         {formatName(experiment.email)}
                       </span>
