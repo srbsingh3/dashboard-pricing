@@ -246,7 +246,7 @@ export function NewCustomerConditionCard({
     <div className="group/card flex flex-col rounded-md border border-solid border-neutral-border bg-default-background shadow-sm">
       <ConditionCardHeader
         icon={<UserPlus className="size-4 text-success-600" />}
-        title="New Customer Condition"
+        title="New Customer"
         iconBgClass="bg-success-50"
         onDelete={onDelete}
       />

@@ -1020,19 +1020,19 @@ export function ExperimentFormDialog({
                                   icon={<Clock className="size-3.5" />}
                                   onClick={() => addCondition(group.id, "time")}
                                 >
-                                  Time condition
+                                  Time recurrence
                                 </DropdownMenu.DropdownItem>
                                 <DropdownMenu.DropdownItem
                                   icon={<UserPlus className="size-3.5" />}
                                   onClick={() => addCondition(group.id, "new_customer")}
                                 >
-                                  New customer condition
+                                  New customer
                                 </DropdownMenu.DropdownItem>
                                 <DropdownMenu.DropdownItem
                                   icon={<MapPinned className="size-3.5" />}
                                   onClick={() => addCondition(group.id, "customer_location")}
                                 >
-                                  Customer location condition
+                                  Customer location
                                 </DropdownMenu.DropdownItem>
                               </DropdownMenu>
                             </SubframeCore.DropdownMenu.Content>
