@@ -40,7 +40,7 @@ export default function RootLayout({
             </main>
           </div>
         </TooltipProvider>
-        <Toaster position="top-center" />
+        <Toaster position="top-right" />
       </body>
     </html>
   );

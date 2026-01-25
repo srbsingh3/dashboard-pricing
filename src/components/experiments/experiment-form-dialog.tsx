@@ -59,6 +59,7 @@ import {
   UserPlus,
   MapPinned,
   Import,
+  CheckCircle2,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
@@ -87,6 +88,7 @@ import {
   generateFilterId,
 } from "./vendor-filter-row";
 import { Badge } from "@/subframe/components/Badge";
+import { Toast } from "@/subframe/components/Toast";
 import {
   Table,
   TableBody,
@@ -674,7 +676,13 @@ export function ExperimentFormDialog({
     setImportPopoverOpen(false);
 
     // Show toast
-    SubframeCore.toast.success(`${newGroups.length} target groups imported`);
+    SubframeCore.toast.custom(() => (
+      <Toast
+        variant="success"
+        icon={<CheckCircle2 className="size-4" />}
+        title={`${newGroups.length} target groups imported`}
+      />
+    ));
   }, [selectedTargetGroups, numberOfVariations, priorityGroups]);
 
   const handleClose = () => {
