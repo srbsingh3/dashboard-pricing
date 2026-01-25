@@ -28,6 +28,8 @@ interface ChipMultiSelectProps {
   className?: string;
   /** When true, shows "X selected" badge instead of individual chips (useful for narrow containers) */
   showCountOnly?: boolean;
+  /** Whether to prevent auto-focus on the search input when popover opens */
+  preventAutoFocus?: boolean;
 }
 
 export function ChipMultiSelect({
@@ -40,6 +42,7 @@ export function ChipMultiSelect({
   disabled = false,
   className,
   showCountOnly = false,
+  preventAutoFocus = false,
 }: ChipMultiSelectProps) {
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -272,6 +275,7 @@ export function ChipMultiSelect({
         className="w-(--radix-popover-trigger-width) overflow-hidden rounded-md border border-solid border-neutral-border bg-white p-0 shadow-lg"
         align="start"
         sideOffset={4}
+        onOpenAutoFocus={preventAutoFocus ? (e) => e.preventDefault() : undefined}
       >
         {/* Search input */}
         <div className="p-2">

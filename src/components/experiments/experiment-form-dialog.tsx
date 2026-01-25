@@ -27,7 +27,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ZONES, PARENT_VERTICALS, ASSIGNMENT_NAMES, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
+import { ZONES, PARENT_VERTICALS, ASSIGNMENT_NAMES, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS, CUSTOMER_CONDITION_TYPES, CUSTOMER_LOCATIONS } from "@/lib/constants";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import {
@@ -99,9 +99,13 @@ import { ParticipantSplitChart } from "./participant-split-chart";
 import {
   ConditionsGrid,
   Condition,
+  TimeCondition,
+  NewCustomerCondition,
+  CustomerLocationCondition,
   createTimeCondition,
   createNewCustomerCondition,
   createCustomerLocationCondition,
+  generateConditionId,
 } from "./condition-cards";
 
 // Helper to generate random vendor count between 40 and 2000
@@ -131,6 +135,84 @@ const generateRandomVendorCount = (
     if (lowerBound >= upperBound) return MAX_COUNT;
     return Math.floor(Math.random() * (upperBound - lowerBound + 1)) + lowerBound;
   }
+};
+
+// Helper to create a random time condition for imported target groups
+const createRandomTimeCondition = (): TimeCondition => {
+  const allDays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
+  const shuffled = [...allDays].sort(() => Math.random() - 0.5);
+  const numDays = Math.floor(Math.random() * 4) + 2; // 2-5 days
+  const selectedDays = shuffled.slice(0, numDays);
+
+  const startHour = Math.floor(Math.random() * 10) + 8; // 8-17
+  const endHour = Math.min(startHour + Math.floor(Math.random() * 6) + 2, 23); // +2 to +8 hours
+
+  return {
+    id: generateConditionId(),
+    repeatMode: "weekly",
+    allDay: Math.random() > 0.8,
+    startTime: `${String(startHour).padStart(2, "0")}:00`,
+    endTime: `${String(endHour).padStart(2, "0")}:00`,
+    selectedDays,
+  };
+};
+
+// Helper to create a random new customer condition for imported target groups
+const createRandomNewCustomerCondition = (): NewCustomerCondition => {
+  const randomType = CUSTOMER_CONDITION_TYPES[Math.floor(Math.random() * CUSTOMER_CONDITION_TYPES.length)].value;
+
+  return {
+    id: generateConditionId(),
+    customerType: randomType,
+    orderCountEnabled: Math.random() > 0.3,
+    orderCountValue: String(Math.floor(Math.random() * 8) + 1),
+    daysSinceFirstOrderEnabled: Math.random() > 0.5,
+    daysSinceFirstOrderValue: String(Math.floor(Math.random() * 50) + 10),
+  };
+};
+
+// Helper to create a random customer location condition for imported target groups
+const createRandomCustomerLocationCondition = (): CustomerLocationCondition => {
+  const shuffled = [...CUSTOMER_LOCATIONS].sort(() => Math.random() - 0.5);
+  const numLocations = Math.floor(Math.random() * 4) + 1; // 1-4 locations
+  const locations = shuffled.slice(0, numLocations).map(l => l.value);
+
+  return {
+    id: generateConditionId(),
+    locations,
+  };
+};
+
+// Helper to create a random condition (picks from all 3 types)
+const createRandomCondition = (): Condition => {
+  const conditionTypes: Array<"time" | "new_customer" | "customer_location"> = [
+    "time",
+    "new_customer",
+    "customer_location",
+  ];
+  const randomType = conditionTypes[Math.floor(Math.random() * conditionTypes.length)];
+
+  switch (randomType) {
+    case "time":
+      return { type: "time", data: createRandomTimeCondition() };
+    case "new_customer":
+      return { type: "new_customer", data: createRandomNewCustomerCondition() };
+    case "customer_location":
+      return { type: "customer_location", data: createRandomCustomerLocationCondition() };
+  }
+};
+
+// Helper to pick a random component from an array
+const getRandomComponent = <T extends { value: string }>(components: readonly T[]): string => {
+  return components[Math.floor(Math.random() * components.length)].value;
+};
+
+// Helper to randomly select 1-4 extra columns to enable
+const getRandomEnabledColumns = (): string[] => {
+  const allColumns = ["fleet_delay", "basket_value", "service_fee", "priority_fee"];
+  const shuffled = [...allColumns].sort(() => Math.random() - 0.5);
+  const numColumns = Math.floor(Math.random() * 4) + 1; // 1-4 columns
+  return shuffled.slice(0, numColumns);
 };
 
 interface ExperimentFormDialogProps {
@@ -536,6 +618,65 @@ export function ExperimentFormDialog({
     );
   }, []);
 
+  // Handle importing target groups from selected assignments
+  const handleImportTargetGroups = useCallback(() => {
+    if (selectedTargetGroups.length === 0) return;
+
+    const newGroups: typeof priorityGroups = [];
+    let maxId = Math.max(...priorityGroups.map((g) => g.id), 0);
+    const numVariations = parseInt(numberOfVariations, 10);
+
+    const defaultVariation = {
+      deliveryFee: "same_as_control",
+      mov: "same_as_control",
+      fleetDelay: "same_as_control",
+      basketValue: "same_as_control",
+      serviceFee: "same_as_control",
+      priorityFee: "same_as_control",
+    };
+
+    for (const assignmentValue of selectedTargetGroups) {
+      // Create 2 groups per assignment with randomized conditions and columns
+      for (let i = 0; i < 2; i++) {
+        maxId++;
+        const enabledColumns = getRandomEnabledColumns();
+
+        newGroups.push({
+          id: maxId,
+          isExpanded: false,
+          vendorFilters: [{
+            id: generateFilterId(),
+            field: "assignment",
+            condition: "is",
+            values: [assignmentValue],
+          }],
+          vendorCount: generateRandomVendorCount(),
+          conditions: [createRandomCondition()],
+          controlDeliveryFee: getRandomComponent(DELIVERY_FEE_COMPONENTS),
+          controlMov: getRandomComponent(MOV_COMPONENTS),
+          controlFleetDelay: enabledColumns.includes("fleet_delay") ? getRandomComponent(FLEET_DELAY_COMPONENTS) : null,
+          controlBasketValue: enabledColumns.includes("basket_value") ? getRandomComponent(BASKET_VALUE_COMPONENTS) : null,
+          controlServiceFee: enabledColumns.includes("service_fee") ? getRandomComponent(SERVICE_FEE_COMPONENTS) : null,
+          controlPriorityFee: enabledColumns.includes("priority_fee") ? getRandomComponent(PRIORITY_FEE_COMPONENTS) : null,
+          enabledColumns,
+          variations: Array.from({ length: numVariations }, () => ({ ...defaultVariation })),
+        });
+      }
+    }
+
+    // Prepend new groups to existing ones
+    setPriorityGroups((prev) => [...newGroups, ...prev]);
+
+    // Clear selection
+    setSelectedTargetGroups([]);
+
+    // Close popover
+    setImportPopoverOpen(false);
+
+    // Show toast
+    SubframeCore.toast.success(`${newGroups.length} target groups imported`);
+  }, [selectedTargetGroups, numberOfVariations, priorityGroups]);
+
   const handleClose = () => {
     onOpenChange(false);
     // Reset form state
@@ -826,6 +967,7 @@ export function ExperimentFormDialog({
                       align="end"
                       sideOffset={4}
                       className="w-80 rounded-md border border-neutral-border bg-white p-4 shadow-lg"
+                      onOpenAutoFocus={(e) => e.preventDefault()}
                     >
                       <div className="flex flex-col gap-3">
                         <ChipMultiSelect
@@ -835,12 +977,13 @@ export function ExperimentFormDialog({
                           onValueChange={setSelectedTargetGroups}
                           placeholder="Select assignments"
                           showCountOnly
+                          preventAutoFocus
                         />
                         <SubframeButton
                           variant="brand-primary"
                           disabled={selectedTargetGroups.length === 0}
                           className="w-full"
-                          onClick={() => setImportPopoverOpen(false)}
+                          onClick={handleImportTargetGroups}
                         >
                           Import
                         </SubframeButton>
