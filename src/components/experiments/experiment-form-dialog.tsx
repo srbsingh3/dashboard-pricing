@@ -18,7 +18,6 @@ import { RadioCardGroup } from "@/subframe/components/RadioCardGroup";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { SearchSelect } from "@/components/ui/search-select";
 import { ZONES, PARENT_VERTICALS, VARIATION_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS } from "@/lib/constants";
-import { IconWithBackground } from "@/subframe/components/IconWithBackground";
 import { IconButton } from "@/subframe/components/IconButton";
 import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import {
@@ -873,11 +872,9 @@ export function ExperimentFormDialog({
                     <div className="flex w-full flex-col items-start p-2">
                       {/* Target Vendors */}
                       <div className="flex w-full items-center gap-4 p-4">
-                        <IconWithBackground
-                          size="medium"
-                          variant="brand"
-                          icon={<Store className="size-4" />}
-                        />
+                        <div className="flex size-8 items-center justify-center rounded-full bg-brand-50">
+                          <Store className="size-4 text-brand-600" />
+                        </div>
                         <div className="flex shrink-0 grow basis-0 items-center gap-2">
                           <span className="text-body-bold text-default-font">
                             Target Vendors
@@ -991,11 +988,9 @@ export function ExperimentFormDialog({
 
                       {/* Conditions */}
                       <div className="flex w-full items-center gap-4 p-4">
-                        <IconWithBackground
-                          size="medium"
-                          variant="warning"
-                          icon={<SlidersHorizontal className="size-4" />}
-                        />
+                        <div className="flex size-8 items-center justify-center rounded-full bg-warning-50">
+                          <SlidersHorizontal className="size-4 text-warning-600" />
+                        </div>
                         <div className="flex shrink-0 grow basis-0 items-center gap-2">
                           <span className="text-body-bold text-default-font">
                             Conditions
@@ -1053,11 +1048,9 @@ export function ExperimentFormDialog({
 
                       {/* Control and Variation */}
                       <div className="flex w-full items-center gap-4 p-4">
-                        <IconWithBackground
-                          size="medium"
-                          variant="success"
-                          icon={<GitBranch className="size-4" />}
-                        />
+                        <div className="flex size-8 items-center justify-center rounded-full bg-success-50">
+                          <GitBranch className="size-4 text-success-600" />
+                        </div>
                         <div className="flex shrink-0 grow basis-0 flex-col items-start gap-1">
                           <span className="w-full text-body-bold text-default-font">
                             Control and Variation
