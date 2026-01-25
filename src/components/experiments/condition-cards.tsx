@@ -288,18 +288,17 @@ export function NewCustomerConditionCard({
         </div>
 
         {/* Order Count Condition */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Checkbox
+            label="Number of orders"
             checked={condition.orderCountEnabled}
             onCheckedChange={(checked) =>
               onUpdate({ ...condition, orderCountEnabled: checked })
             }
+            className="flex-1"
           />
-          <span className="flex-1 text-body text-default-font">
-            Number of orders
-          </span>
           <ChevronLeft className="size-4 text-neutral-400" />
-          <TextField className="w-20">
+          <TextField className="w-14">
             <TextField.Input
               type="number"
               min="0"
@@ -314,18 +313,17 @@ export function NewCustomerConditionCard({
         </div>
 
         {/* Days Since First Order Condition */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Checkbox
+            label="Days since first order"
             checked={condition.daysSinceFirstOrderEnabled}
             onCheckedChange={(checked) =>
               onUpdate({ ...condition, daysSinceFirstOrderEnabled: checked })
             }
+            className="flex-1"
           />
-          <span className="flex-1 text-body text-default-font">
-            Days since first order
-          </span>
           <ChevronLeft className="size-4 text-neutral-400" />
-          <TextField className="w-20">
+          <TextField className="w-14">
             <TextField.Input
               type="number"
               min="0"
