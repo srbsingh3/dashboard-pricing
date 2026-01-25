@@ -163,10 +163,10 @@ export function TimeConditionCard({
       />
 
       <div className="flex flex-col gap-4 p-4">
-        {/* Day Selection */}
+        {/* Day Selection - Soft Neumorphic Tray */}
         <div className="flex flex-col gap-2">
           <span className="text-caption-bold text-neutral-700">Repeat on</span>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex gap-1 rounded-md bg-neutral-100 p-1">
             {WEEKDAYS.map((day) => {
               const isSelected = condition.selectedDays.includes(day.value);
               return (
@@ -175,10 +175,10 @@ export function TimeConditionCard({
                   type="button"
                   onClick={() => toggleDay(day.value)}
                   className={cn(
-                    "flex size-9 items-center justify-center rounded-lg text-caption-bold transition-all",
+                    "flex size-8 items-center justify-center rounded-md text-caption font-medium transition-all duration-200",
                     isSelected
-                      ? "bg-brand-600 text-white"
-                      : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                      ? "bg-default-background text-neutral-600 shadow-sm"
+                      : "text-neutral-400 hover:text-neutral-500"
                   )}
                 >
                   {day.label}

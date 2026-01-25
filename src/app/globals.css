@@ -117,12 +117,22 @@
   --font-family-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-family-mono: "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
+  /* Warm Neutral Colors (for soft/neumorphic UI) */
+  --color-warm-50: rgb(253, 252, 251);
+  --color-warm-100: rgb(248, 246, 243);
+  --color-warm-200: rgb(240, 237, 232);
+  --color-warm-300: rgb(224, 219, 212);
+  --color-warm-400: rgb(192, 184, 174);
+  --color-warm-500: rgb(156, 146, 134);
+
   /* Box Shadows */
   --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
   --shadow-default: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
   --shadow-md: 0px 4px 16px -2px rgba(0, 0, 0, 0.08), 0px 2px 4px -1px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0px 12px 32px -4px rgba(0, 0, 0, 0.08), 0px 4px 8px -2px rgba(0, 0, 0, 0.08);
   --shadow-overlay: 0px 12px 32px -4px rgba(0, 0, 0, 0.08), 0px 4px 8px -2px rgba(0, 0, 0, 0.08);
+  --shadow-soft: 0px 4px 12px -2px rgba(140, 130, 115, 0.15), 0px 2px 4px -1px rgba(140, 130, 115, 0.1);
+  --shadow-soft-hover: 0px 6px 16px -2px rgba(140, 130, 115, 0.2), 0px 3px 6px -1px rgba(140, 130, 115, 0.12);
 
   /* Border Radius */
   --radius-sm: 2px;
@@ -367,6 +377,15 @@
 
   .shadow-subframe-overlay {
     box-shadow: var(--shadow-overlay);
+  }
+
+  /* Soft/Neumorphic Shadow Utilities */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-soft-hover {
+    box-shadow: var(--shadow-soft-hover);
   }
 }
 
