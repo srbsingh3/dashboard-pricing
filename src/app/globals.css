@@ -501,6 +501,65 @@ button:focus-visible,
   animation: slide-down 0.3s ease-out;
 }
 
+/* Toggle Button Press Animation */
+@keyframes toggle-press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes toggle-icon-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes toggle-icon-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@utility animate-toggle-press {
+  animation: toggle-press 150ms ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility animate-toggle-icon-out {
+  animation: toggle-icon-out 150ms ease-out forwards;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@utility animate-toggle-icon-in {
+  animation: toggle-icon-in 150ms ease-out forwards;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
 /* ============================================
    COMPONENT ANIMATIONS
    ============================================ */

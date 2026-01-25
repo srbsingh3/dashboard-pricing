@@ -174,6 +174,7 @@ export function ExperimentFormDialog({
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
+  const [allExpanded, setAllExpanded] = useState(true);
   const [priorityGroups, setPriorityGroups] = useState<{
     id: number;
     isExpanded: boolean;
@@ -270,11 +271,17 @@ export function ExperimentFormDialog({
 
   // Toggle expansion of a single priority group
   const toggleGroupExpanded = useCallback((groupId: number) => {
-    setPriorityGroups((prev) =>
-      prev.map((group) =>
+    setPriorityGroups((prev) => {
+      const newGroups = prev.map((group) =>
         group.id === groupId ? { ...group, isExpanded: !group.isExpanded } : group
-      )
-    );
+      );
+      // Update allExpanded based on whether all groups are now expanded
+      const allAreExpanded = newGroups.every((g) => g.isExpanded);
+      const noneAreExpanded = newGroups.every((g) => !g.isExpanded);
+      if (allAreExpanded) setAllExpanded(true);
+      if (noneAreExpanded) setAllExpanded(false);
+      return newGroups;
+    });
   }, []);
 
   // Add a new priority group at the top
@@ -306,19 +313,13 @@ export function ExperimentFormDialog({
     });
   }, [numberOfVariations]);
 
-  // Collapse all priority groups
-  const collapseAll = useCallback(() => {
-    setPriorityGroups((prev) =>
-      prev.map((group) => ({ ...group, isExpanded: false }))
+  // Toggle all priority groups expanded/collapsed with animation
+  const toggleAllExpanded = useCallback(() => {
+    setAllExpanded((prev) => !prev);
+    setPriorityGroups((prevGroups) =>
+      prevGroups.map((group) => ({ ...group, isExpanded: !allExpanded }))
     );
-  }, []);
-
-  // Expand all priority groups
-  const expandAll = useCallback(() => {
-    setPriorityGroups((prev) =>
-      prev.map((group) => ({ ...group, isExpanded: true }))
-    );
-  }, []);
+  }, [allExpanded]);
 
   // Delete a priority group (only if more than one exists)
   const deletePriorityGroup = useCallback((groupId: number) => {
@@ -534,6 +535,7 @@ export function ExperimentFormDialog({
       setSelectedVerticals([]);
       setNumberOfVariations("1");
       setParticipantShare("");
+      setAllExpanded(true);
       setPriorityGroups([{
         id: 1,
         isExpanded: true,
@@ -777,16 +779,27 @@ export function ExperimentFormDialog({
                   <Badge variant="neutral">{priorityGroups.length}</Badge>
                 </div>
                 <div className="flex items-center gap-1">
-                  <IconButton
-                    size="medium"
-                    icon={<ChevronsDownUp className="size-4 text-subtext-color" />}
-                    onClick={collapseAll}
-                  />
-                  <IconButton
-                    size="medium"
-                    icon={<ChevronsUpDown className="size-4 text-subtext-color" />}
-                    onClick={expandAll}
-                  />
+                  <button
+                    type="button"
+                    onClick={toggleAllExpanded}
+                    className="relative flex size-8 items-center justify-center rounded-md transition-transform duration-150 ease-out hover:bg-neutral-100 active:scale-95"
+                    aria-label={allExpanded ? "Collapse all groups" : "Expand all groups"}
+                  >
+                    {/* Collapse icon - visible when expanded */}
+                    <ChevronsDownUp
+                      className={cn(
+                        "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
+                        allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                      )}
+                    />
+                    {/* Expand icon - visible when collapsed */}
+                    <ChevronsUpDown
+                      className={cn(
+                        "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
+                        !allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                      )}
+                    />
+                  </button>
                   <IconButton
                     size="medium"
                     icon={<Plus className="size-4 text-subtext-color" />}
