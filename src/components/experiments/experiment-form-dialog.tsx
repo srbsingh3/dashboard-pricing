@@ -926,91 +926,97 @@ export function ExperimentFormDialog({
 
           {/* Right Panel */}
           <div className="flex-1 bg-neutral-50">
-            <ScrollContainer className="p-6">
-              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
-              {/* Section Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
-                  <Badge variant="neutral">{priorityGroups.length}</Badge>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={toggleAllExpanded}
-                    className="relative flex size-8 items-center justify-center rounded-md transition-transform duration-150 ease-out hover:bg-neutral-100 active:scale-95"
-                    aria-label={allExpanded ? "Collapse all groups" : "Expand all groups"}
-                  >
-                    {/* Collapse icon - visible when expanded */}
-                    <ChevronsDownUp
-                      className={cn(
-                        "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
-                        allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                      )}
-                    />
-                    {/* Expand icon - visible when collapsed */}
-                    <ChevronsUpDown
-                      className={cn(
-                        "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
-                        !allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                      )}
-                    />
-                  </button>
-                  {/* Import Target Groups Popover */}
-                  <Popover open={importPopoverOpen} onOpenChange={setImportPopoverOpen}>
-                    <Tooltip open={importPopoverOpen ? false : undefined}>
-                      <TooltipTrigger asChild>
-                        <PopoverTrigger asChild>
-                          <IconButton
-                            size="medium"
-                            icon={<Import className="size-4 text-subtext-color" />}
-                          />
-                        </PopoverTrigger>
-                      </TooltipTrigger>
-                      <TooltipContent side="top" sideOffset={4}>
-                        Import Target Groups
-                      </TooltipContent>
-                    </Tooltip>
-                    <PopoverContent
-                      align="end"
-                      sideOffset={4}
-                      className="w-80 rounded-md border border-neutral-border bg-white p-4 shadow-lg"
-                      onOpenAutoFocus={(e) => e.preventDefault()}
-                      onCloseAutoFocus={(e) => e.preventDefault()}
-                    >
-                      <div className="flex flex-col gap-2">
-                        <span className="text-caption-bold text-neutral-700">Import Target Groups</span>
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1">
-                            <ChipMultiSelect
-                              options={ASSIGNMENT_NAMES}
-                              value={selectedTargetGroups}
-                              onValueChange={setSelectedTargetGroups}
-                              placeholder="Select assignments"
-                              showCountOnly
-                              preventAutoFocus
-                            />
+            <ScrollContainer>
+              {/* Sticky Section Header */}
+              <div className="sticky top-0 z-10 bg-neutral-50 px-6 pt-6 pb-4">
+                <div className="mx-auto transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
+                      <Badge variant="neutral">{priorityGroups.length}</Badge>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={toggleAllExpanded}
+                        className="relative flex size-8 items-center justify-center rounded-md transition-transform duration-150 ease-out hover:bg-neutral-100 active:scale-95"
+                        aria-label={allExpanded ? "Collapse all groups" : "Expand all groups"}
+                      >
+                        {/* Collapse icon - visible when expanded */}
+                        <ChevronsDownUp
+                          className={cn(
+                            "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
+                            allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                          )}
+                        />
+                        {/* Expand icon - visible when collapsed */}
+                        <ChevronsUpDown
+                          className={cn(
+                            "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
+                            !allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                          )}
+                        />
+                      </button>
+                      {/* Import Target Groups Popover */}
+                      <Popover open={importPopoverOpen} onOpenChange={setImportPopoverOpen}>
+                        <Tooltip open={importPopoverOpen ? false : undefined}>
+                          <TooltipTrigger asChild>
+                            <PopoverTrigger asChild>
+                              <IconButton
+                                size="medium"
+                                icon={<Import className="size-4 text-subtext-color" />}
+                              />
+                            </PopoverTrigger>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" sideOffset={4}>
+                            Import Target Groups
+                          </TooltipContent>
+                        </Tooltip>
+                        <PopoverContent
+                          align="end"
+                          sideOffset={4}
+                          className="w-80 rounded-md border border-neutral-border bg-white p-4 shadow-lg"
+                          onOpenAutoFocus={(e) => e.preventDefault()}
+                          onCloseAutoFocus={(e) => e.preventDefault()}
+                        >
+                          <div className="flex flex-col gap-2">
+                            <span className="text-caption-bold text-neutral-700">Import Target Groups</span>
+                            <div className="flex items-center gap-2">
+                              <div className="flex-1">
+                                <ChipMultiSelect
+                                  options={ASSIGNMENT_NAMES}
+                                  value={selectedTargetGroups}
+                                  onValueChange={setSelectedTargetGroups}
+                                  placeholder="Select assignments"
+                                  showCountOnly
+                                  preventAutoFocus
+                                />
+                              </div>
+                              <button
+                                type="button"
+                                disabled={selectedTargetGroups.length === 0}
+                                onClick={handleImportTargetGroups}
+                                className="flex size-9 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
+                              >
+                                <Import className="size-4" />
+                              </button>
+                            </div>
                           </div>
-                          <button
-                            type="button"
-                            disabled={selectedTargetGroups.length === 0}
-                            onClick={handleImportTargetGroups}
-                            className="flex size-9 shrink-0 items-center justify-center rounded-md bg-brand-600 text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
-                          >
-                            <Import className="size-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-                  <IconButton
-                    size="medium"
-                    icon={<Plus className="size-4 text-subtext-color" />}
-                    onClick={addPriorityGroup}
-                  />
+                        </PopoverContent>
+                      </Popover>
+                      <IconButton
+                        size="medium"
+                        icon={<Plus className="size-4 text-subtext-color" />}
+                        onClick={addPriorityGroup}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
 
+              {/* Priority Cards Content */}
+              <div className="px-6 pb-6">
+              <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
               {/* Priority Cards - rendered from state with drag and drop */}
               <DndContext
                 sensors={sensors}
@@ -1586,6 +1592,7 @@ export function ExperimentFormDialog({
                   ))}
                 </SortableContext>
               </DndContext>
+              </div>
               </div>
             </ScrollContainer>
           </div>
