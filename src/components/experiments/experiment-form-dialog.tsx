@@ -1658,7 +1658,7 @@ export function ExperimentFormDialog({
           {/* Align with the cards container - offset by left panel width (w-96 = 384px) on lg screens */}
           <div className="mx-auto flex w-full items-center justify-end gap-3 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
             <SubframeButton
-              variant="neutral-secondary"
+              variant="neutral-tertiary"
               onClick={handleClose}
             >
               Cancel
