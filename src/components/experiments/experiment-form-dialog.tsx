@@ -888,7 +888,9 @@ export function ExperimentFormDialog({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <h3 className="text-body-bold text-neutral-900">Target Groups</h3>
-                      <Badge variant="neutral">{priorityGroups.length}</Badge>
+                      {priorityGroups.length > 0 && (
+                        <Badge variant="neutral">{priorityGroups.length}</Badge>
+                      )}
                     </div>
                     <div className="flex items-center gap-1">
                       <button
