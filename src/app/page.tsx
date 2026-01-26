@@ -103,21 +103,21 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Main Charts Row */}
+        {/* Row 1: Trend Charts */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <OrdersTrendChart />
           <DeliveryFeeTrendChart />
         </div>
 
-        {/* City Analysis Row */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        {/* Row 2: City Analysis */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <CityPerformanceChart />
           <DeliveryFeeByCityChart />
-          <VerticalBreakdownChart />
         </div>
 
-        {/* Delivery Fee Distribution */}
-        <div className="grid grid-cols-1 gap-6">
+        {/* Row 3: Vertical & Fee Distribution */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <VerticalBreakdownChart />
           <DeliveryFeeDistributionChart />
         </div>
       </div>

@@ -291,7 +291,7 @@ export function VerticalBreakdownChart() {
   return (
     <div className="rounded-lg border border-neutral-200 bg-white p-5">
       <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Orders by Vertical</h3>
+        <h3 className="text-body-bold text-neutral-900">Order Share by Vertical</h3>
         <p className="text-caption text-neutral-500">Distribution across business verticals</p>
       </div>
       <div className="h-[240px]">
