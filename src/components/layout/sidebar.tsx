@@ -14,8 +14,8 @@ import {
   FeatherStore,
   FeatherSettings,
   FeatherGlobe,
-  FeatherChevronDown,
 } from "@subframe/core";
+import { ChevronDown } from "lucide-react";
 import { NAV_ITEMS, REGIONS } from "@/lib/constants";
 import {
   DropdownMenu,
@@ -77,7 +77,7 @@ export function Sidebar() {
                   <FeatherGlobe className="size-4" />
                   {currentRegion}
                 </span>
-                <FeatherChevronDown className="size-3 transition duration-200 group-data-[state=open]:rotate-180" />
+                <ChevronDown className="size-3 origin-center transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
@@ -107,7 +107,7 @@ export function Sidebar() {
                   />
                   <span className="font-medium">FP_DE</span>
                 </span>
-                <FeatherChevronDown className="size-3 transition duration-200 group-data-[state=open]:rotate-180" />
+                <ChevronDown className="size-3 origin-center transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
@@ -177,7 +177,7 @@ export function Sidebar() {
                   />
                   <span className="font-medium">Saurabh Singh</span>
                 </span>
-                <FeatherChevronDown className="size-3 transition duration-200 group-data-[state=open]:rotate-180" />
+                <ChevronDown className="size-3 origin-center transition-transform duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
