@@ -5,7 +5,6 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X, Split, RefreshCw, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Button as SubframeButton } from "@/subframe/components/Button";
 import { FullscreenDialog } from "@/subframe/components/FullscreenDialog";
 import { TextField } from "@/subframe/components/TextField";
@@ -707,14 +706,14 @@ export function ExperimentFormDialog({
               New Experiment
             </h2>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="size-8 text-neutral-500 hover:text-neutral-700"
+          <button
+            type="button"
             onClick={handleClose}
+            className="flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-700"
+            aria-label="Close dialog"
           >
             <X className="size-4" />
-          </Button>
+          </button>
         </div>
         {/* Divider line like Figma */}
         <div className="h-px bg-neutral-200" />
