@@ -1,12 +1,13 @@
 // Type definitions for DPS Dashboard
 
 export type ExperimentStatus = "running" | "completed" | "draft";
+export type ExperimentType = "ab" | "switchback";
 
 export interface Experiment {
   id: number;
   name: string;
   status: ExperimentStatus;
-  alreadyStarted: boolean;
+  type: ExperimentType;
   targetGroups: number;
   variations: number;
   createdOn: string;
@@ -14,6 +15,14 @@ export interface Experiment {
   email: string;
   region: string;
   city: string;
+  // New fields for enhanced dashboard
+  objective: string;
+  primaryMetric: string;
+  startedOn?: string;
+  endedOn?: string;
+  daysRunning?: number;
+  significance?: number; // 0-100 percentage
+  lift?: number; // percentage change (can be negative)
 }
 
 export interface Campaign {

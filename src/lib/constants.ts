@@ -32,6 +32,24 @@ export const EXPERIMENT_STATUS = {
   DRAFT: "draft",
 } as const;
 
+// Experiment types
+export const EXPERIMENT_TYPES = [
+  { value: "ab", label: "A/B Test" },
+  { value: "switchback", label: "Switchback" },
+] as const;
+
+// Primary metrics for experiments
+export const PRIMARY_METRICS = [
+  { value: "conversion_rate", label: "Conversion Rate" },
+  { value: "order_volume", label: "Order Volume" },
+  { value: "revenue_per_order", label: "Revenue per Order" },
+  { value: "avg_delivery_fee", label: "Avg Delivery Fee" },
+  { value: "gross_profit", label: "Gross Profit" },
+] as const;
+
+// Significance threshold (industry standard)
+export const SIGNIFICANCE_THRESHOLD = 95;
+
 // Status colors (for badges) - Using Subframe semantic colors
 // Running = blue (brand), Completed = green (success), Draft = gray (neutral)
 export const STATUS_COLORS = {
