@@ -459,6 +459,16 @@ button:focus-visible,
   box-shadow: none;
 }
 
+/* Remove focus outline from Recharts containers */
+.recharts-wrapper,
+.recharts-wrapper *,
+.recharts-surface,
+.recharts-surface:focus,
+.recharts-surface:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* ============================================
    ANIMATIONS
    ============================================ */
