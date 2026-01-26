@@ -118,6 +118,10 @@ export const STAGGER_CHILDREN = {
 export const ROWS_PER_PAGE_OPTIONS = [10, 25, 50, 100] as const;
 export const DEFAULT_ROWS_PER_PAGE = 10;
 
+// Breakpoints for responsive table styling
+// When screen is wider than this, table gets a bordered container appearance
+export const TABLE_CONTAINER_BREAKPOINT = 1700; // px - slightly above max-w-[1600px]
+
 // Regions/Countries
 export const REGIONS = [
   { value: "all", label: "All" },

@@ -484,10 +484,10 @@ export function ExperimentsTable() {
       </div>
 
       {/* Table */}
-      <div className="-mx-6">
+      <div className="-mx-6 2xl:mx-0 2xl:overflow-hidden 2xl:rounded-md 2xl:border 2xl:border-neutral-border">
         <table className="w-full">
           <thead>
-            <tr className="border-y border-neutral-border bg-neutral-50">
+            <tr className="border-y border-neutral-border bg-neutral-50 2xl:border-t-0">
               <th
                 className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("id")}
@@ -580,7 +580,7 @@ export function ExperimentsTable() {
               </th>
             </tr>
           </thead>
-          <tbody className="border-b border-neutral-border">
+          <tbody className="border-b border-neutral-border 2xl:border-b-0">
             {paginatedExperiments.map((experiment) => (
               <tr
                 key={experiment.id}
