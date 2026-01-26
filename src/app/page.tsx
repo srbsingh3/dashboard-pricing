@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -92,6 +93,10 @@ function KPICell({ metric, isLast }: { metric: KPIMetric; isLast: boolean }) {
 }
 
 export default function DashboardPage() {
+  useEffect(() => {
+    document.title = "Dashboard • DPS";
+  }, []);
+
   return (
     <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
       <div className="mx-auto max-w-[1600px] space-y-6 p-6">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/subframe/components/Button";
 import { ExperimentsTable } from "@/components/experiments/experiments-table";
@@ -8,6 +8,10 @@ import { ExperimentFormDialog } from "@/components/experiments/experiment-form-d
 
 export default function ExperimentsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  useEffect(() => {
+    document.title = isFormOpen ? "New Experiment • DPS" : "Experiments • DPS";
+  }, [isFormOpen]);
 
   return (
     <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
