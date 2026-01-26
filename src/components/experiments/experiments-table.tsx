@@ -293,97 +293,120 @@ export function ExperimentsTable() {
       </div>
 
       {/* Table */}
-      <div>
+      <div className="-mx-6">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-neutral-200">
+            <tr className="border-y border-neutral-border">
               <th
-                className="cursor-pointer px-4 py-3 text-left select-none"
+                className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("name")}
               >
-                <div className="flex items-center gap-1 text-caption font-medium tracking-wide text-neutral-500 uppercase">
-                  Experiment
+                <div className="flex h-8 items-center gap-1 pr-3 pl-6">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    EXPERIMENT
+                  </span>
                   <SortIndicator columnKey="name" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
               <th
-                className="cursor-pointer px-4 py-3 text-left select-none"
+                className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("status")}
               >
-                <div className="flex items-center gap-1 text-caption font-medium tracking-wide text-neutral-500 uppercase">
-                  Status
+                <div className="flex h-8 items-center gap-1 px-3">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    STATUS
+                  </span>
                   <SortIndicator columnKey="status" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
-              <th className="px-4 py-3 text-left">
-                <span className="text-caption font-medium tracking-wide text-neutral-500 uppercase">
-                  Owner
-                </span>
+              <th className="text-left">
+                <div className="flex h-8 items-center gap-1 px-3">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    OWNER
+                  </span>
+                </div>
               </th>
-              <th className="px-4 py-3 text-center">
-                <span className="text-caption font-medium tracking-wide text-neutral-500 uppercase">
-                  Target Groups
-                </span>
+              <th className="text-center">
+                <div className="flex h-8 items-center justify-center gap-1 px-3">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    TARGET GROUPS
+                  </span>
+                </div>
               </th>
-              <th className="px-4 py-3 text-center">
-                <span className="text-caption font-medium tracking-wide text-neutral-500 uppercase">
-                  Started
-                </span>
+              <th className="text-center">
+                <div className="flex h-8 items-center justify-center gap-1 px-3">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    STARTED
+                  </span>
+                </div>
               </th>
               <th
-                className="cursor-pointer px-4 py-3 text-left select-none"
+                className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("createdOn")}
               >
-                <div className="flex items-center gap-1 text-caption font-medium tracking-wide text-neutral-500 uppercase">
-                  Created
+                <div className="flex h-8 items-center gap-1 px-3">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    CREATED
+                  </span>
                   <SortIndicator columnKey="createdOn" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
-              <th className="w-[120px] px-4 py-3"></th>
+              <th className="w-[120px]">
+                <div className="h-8 pr-6 pl-3" />
+              </th>
             </tr>
           </thead>
-          <tbody>
-              {paginatedExperiments.map((experiment) => (
-                <tr
-                  key={experiment.id}
-                  className="group border-b border-neutral-100 transition-colors hover:bg-neutral-50"
-                >
-                  <td className="p-4">
-                    <span className="text-body-bold text-neutral-900">
+          <tbody className="border-b border-neutral-border">
+            {paginatedExperiments.map((experiment) => (
+              <tr
+                key={experiment.id}
+                className="group border-t border-neutral-border transition-colors hover:bg-neutral-50"
+              >
+                <td>
+                  <div className="flex h-12 items-center pr-3 pl-6">
+                    <span className="text-body-bold whitespace-nowrap text-neutral-700">
                       {experiment.name}
                     </span>
-                  </td>
-                  <td className="p-4">
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center px-3">
                     <StatusBadge status={experiment.status} />
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center gap-2">
-                      <Avatar
-                        size="small"
-                        image={getAvatarUrl(experiment.email)}
-                      />
-                      <span className="text-body text-neutral-700">
-                        {formatName(experiment.email)}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="p-4 text-center">
-                    <span className="text-body text-neutral-600 tabular-nums">
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center gap-2 px-3">
+                    <Avatar
+                      size="small"
+                      image={getAvatarUrl(experiment.email)}
+                    />
+                    <span className="text-body-bold whitespace-nowrap text-default-font">
+                      {formatName(experiment.email)}
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center justify-center px-3">
+                    <span className="text-body whitespace-nowrap text-neutral-500 tabular-nums">
                       {experiment.targetGroups}
                     </span>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex justify-center">
-                      <AlreadyStartedIcon started={experiment.alreadyStarted} />
-                    </div>
-                  </td>
-                  <td className="p-4">
-                    <span className="text-body text-neutral-500">
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center justify-center px-3">
+                    <AlreadyStartedIcon started={experiment.alreadyStarted} />
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center px-3">
+                    <span className="text-body whitespace-nowrap text-neutral-500">
                       {experiment.createdOn}
                     </span>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center justify-end gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center justify-end pr-6 pl-3">
+                    <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <IconButton
@@ -421,9 +444,10 @@ export function ExperimentsTable() {
                         <TooltipContent>Delete</TooltipContent>
                       </Tooltip>
                     </div>
-                  </td>
-                </tr>
-              ))}
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
