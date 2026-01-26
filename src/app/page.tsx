@@ -100,7 +100,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex h-full flex-col rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
-      <ScrollContainer variant="thick" className="flex-1">
+      <ScrollContainer className="flex-1">
         <div className="mx-auto max-w-[1600px] space-y-6 p-6">
           {/* Page Header */}
           <div className="flex items-center justify-between">
