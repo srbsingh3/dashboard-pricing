@@ -172,7 +172,7 @@ function SortIndicator({
 
 export function ExperimentsTable() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortKey, setSortKey] = useState<SortKey>("createdOn");
+  const [sortKey, setSortKey] = useState<SortKey>("id");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -299,9 +299,20 @@ export function ExperimentsTable() {
             <tr className="border-y border-neutral-border bg-neutral-50">
               <th
                 className="cursor-pointer text-left select-none"
-                onClick={() => handleSort("name")}
+                onClick={() => handleSort("id")}
               >
                 <div className="flex h-10 items-center gap-1 pr-3 pl-6">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    ID
+                  </span>
+                  <SortIndicator columnKey="id" sortKey={sortKey} sortDirection={sortDirection} />
+                </div>
+              </th>
+              <th
+                className="cursor-pointer text-left select-none"
+                onClick={() => handleSort("name")}
+              >
+                <div className="flex h-10 items-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
                     Experiment
                   </span>
@@ -364,6 +375,13 @@ export function ExperimentsTable() {
               >
                 <td>
                   <div className="flex h-12 items-center pr-3 pl-6">
+                    <span className="text-body whitespace-nowrap text-neutral-500 tabular-nums">
+                      {experiment.id}
+                    </span>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-12 items-center px-3">
                     <span className="text-body-bold whitespace-nowrap text-neutral-700">
                       {experiment.name}
                     </span>
