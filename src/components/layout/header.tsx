@@ -100,13 +100,13 @@ export function Header() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
-                <span className="font-medium">FP_SG</span>
+                <span className="font-medium">FP_DE</span>
                 <ChevronDown className="size-3" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
               <DropdownMenuItem>FP_DE (Germany)</DropdownMenuItem>
+              <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
               <DropdownMenuItem>FP_AR (Argentina)</DropdownMenuItem>
               <DropdownMenuItem>FP_UK (United Kingdom)</DropdownMenuItem>
             </DropdownMenuContent>

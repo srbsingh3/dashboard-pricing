@@ -155,13 +155,13 @@ export function Sidebar() {
               size="sm"
               className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
             >
-              <span className="font-medium">FP_SG</span>
+              <span className="font-medium">FP_DE</span>
               <FeatherChevronDown className="size-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
-            <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
             <DropdownMenuItem>FP_DE (Germany)</DropdownMenuItem>
+            <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
             <DropdownMenuItem>FP_AR (Argentina)</DropdownMenuItem>
             <DropdownMenuItem>FP_UK (United Kingdom)</DropdownMenuItem>
           </DropdownMenuContent>
