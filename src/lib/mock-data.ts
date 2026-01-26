@@ -8,6 +8,68 @@ import type {
   TargetGroup,
 } from "./types";
 
+// Daily Orders Trend Data (last 30 days)
+export const dailyOrdersData = [
+  { date: "Mar 28", orders: 1850, deliveryFee: 2.15, gmv: 5920 },
+  { date: "Mar 29", orders: 1920, deliveryFee: 2.18, gmv: 6150 },
+  { date: "Mar 30", orders: 2100, deliveryFee: 2.22, gmv: 6720 },
+  { date: "Mar 31", orders: 2250, deliveryFee: 2.20, gmv: 7200 },
+  { date: "Apr 1", orders: 1980, deliveryFee: 2.19, gmv: 6340 },
+  { date: "Apr 2", orders: 1890, deliveryFee: 2.21, gmv: 6050 },
+  { date: "Apr 3", orders: 1950, deliveryFee: 2.23, gmv: 6240 },
+  { date: "Apr 4", orders: 2050, deliveryFee: 2.18, gmv: 6560 },
+  { date: "Apr 5", orders: 2180, deliveryFee: 2.20, gmv: 6980 },
+  { date: "Apr 6", orders: 2320, deliveryFee: 2.24, gmv: 7420 },
+  { date: "Apr 7", orders: 2450, deliveryFee: 2.26, gmv: 7840 },
+  { date: "Apr 8", orders: 2100, deliveryFee: 2.22, gmv: 6720 },
+  { date: "Apr 9", orders: 1980, deliveryFee: 2.25, gmv: 6340 },
+  { date: "Apr 10", orders: 2050, deliveryFee: 2.24, gmv: 6560 },
+  { date: "Apr 11", orders: 2150, deliveryFee: 2.23, gmv: 6880 },
+  { date: "Apr 12", orders: 2280, deliveryFee: 2.26, gmv: 7300 },
+  { date: "Apr 13", orders: 2400, deliveryFee: 2.28, gmv: 7680 },
+  { date: "Apr 14", orders: 2520, deliveryFee: 2.30, gmv: 8060 },
+  { date: "Apr 15", orders: 2180, deliveryFee: 2.25, gmv: 6980 },
+  { date: "Apr 16", orders: 2050, deliveryFee: 2.24, gmv: 6560 },
+  { date: "Apr 17", orders: 2120, deliveryFee: 2.26, gmv: 6780 },
+  { date: "Apr 18", orders: 2200, deliveryFee: 2.25, gmv: 7040 },
+  { date: "Apr 19", orders: 2350, deliveryFee: 2.27, gmv: 7520 },
+  { date: "Apr 20", orders: 2480, deliveryFee: 2.29, gmv: 7940 },
+  { date: "Apr 21", orders: 2600, deliveryFee: 2.31, gmv: 8320 },
+  { date: "Apr 22", orders: 2250, deliveryFee: 2.26, gmv: 7200 },
+  { date: "Apr 23", orders: 2100, deliveryFee: 2.24, gmv: 6720 },
+  { date: "Apr 24", orders: 2180, deliveryFee: 2.25, gmv: 6980 },
+  { date: "Apr 25", orders: 2280, deliveryFee: 2.26, gmv: 7300 },
+  { date: "Apr 26", orders: 2154, deliveryFee: 2.26, gmv: 6893 },
+];
+
+// City Performance Data
+export const cityPerformanceData = [
+  { city: "Berlin", orders: 18420, avgDeliveryFee: 2.45, cvr: 62.3, gmv: 58940 },
+  { city: "Hamburg", orders: 12850, avgDeliveryFee: 2.32, cvr: 59.8, gmv: 41120 },
+  { city: "Munich", orders: 14200, avgDeliveryFee: 2.58, cvr: 64.1, gmv: 45440 },
+  { city: "Cologne", orders: 8450, avgDeliveryFee: 2.18, cvr: 57.2, gmv: 27040 },
+  { city: "Frankfurt", orders: 8234, avgDeliveryFee: 2.35, cvr: 60.5, gmv: 26349 },
+];
+
+// Vertical Breakdown Data
+export const verticalBreakdownData = [
+  { name: "Restaurants", value: 42, orders: 26105, color: "#6366f1" },
+  { name: "Grocery", value: 28, orders: 17403, color: "#22c55e" },
+  { name: "Convenience", value: 15, orders: 9323, color: "#f59e0b" },
+  { name: "Pharmacy", value: 8, orders: 4972, color: "#ec4899" },
+  { name: "Flowers", value: 4, orders: 2486, color: "#8b5cf6" },
+  { name: "Other", value: 3, orders: 1865, color: "#94a3b8" },
+];
+
+// Delivery Fee Distribution by Range
+export const deliveryFeeDistribution = [
+  { range: "€0-1", count: 4850, percentage: 7.8 },
+  { range: "€1-2", count: 18920, percentage: 30.4 },
+  { range: "€2-3", count: 24680, percentage: 39.7 },
+  { range: "€3-4", count: 10250, percentage: 16.5 },
+  { range: "€4+", count: 3454, percentage: 5.6 },
+];
+
 // KPI Metrics for Dashboard
 export const kpiMetrics: KPIMetric[] = [
   {

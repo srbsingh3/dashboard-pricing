@@ -6,14 +6,14 @@ import { activeExperiments, activeCampaigns } from "@/lib/mock-data";
 
 export function ActiveExperimentsCard() {
   return (
-    <div className="flex h-full flex-col rounded-lg border border-neutral-border bg-default-background">
-      <div className="px-4 py-3">
+    <div className="flex h-full flex-col rounded-lg border border-neutral-200 bg-white">
+      <div className="px-5 pt-5">
         <h3 className="text-body-bold text-neutral-900">Active Experiments</h3>
       </div>
-      <div className="flex-1 px-4 pb-4">
+      <div className="flex-1 px-5 pb-5">
         <div className="space-y-1">
           {/* Header */}
-          <div className="grid grid-cols-[1fr_100px_80px] gap-4 border-b border-neutral-border px-3 py-2 text-caption-bold text-neutral-500">
+          <div className="grid grid-cols-[1fr_100px_80px] gap-4 border-b border-neutral-200 px-3 py-2 text-caption-bold text-neutral-500">
             <span>Name</span>
             <span>Active Duration</span>
             <span>Significance</span>
@@ -48,14 +48,14 @@ export function ActiveExperimentsCard() {
 
 export function ActiveCampaignsCard() {
   return (
-    <div className="flex h-full flex-col rounded-lg border border-neutral-border bg-default-background">
-      <div className="px-4 py-3">
+    <div className="flex h-full flex-col rounded-lg border border-neutral-200 bg-white">
+      <div className="px-5 pt-5">
         <h3 className="text-body-bold text-neutral-900">Active Campaigns</h3>
       </div>
-      <div className="flex-1 px-4 pb-4">
+      <div className="flex-1 px-5 pb-5">
         <div className="space-y-1">
           {/* Header */}
-          <div className="grid grid-cols-[1fr_80px_80px] gap-4 border-b border-neutral-border px-3 py-2 text-caption-bold text-neutral-500">
+          <div className="grid grid-cols-[1fr_80px_80px] gap-4 border-b border-neutral-200 px-3 py-2 text-caption-bold text-neutral-500">
             <span>Name</span>
             <span>Time Left</span>
             <span>Budget Left</span>

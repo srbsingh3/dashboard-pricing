@@ -31,7 +31,7 @@ interface FilterBarProps {
 
 export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-neutral-border bg-default-background p-4">
+    <div className="flex flex-wrap items-center gap-3">
       {/* Duration */}
       <div className="flex flex-col gap-1">
         <label className="text-caption-bold text-neutral-500">Duration</label>
