@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { SidebarWithSections } from "@/subframe/components/SidebarWithSections";
-import { Avatar } from "@/subframe/components/Avatar";
 import {
   FeatherLayoutDashboard,
   FeatherLayers,
@@ -72,13 +71,13 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+                className="group w-full justify-between text-neutral-600 hover:bg-neutral-50 hover:text-neutral-600 active:bg-neutral-100"
               >
                 <span className="flex items-center gap-2">
                   <FeatherGlobe className="size-4" />
                   {currentRegion}
                 </span>
-                <FeatherChevronDown className="size-3" />
+                <FeatherChevronDown className="size-3 transition duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
@@ -96,7 +95,7 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+                className="group w-full justify-between text-neutral-600 hover:bg-neutral-50 hover:text-neutral-600 active:bg-neutral-100"
               >
                 <span className="flex items-center gap-2">
                   <Image
@@ -108,7 +107,7 @@ export function Sidebar() {
                   />
                   <span className="font-medium">FP_DE</span>
                 </span>
-                <FeatherChevronDown className="size-3" />
+                <FeatherChevronDown className="size-3 transition duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
@@ -166,22 +165,19 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+                className="group w-full justify-between text-neutral-600 hover:bg-neutral-50 hover:text-neutral-600 active:bg-neutral-100"
               >
                 <span className="flex items-center gap-2">
-                  <Avatar
-                    variant="brand"
-                    size="small"
-                    image="/bob-the-builder.jpg"
-                    square={false}
-                  >
-                    SS
-                  </Avatar>
-                  <span className="text-body-bold text-default-font">
-                    Saurabh Singh
-                  </span>
+                  <Image
+                    src="/bob-the-builder.jpg"
+                    alt="Saurabh Singh"
+                    width={16}
+                    height={16}
+                    className="size-4 rounded-full object-cover"
+                  />
+                  <span className="font-medium">Saurabh Singh</span>
                 </span>
-                <FeatherChevronDown className="size-3" />
+                <FeatherChevronDown className="size-3 transition duration-200 group-data-[state=open]:rotate-180" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-48">
