@@ -430,6 +430,41 @@
   }
 }
 
+/* Auto-hide scrollbar - overlays content, no reserved space, appears only when hovering */
+@utility scrollbar-auto-hide {
+  /* Firefox - thin scrollbar that's invisible by default */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  /* WebKit - custom styled overlay scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 9999px;
+  }
+
+  /* Show scrollbar only when hovering over the container */
+  &:hover {
+    scrollbar-color: var(--color-neutral-400) transparent;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: var(--color-neutral-400);
+  }
+
+  &:hover::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-neutral-500);
+  }
+}
+
 /* ============================================
    FOCUS STATES
    ============================================ */

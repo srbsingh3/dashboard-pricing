@@ -12,6 +12,7 @@ import {
   DeliveryFeeDistributionChart,
 } from "@/components/dashboard/charts";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { ScrollContainer } from "@/components/ui/scroll-container";
 import { kpiMetrics } from "@/lib/mock-data";
 import type { KPIMetric } from "@/lib/types";
 
@@ -98,43 +99,45 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
-      <div className="mx-auto max-w-[1600px] space-y-6 p-6">
-        {/* Page Header */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-heading-2 text-default-font">Dashboard</h1>
-          <DateRangePicker defaultPreset="30d" />
-        </div>
+    <div className="flex h-full flex-col rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
+      <ScrollContainer variant="thick" className="flex-1">
+        <div className="mx-auto max-w-[1600px] space-y-6 p-6">
+          {/* Page Header */}
+          <div className="flex items-center justify-between">
+            <h1 className="text-heading-2 text-default-font">Dashboard</h1>
+            <DateRangePicker defaultPreset="30d" />
+          </div>
 
-        {/* KPI Summary Strip - Subframe Reporting Dashboard Style */}
-        <div className="flex w-full flex-wrap items-start rounded-md border border-solid border-neutral-border bg-default-background">
-          {kpiMetrics.map((metric, index) => (
-            <KPICell
-              key={metric.id}
-              metric={metric}
-              isLast={index === kpiMetrics.length - 1}
-            />
-          ))}
-        </div>
+          {/* KPI Summary Strip - Subframe Reporting Dashboard Style */}
+          <div className="flex w-full flex-wrap items-start rounded-md border border-solid border-neutral-border bg-default-background">
+            {kpiMetrics.map((metric, index) => (
+              <KPICell
+                key={metric.id}
+                metric={metric}
+                isLast={index === kpiMetrics.length - 1}
+              />
+            ))}
+          </div>
 
-        {/* Row 1: Trend Charts */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <OrdersTrendChart />
-          <DeliveryFeeTrendChart />
-        </div>
+          {/* Row 1: Trend Charts */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <OrdersTrendChart />
+            <DeliveryFeeTrendChart />
+          </div>
 
-        {/* Row 2: City Analysis */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <CityPerformanceChart />
-          <DeliveryFeeByCityChart />
-        </div>
+          {/* Row 2: City Analysis */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <CityPerformanceChart />
+            <DeliveryFeeByCityChart />
+          </div>
 
-        {/* Row 3: Vertical & Fee Distribution */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <VerticalBreakdownChart />
-          <DeliveryFeeDistributionChart />
+          {/* Row 3: Vertical & Fee Distribution */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <VerticalBreakdownChart />
+            <DeliveryFeeDistributionChart />
+          </div>
         </div>
-      </div>
+      </ScrollContainer>
     </div>
   );
 }

@@ -6,13 +6,16 @@ import { cn } from "@/lib/utils";
 interface ScrollContainerProps {
   children: React.ReactNode;
   className?: string;
+  /** Use "thick" for main layout scrollbar, default is thin */
+  variant?: "thin" | "thick";
 }
 
 /**
  * A scroll container that hides the native scrollbar and shows
  * an overlay scroll indicator only while actively scrolling.
  */
-export function ScrollContainer({ children, className }: ScrollContainerProps) {
+export function ScrollContainer({ children, className, variant = "thin" }: ScrollContainerProps) {
+  const thumbWidth = variant === "thick" ? "w-2" : "w-1.5";
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScrolling, setIsScrolling] = useState(false);
   const [scrollInfo, setScrollInfo] = useState({
@@ -71,12 +74,13 @@ export function ScrollContainer({ children, className }: ScrollContainerProps) {
       {/* Overlay scroll indicator */}
       <div
         className={cn(
-          "pointer-events-none absolute top-0 right-1 bottom-0 w-1.5 transition-opacity duration-300",
+          "pointer-events-none absolute top-0 right-1 bottom-0 transition-opacity duration-300",
+          thumbWidth,
           isScrolling && scrollInfo.thumbHeight > 0 ? "opacity-100" : "opacity-0"
         )}
       >
         <div
-          className="absolute right-0 w-1.5 rounded-full bg-neutral-400/50"
+          className={cn("absolute right-0 rounded-full bg-neutral-400/50", thumbWidth)}
           style={{
             height: `${scrollInfo.thumbHeight}px`,
             top: `${scrollInfo.thumbTop}px`,
