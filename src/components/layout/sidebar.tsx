@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { SidebarWithSections } from "@/subframe/components/SidebarWithSections";
 import { Avatar } from "@/subframe/components/Avatar";
@@ -155,15 +156,60 @@ export function Sidebar() {
               size="sm"
               className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
             >
-              <span className="font-medium">FP_DE</span>
+              <span className="flex items-center gap-2">
+                <Image
+                  src="/foodpanda.jpg"
+                  alt="Foodpanda"
+                  width={16}
+                  height={16}
+                  className="size-4 rounded-full object-cover"
+                />
+                <span className="font-medium">FP_DE</span>
+              </span>
               <FeatherChevronDown className="size-3" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
-            <DropdownMenuItem>FP_DE (Germany)</DropdownMenuItem>
-            <DropdownMenuItem>FP_SG (Singapore)</DropdownMenuItem>
-            <DropdownMenuItem>FP_AR (Argentina)</DropdownMenuItem>
-            <DropdownMenuItem>FP_UK (United Kingdom)</DropdownMenuItem>
+          <DropdownMenuContent align="start" className="w-40">
+            <DropdownMenuItem className="gap-2">
+              <Image
+                src="/foodpanda.jpg"
+                alt="Foodpanda"
+                width={20}
+                height={20}
+                className="size-5 rounded-full object-cover"
+              />
+              FP_DE
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2">
+              <Image
+                src="/foodpanda.jpg"
+                alt="Foodpanda"
+                width={20}
+                height={20}
+                className="size-5 rounded-full object-cover"
+              />
+              FP_SG
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2">
+              <Image
+                src="/foodpanda.jpg"
+                alt="Foodpanda"
+                width={20}
+                height={20}
+                className="size-5 rounded-full object-cover"
+              />
+              FP_AR
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2">
+              <Image
+                src="/foodpanda.jpg"
+                alt="Foodpanda"
+                width={20}
+                height={20}
+                className="size-5 rounded-full object-cover"
+              />
+              FP_UK
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
