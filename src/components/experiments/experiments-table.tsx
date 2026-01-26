@@ -22,6 +22,7 @@ import type { Experiment, ExperimentStatus } from "@/lib/types";
 import { Button } from "@/subframe/components/Button";
 import { IconButton } from "@/subframe/components/IconButton";
 import { Badge } from "@/subframe/components/Badge";
+import { TextField } from "@/subframe/components/TextField";
 import { Avatar } from "@/subframe/components/Avatar";
 import {
   Tooltip,
@@ -251,23 +252,24 @@ export function ExperimentsTable() {
           Filters
         </p>
         <div className="flex items-center gap-4">
-          <div className="flex h-10 flex-1 items-center gap-4 rounded-md px-4 shadow-md">
-            <Search className="size-4 text-subtext-color" />
-            <input
-              type="text"
-              placeholder="Search experiments..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="flex-1 bg-transparent text-body text-default-font placeholder:text-subtext-color focus:outline-none"
-            />
+          <div className="flex-1">
+            <TextField
+              className="w-full"
+              icon={<Search className="size-4" />}
+            >
+              <TextField.Input
+                placeholder="Search experiments..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+            </TextField>
           </div>
           <span className="text-body text-subtext-color">or</span>
           <Button
             variant="neutral-secondary"
-            size="large"
             icon={<SlidersHorizontal className="size-4" />}
           >
             Add filters
