@@ -22,7 +22,7 @@ import {
   deliveryFeeDistribution,
 } from "@/lib/mock-data";
 
-// Custom tooltip style
+// Custom tooltip style for bar/line charts
 const tooltipStyle = {
   backgroundColor: "white",
   border: "1px solid #e5e7eb",
@@ -30,6 +30,46 @@ const tooltipStyle = {
   padding: "12px",
   boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
 };
+
+// Custom tooltip component for Pie Chart (Subframe-style)
+interface PieTooltipPayload {
+  name: string;
+  value: number;
+  payload: {
+    name: string;
+    value: number;
+    color: string;
+  };
+}
+
+interface PieTooltipProps {
+  active?: boolean;
+  payload?: PieTooltipPayload[];
+}
+
+function PieChartTooltip({ active, payload }: PieTooltipProps) {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div
+        className="flex animate-in flex-col gap-2 rounded-sm border border-neutral-200 bg-white p-2 shadow-md duration-100 fade-in"
+        style={{ minWidth: "100px" }}
+      >
+        <div className="flex items-center gap-2">
+          <span
+            className="size-2 rounded-full"
+            style={{ backgroundColor: data.payload.color }}
+          />
+          <span className="text-caption text-neutral-500">{data.name}</span>
+          <span className="ml-auto text-caption font-medium text-neutral-900">
+            {data.value}%
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
 
 // Orders Trend Chart
 export function OrdersTrendChart() {
@@ -217,7 +257,7 @@ export function DeliveryFeeByCityChart() {
   );
 }
 
-// Vertical Breakdown Pie Chart
+// Vertical Breakdown Pie Chart (Subframe-style donut)
 export function VerticalBreakdownChart() {
   return (
     <div className="rounded-lg border border-neutral-200 bg-white p-5">
@@ -232,27 +272,28 @@ export function VerticalBreakdownChart() {
               data={verticalBreakdownData}
               cx="50%"
               cy="50%"
-              innerRadius={55}
-              outerRadius={85}
-              paddingAngle={2}
+              startAngle={90}
+              endAngle={-270}
+              innerRadius="82%"
+              outerRadius="100%"
+              paddingAngle={0.5}
               dataKey="value"
+              nameKey="name"
             >
               {verticalBreakdownData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip
-              contentStyle={tooltipStyle}
-              formatter={(value: number, name: string) => [`${value}%`, name]}
-            />
+            <Tooltip content={<PieChartTooltip />} isAnimationActive={false} />
             <Legend
               layout="vertical"
               align="right"
-              verticalAlign="middle"
+              verticalAlign="top"
               iconType="circle"
               iconSize={8}
+              wrapperStyle={{ paddingLeft: "16px" }}
               formatter={(value) => (
-                <span className="text-caption text-neutral-600">{value}</span>
+                <span className="text-caption text-neutral-500">{value}</span>
               )}
             />
           </PieChart>
