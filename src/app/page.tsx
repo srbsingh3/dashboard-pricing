@@ -12,7 +12,6 @@ import {
   VerticalBreakdownChart,
   DeliveryFeeDistributionChart,
 } from "@/components/dashboard/charts";
-import { ActiveExperimentsCard, ActiveCampaignsCard } from "@/components/dashboard/active-lists";
 import { kpiMetrics } from "@/lib/mock-data";
 import type { KPIMetric } from "@/lib/types";
 
@@ -118,16 +117,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Delivery Fee Distribution */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <DeliveryFeeDistributionChart />
-          <div className="grid grid-cols-1 gap-6">
-            <ActiveExperimentsCard />
-          </div>
-        </div>
-
-        {/* Active Campaigns */}
         <div className="grid grid-cols-1 gap-6">
-          <ActiveCampaignsCard />
+          <DeliveryFeeDistributionChart />
         </div>
       </div>
     </div>
