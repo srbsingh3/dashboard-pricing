@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { SidebarWithSections } from "@/subframe/components/SidebarWithSections";
 import { Avatar } from "@/subframe/components/Avatar";
-import { IconButton } from "@/subframe/components/IconButton";
 import {
   FeatherLayoutDashboard,
   FeatherLayers,
@@ -15,7 +14,6 @@ import {
   FeatherRepeat,
   FeatherStore,
   FeatherSettings,
-  FeatherMoreVertical,
   FeatherGlobe,
   FeatherChevronDown,
 } from "@subframe/core";
@@ -67,36 +65,132 @@ export function Sidebar() {
         </Link>
       }
       footer={
-        <>
-          <div className="flex shrink-0 grow basis-0 items-center gap-3">
-            <Avatar
-              variant="brand"
-              size="medium"
-              image="/bob-the-builder.jpg"
-              square={false}
-            >
-              SS
-            </Avatar>
-            <div className="flex flex-col items-start">
-              <span className="text-body-bold text-default-font">
-                Saurabh Singh
-              </span>
-            </div>
-          </div>
+        <div className="flex w-full flex-col gap-1">
+          {/* Region selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <IconButton
-                size="small"
-                icon={<FeatherMoreVertical />}
-              />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+              >
+                <span className="flex items-center gap-2">
+                  <FeatherGlobe className="size-4" />
+                  {currentRegion}
+                </span>
+                <FeatherChevronDown className="size-3" />
+              </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="start" className="w-48">
+              {REGIONS.filter((r) => r.value !== "all").map((region) => (
+                <DropdownMenuItem key={region.value}>
+                  {region.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Entity selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+              >
+                <span className="flex items-center gap-2">
+                  <Image
+                    src="/foodpanda.jpg"
+                    alt="Foodpanda"
+                    width={16}
+                    height={16}
+                    className="size-4 rounded-full object-cover"
+                  />
+                  <span className="font-medium">FP_DE</span>
+                </span>
+                <FeatherChevronDown className="size-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuItem className="gap-2">
+                <Image
+                  src="/foodpanda.jpg"
+                  alt="Foodpanda"
+                  width={20}
+                  height={20}
+                  className="size-5 rounded-full object-cover"
+                />
+                FP_DE
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2">
+                <Image
+                  src="/foodpanda.jpg"
+                  alt="Foodpanda"
+                  width={20}
+                  height={20}
+                  className="size-5 rounded-full object-cover"
+                />
+                FP_SG
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2">
+                <Image
+                  src="/foodpanda.jpg"
+                  alt="Foodpanda"
+                  width={20}
+                  height={20}
+                  className="size-5 rounded-full object-cover"
+                />
+                FP_AR
+              </DropdownMenuItem>
+              <DropdownMenuItem className="gap-2">
+                <Image
+                  src="/foodpanda.jpg"
+                  alt="Foodpanda"
+                  width={20}
+                  height={20}
+                  className="size-5 rounded-full object-cover"
+                />
+                FP_UK
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Settings */}
+          <SidebarWithSections.NavItem icon={<FeatherSettings />}>
+            Settings
+          </SidebarWithSections.NavItem>
+
+          {/* User dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
+              >
+                <span className="flex items-center gap-2">
+                  <Avatar
+                    variant="brand"
+                    size="small"
+                    image="/bob-the-builder.jpg"
+                    square={false}
+                  >
+                    SS
+                  </Avatar>
+                  <span className="text-body-bold text-default-font">
+                    Saurabh Singh
+                  </span>
+                </span>
+                <FeatherChevronDown className="size-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className="w-48">
               <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem>
+              <DropdownMenuItem>Account settings</DropdownMenuItem>
               <DropdownMenuItem>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </>
+        </div>
       }
     >
       {/* Main Navigation */}
@@ -119,105 +213,6 @@ export function Sidebar() {
         })}
       </div>
 
-      {/* Divider */}
-      <div className="my-2 w-full border-t border-neutral-border" />
-
-      {/* Region, Entity & Settings */}
-      <div className="flex w-full flex-col gap-1">
-        {/* Region selector */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
-            >
-              <span className="flex items-center gap-2">
-                <FeatherGlobe className="size-4" />
-                {currentRegion}
-              </span>
-              <FeatherChevronDown className="size-3" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
-            {REGIONS.filter((r) => r.value !== "all").map((region) => (
-              <DropdownMenuItem key={region.value}>
-                {region.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Entity selector */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-between text-neutral-600 hover:bg-neutral-50"
-            >
-              <span className="flex items-center gap-2">
-                <Image
-                  src="/foodpanda.jpg"
-                  alt="Foodpanda"
-                  width={16}
-                  height={16}
-                  className="size-4 rounded-full object-cover"
-                />
-                <span className="font-medium">FP_DE</span>
-              </span>
-              <FeatherChevronDown className="size-3" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-40">
-            <DropdownMenuItem className="gap-2">
-              <Image
-                src="/foodpanda.jpg"
-                alt="Foodpanda"
-                width={20}
-                height={20}
-                className="size-5 rounded-full object-cover"
-              />
-              FP_DE
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2">
-              <Image
-                src="/foodpanda.jpg"
-                alt="Foodpanda"
-                width={20}
-                height={20}
-                className="size-5 rounded-full object-cover"
-              />
-              FP_SG
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2">
-              <Image
-                src="/foodpanda.jpg"
-                alt="Foodpanda"
-                width={20}
-                height={20}
-                className="size-5 rounded-full object-cover"
-              />
-              FP_AR
-            </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2">
-              <Image
-                src="/foodpanda.jpg"
-                alt="Foodpanda"
-                width={20}
-                height={20}
-                className="size-5 rounded-full object-cover"
-              />
-              FP_UK
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Settings */}
-        <SidebarWithSections.NavItem icon={<FeatherSettings />}>
-          Settings
-        </SidebarWithSections.NavItem>
-      </div>
     </SidebarWithSections>
   );
 }
