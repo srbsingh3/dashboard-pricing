@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FilterBar } from "@/components/dashboard/filter-bar";
 import {
   OrdersTrendChart,
   DeliveryFeeTrendChart,
@@ -72,29 +70,11 @@ function CompactKPICard({ metric }: { metric: KPIMetric }) {
 }
 
 export default function DashboardPage() {
-  const [filters, setFilters] = useState({
-    duration: "1m",
-    comparison: "percentage",
-    city: "all",
-    zone: "all",
-    verticalType: "all",
-    vendorChain: "all",
-  });
-
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
   return (
     <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
       <div className="mx-auto max-w-[1600px] space-y-6 p-6">
-        {/* Page Header with Filters */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-heading-2 text-neutral-900">Dashboard</h1>
-          </div>
-          <FilterBar filters={filters} onFilterChange={handleFilterChange} />
-        </div>
+        {/* Page Header */}
+        <h1 className="text-heading-2 text-neutral-900">Dashboard</h1>
 
         {/* KPI Summary Row */}
         <div className="flex items-start justify-between gap-6 rounded-lg border border-neutral-200 bg-white p-5">
