@@ -13,24 +13,30 @@ import {
 import { kpiMetrics } from "@/lib/mock-data";
 import type { KPIMetric } from "@/lib/types";
 
-// Compact KPI Card for the top row
-function CompactKPICard({ metric }: { metric: KPIMetric }) {
-  const formatValue = (value: number, format: string) => {
-    switch (format) {
-      case "currency":
-        return value.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
-      case "percentage":
-        return value.toFixed(1);
-      case "number":
-        return value.toLocaleString("en-US");
-      default:
-        return value.toString();
-    }
-  };
+// Format KPI values based on their type
+function formatKPIValue(value: number, format: string): string {
+  switch (format) {
+    case "currency":
+      return value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    case "currency_whole":
+      return value.toLocaleString("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+    case "percentage":
+      return value.toFixed(1);
+    case "number":
+      return value.toLocaleString("en-US");
+    default:
+      return value.toString();
+  }
+}
 
+// KPI Cell component matching Subframe Reporting Dashboard pattern
+function KPICell({ metric, isLast }: { metric: KPIMetric; isLast: boolean }) {
   const TrendIcon =
     metric.changeType === "positive"
       ? TrendingUp
@@ -39,33 +45,48 @@ function CompactKPICard({ metric }: { metric: KPIMetric }) {
         : Minus;
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-baseline gap-1.5">
-        {metric.prefix && (
-          <span className="text-caption text-neutral-500">{metric.prefix}</span>
-        )}
-        <span className="text-heading-2 text-neutral-900">
-          {formatValue(metric.value, metric.format)}
+    <>
+      <div className="flex shrink-0 grow basis-0 flex-col items-center justify-center gap-2 p-4">
+        {/* Label */}
+        <span className="text-center text-body-bold text-default-font">
+          {metric.label}
         </span>
-        {metric.suffix && (
-          <span className="text-heading-3 text-neutral-500">{metric.suffix}</span>
-        )}
-      </div>
-      <div className="flex items-center gap-2">
-        <span className="text-body text-neutral-500">{metric.label}</span>
+
+        {/* Value with prefix/suffix */}
+        <div className="flex items-baseline justify-center gap-1">
+          {metric.prefix && (
+            <span className="text-body text-subtext-color">{metric.prefix}</span>
+          )}
+          <span className="text-center text-heading-1 whitespace-nowrap text-default-font">
+            {formatKPIValue(metric.value, metric.format)}
+          </span>
+          {metric.suffix && (
+            <span className="text-heading-3 text-subtext-color">{metric.suffix}</span>
+          )}
+        </div>
+
+        {/* Trend indicator */}
         <div
           className={cn(
-            "inline-flex items-center gap-0.5 text-caption-bold",
+            "flex items-center gap-1",
             metric.changeType === "positive" && "text-success-600",
             metric.changeType === "negative" && "text-error-600",
-            metric.changeType === "neutral" && "text-neutral-500"
+            metric.changeType === "neutral" && "text-subtext-color"
           )}
         >
           <TrendIcon className="size-3" />
-          <span>{Math.abs(metric.change).toFixed(2)}%</span>
+          <span className="text-caption whitespace-nowrap">
+            {metric.changeType === "positive" ? "+" : metric.changeType === "negative" ? "" : ""}
+            {metric.change.toFixed(2)}%
+          </span>
         </div>
       </div>
-    </div>
+
+      {/* Vertical divider between cells */}
+      {!isLast && (
+        <div className="flex w-px flex-none flex-col items-center gap-2 self-stretch bg-neutral-border" />
+      )}
+    </>
   );
 }
 
@@ -74,12 +95,16 @@ export default function DashboardPage() {
     <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
       <div className="mx-auto max-w-[1600px] space-y-6 p-6">
         {/* Page Header */}
-        <h1 className="text-heading-2 text-neutral-900">Dashboard</h1>
+        <h1 className="text-heading-2 text-default-font">Dashboard</h1>
 
-        {/* KPI Summary Row */}
-        <div className="flex items-start justify-between gap-6 rounded-lg border border-neutral-200 bg-white p-5">
-          {kpiMetrics.map((metric) => (
-            <CompactKPICard key={metric.id} metric={metric} />
+        {/* KPI Summary Strip - Subframe Reporting Dashboard Style */}
+        <div className="flex w-full flex-wrap items-start rounded-md border border-solid border-neutral-border bg-default-background">
+          {kpiMetrics.map((metric, index) => (
+            <KPICell
+              key={metric.id}
+              metric={metric}
+              isLast={index === kpiMetrics.length - 1}
+            />
           ))}
         </div>
 
