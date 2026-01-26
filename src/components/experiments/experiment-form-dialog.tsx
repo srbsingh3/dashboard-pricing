@@ -226,7 +226,7 @@ interface ExperimentFormDialogProps {
 // Sortable Priority Card wrapper component
 interface SortablePriorityCardProps {
   id: number;
-  children: React.ReactNode;
+  children: React.ReactNode | ((props: { listeners: Record<string, unknown>; isDragging: boolean }) => React.ReactNode);
   disabled?: boolean;
 }
 

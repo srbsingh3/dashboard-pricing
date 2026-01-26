@@ -92,7 +92,7 @@ export function ParticipantSplitChart({
     0
   );
 
-  const widthTransition = { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] };
+  const widthTransition = { duration: 0.2, ease: [0.25, 0.1, 0.25, 1] as const };
 
   return (
     <div className="relative w-full overflow-visible rounded-md">

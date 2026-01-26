@@ -136,7 +136,7 @@ export function OrdersTrendChart() {
               labelStyle={CHART_STYLES.tooltipLabel}
               itemStyle={CHART_STYLES.tooltipItem}
               cursor={CHART_STYLES.cursor}
-              formatter={(value: number) => [value.toLocaleString(), "Orders"]}
+              formatter={(value) => [Number(value).toLocaleString(), "Orders"]}
             />
             <Area
               type="monotone"
@@ -186,7 +186,7 @@ export function DeliveryFeeTrendChart() {
               labelStyle={CHART_STYLES.tooltipLabel}
               itemStyle={CHART_STYLES.tooltipItem}
               cursor={CHART_STYLES.cursor}
-              formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
+              formatter={(value) => [`€${Number(value).toFixed(2)}`, "Avg. Fee"]}
             />
             <Area
               type="monotone"
@@ -235,7 +235,7 @@ export function CityPerformanceChart() {
               labelStyle={CHART_STYLES.tooltipLabel}
               itemStyle={CHART_STYLES.tooltipItem}
               cursor={CHART_STYLES.barCursor}
-              formatter={(value: number) => [value.toLocaleString(), "Orders"]}
+              formatter={(value) => [Number(value).toLocaleString(), "Orders"]}
             />
             <Bar dataKey="orders" fill="#6366f1" radius={[0, 2, 2, 0]} barSize={16} />
           </BarChart>
@@ -275,7 +275,7 @@ export function DeliveryFeeByCityChart() {
               labelStyle={CHART_STYLES.tooltipLabel}
               itemStyle={CHART_STYLES.tooltipItem}
               cursor={CHART_STYLES.barCursor}
-              formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
+              formatter={(value) => [`€${Number(value).toFixed(2)}`, "Avg. Fee"]}
             />
             <Bar dataKey="avgDeliveryFee" fill="#22c55e" radius={[2, 2, 0, 0]} barSize={28} />
           </BarChart>
@@ -357,9 +357,9 @@ export function DeliveryFeeDistributionChart() {
               labelStyle={CHART_STYLES.tooltipLabel}
               itemStyle={CHART_STYLES.tooltipItem}
               cursor={CHART_STYLES.barCursor}
-              formatter={(value: number, name: string) => {
-                if (name === "count") return [value.toLocaleString(), "Orders"];
-                return [value, name];
+              formatter={(value, name) => {
+                if (name === "count") return [Number(value).toLocaleString(), "Orders"];
+                return [value, String(name)];
               }}
             />
             <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={45} />
@@ -400,7 +400,7 @@ export function ConversionByCityChart() {
               labelStyle={CHART_STYLES.tooltipLabel}
               itemStyle={CHART_STYLES.tooltipItem}
               cursor={CHART_STYLES.barCursor}
-              formatter={(value: number) => [`${value.toFixed(1)}%`, "CVR"]}
+              formatter={(value) => [`${Number(value).toFixed(1)}%`, "CVR"]}
             />
             <Bar dataKey="cvr" fill="#ec4899" radius={[4, 4, 0, 0]} barSize={40} />
           </BarChart>
