@@ -49,6 +49,9 @@ export const cityPerformanceData = [
   { city: "Munich", orders: 14200, avgDeliveryFee: 2.58, cvr: 64.1, gmv: 45440 },
   { city: "Cologne", orders: 8450, avgDeliveryFee: 2.18, cvr: 57.2, gmv: 27040 },
   { city: "Frankfurt", orders: 8234, avgDeliveryFee: 2.35, cvr: 60.5, gmv: 26349 },
+  { city: "Stuttgart", orders: 6820, avgDeliveryFee: 2.28, cvr: 58.4, gmv: 21824 },
+  { city: "Düsseldorf", orders: 5940, avgDeliveryFee: 2.22, cvr: 56.9, gmv: 19008 },
+  { city: "Leipzig", orders: 4560, avgDeliveryFee: 2.12, cvr: 55.2, gmv: 14592 },
 ];
 
 // Vertical Breakdown Data
@@ -91,16 +94,16 @@ export const kpiMetrics: KPIMetric[] = [
   },
   {
     id: "gmv",
-    label: "Gross Merchandise Value (GMV)",
+    label: "Gross Merchandise Value",
     value: 200638,
     change: 0.48,
     changeType: "positive",
     prefix: "EUR",
-    format: "currency",
+    format: "currency_whole",
   },
   {
     id: "afv",
-    label: "Average Food Value (AFV)",
+    label: "Average Food Value",
     value: 14.06,
     change: -0.06,
     changeType: "negative",
@@ -109,7 +112,7 @@ export const kpiMetrics: KPIMetric[] = [
   },
   {
     id: "cvr",
-    label: "Conversion Rate (CVR)",
+    label: "Conversion Rate",
     value: 60.81,
     change: 1.32,
     changeType: "positive",

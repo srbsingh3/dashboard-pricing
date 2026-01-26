@@ -41,7 +41,7 @@ export interface KPIMetric {
   changeType: "positive" | "negative" | "neutral";
   prefix?: string;
   suffix?: string;
-  format: "currency" | "number" | "percentage";
+  format: "currency" | "currency_whole" | "number" | "percentage";
 }
 
 export interface TargetGroup {

@@ -237,7 +237,7 @@ export function CityPerformanceChart() {
               cursor={CHART_STYLES.barCursor}
               formatter={(value: number) => [value.toLocaleString(), "Orders"]}
             />
-            <Bar dataKey="orders" fill="#6366f1" radius={[0, 4, 4, 0]} barSize={24} />
+            <Bar dataKey="orders" fill="#6366f1" radius={[0, 2, 2, 0]} barSize={16} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -277,7 +277,7 @@ export function DeliveryFeeByCityChart() {
               cursor={CHART_STYLES.barCursor}
               formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
             />
-            <Bar dataKey="avgDeliveryFee" fill="#22c55e" radius={[4, 4, 0, 0]} barSize={40} />
+            <Bar dataKey="avgDeliveryFee" fill="#22c55e" radius={[2, 2, 0, 0]} barSize={28} />
           </BarChart>
         </ResponsiveContainer>
       </div>
