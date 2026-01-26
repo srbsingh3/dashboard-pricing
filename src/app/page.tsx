@@ -10,6 +10,7 @@ import {
   VerticalBreakdownChart,
   DeliveryFeeDistributionChart,
 } from "@/components/dashboard/charts";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { kpiMetrics } from "@/lib/mock-data";
 import type { KPIMetric } from "@/lib/types";
 
@@ -95,7 +96,10 @@ export default function DashboardPage() {
     <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
       <div className="mx-auto max-w-[1600px] space-y-6 p-6">
         {/* Page Header */}
-        <h1 className="text-heading-2 text-default-font">Dashboard</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-heading-2 text-default-font">Dashboard</h1>
+          <DateRangePicker defaultPreset="30d" />
+        </div>
 
         {/* KPI Summary Strip - Subframe Reporting Dashboard Style */}
         <div className="flex w-full flex-wrap items-start rounded-md border border-solid border-neutral-border bg-default-background">
