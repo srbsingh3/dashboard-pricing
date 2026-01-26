@@ -22,6 +22,30 @@ import {
   deliveryFeeDistribution,
 } from "@/lib/mock-data";
 
+// Refined animation configuration - different styles for different chart types
+const CHART_ANIMATION = {
+  // Area charts: flowing entrance, data "sweeps" in smoothly
+  area: {
+    duration: 500,
+    easing: "ease-out" as const,
+  },
+  // Vertical bars: snappy growth with satisfying settle
+  barVertical: {
+    duration: 350,
+    easing: "ease-in-out" as const,
+  },
+  // Horizontal bars: quick extension from left
+  barHorizontal: {
+    duration: 350,
+    easing: "ease-out" as const,
+  },
+  // Pie/donut: natural expansion
+  pie: {
+    duration: 400,
+    easing: "ease-out" as const,
+  },
+};
+
 // Subframe-aligned chart styling constants
 const CHART_STYLES = {
   // Axis styling (matches Subframe typography)
@@ -144,6 +168,8 @@ export function OrdersTrendChart() {
               stroke="#6366f1"
               strokeWidth={2}
               fill="url(#ordersGradient)"
+              animationDuration={CHART_ANIMATION.area.duration}
+              animationEasing={CHART_ANIMATION.area.easing}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -194,6 +220,8 @@ export function DeliveryFeeTrendChart() {
               stroke="#22c55e"
               strokeWidth={2}
               fill="url(#feeGradient)"
+              animationDuration={CHART_ANIMATION.area.duration}
+              animationEasing={CHART_ANIMATION.area.easing}
             />
           </AreaChart>
         </ResponsiveContainer>
@@ -237,7 +265,14 @@ export function CityPerformanceChart() {
               cursor={CHART_STYLES.barCursor}
               formatter={(value) => [Number(value).toLocaleString(), "Orders"]}
             />
-            <Bar dataKey="orders" fill="#6366f1" radius={[0, 2, 2, 0]} barSize={16} />
+            <Bar
+              dataKey="orders"
+              fill="#6366f1"
+              radius={[0, 2, 2, 0]}
+              barSize={16}
+              animationDuration={CHART_ANIMATION.barHorizontal.duration}
+              animationEasing={CHART_ANIMATION.barHorizontal.easing}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -277,7 +312,14 @@ export function DeliveryFeeByCityChart() {
               cursor={CHART_STYLES.barCursor}
               formatter={(value) => [`€${Number(value).toFixed(2)}`, "Avg. Fee"]}
             />
-            <Bar dataKey="avgDeliveryFee" fill="#22c55e" radius={[2, 2, 0, 0]} barSize={28} />
+            <Bar
+              dataKey="avgDeliveryFee"
+              fill="#22c55e"
+              radius={[2, 2, 0, 0]}
+              barSize={28}
+              animationDuration={CHART_ANIMATION.barVertical.duration}
+              animationEasing={CHART_ANIMATION.barVertical.easing}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -304,6 +346,8 @@ export function VerticalBreakdownChart() {
               paddingAngle={0.5}
               dataKey="value"
               nameKey="name"
+              animationDuration={CHART_ANIMATION.pie.duration}
+              animationEasing={CHART_ANIMATION.pie.easing}
             >
               {verticalBreakdownData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -362,7 +406,14 @@ export function DeliveryFeeDistributionChart() {
                 return [value, String(name)];
               }}
             />
-            <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={45} />
+            <Bar
+              dataKey="count"
+              fill="#f59e0b"
+              radius={[4, 4, 0, 0]}
+              barSize={45}
+              animationDuration={CHART_ANIMATION.barVertical.duration}
+              animationEasing={CHART_ANIMATION.barVertical.easing}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -402,7 +453,14 @@ export function ConversionByCityChart() {
               cursor={CHART_STYLES.barCursor}
               formatter={(value) => [`${Number(value).toFixed(1)}%`, "CVR"]}
             />
-            <Bar dataKey="cvr" fill="#ec4899" radius={[4, 4, 0, 0]} barSize={40} />
+            <Bar
+              dataKey="cvr"
+              fill="#ec4899"
+              radius={[4, 4, 0, 0]}
+              barSize={40}
+              animationDuration={CHART_ANIMATION.barVertical.duration}
+              animationEasing={CHART_ANIMATION.barVertical.easing}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
