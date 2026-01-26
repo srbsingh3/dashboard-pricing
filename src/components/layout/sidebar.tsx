@@ -46,7 +46,7 @@ export function Sidebar() {
     <SidebarWithSections
       className="sticky top-0 h-screen shrink-0 border-r-0! bg-neutral-100!"
       header={
-        <Link href="/dashboard" className="mt-2.5 flex items-center gap-2 transition-opacity hover:opacity-80">
+        <Link href="/" className="mt-2.5 flex items-center gap-2 transition-opacity hover:opacity-80">
           <svg
             width="28"
             height="28"

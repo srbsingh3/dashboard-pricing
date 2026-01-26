@@ -60,7 +60,7 @@ vi.mock('@subframe/core', () => ({
 describe('Sidebar', () => {
   it('renders the sidebar with logo', () => {
     render(<Sidebar />)
-    expect(screen.getByText('dps')).toBeInTheDocument()
+    expect(screen.getByText('Dynamic Pricing')).toBeInTheDocument()
   })
 
   it('renders navigation items', () => {
