@@ -1,6 +1,6 @@
 // Type definitions for DPS Dashboard
 
-export type ExperimentStatus = "enabled" | "disabled" | "draft" | "completed";
+export type ExperimentStatus = "running" | "completed" | "draft";
 
 export interface Experiment {
   id: number;

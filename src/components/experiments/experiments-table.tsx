@@ -12,17 +12,15 @@ import {
   ChevronUp,
   Search,
   SlidersHorizontal,
-  CheckCircle,
-  XCircle,
-  PencilLine,
-  Clock,
+  Play,
+  CheckCircle2,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { experiments } from "@/lib/mock-data";
 import type { Experiment, ExperimentStatus } from "@/lib/types";
 import { Button } from "@/subframe/components/Button";
 import { IconButton } from "@/subframe/components/IconButton";
-import { TextField } from "@/subframe/components/TextField";
 import { Badge } from "@/subframe/components/Badge";
 import { Avatar } from "@/subframe/components/Avatar";
 import {
@@ -42,43 +40,37 @@ type SortKey = keyof Experiment | null;
 type SortDirection = "asc" | "desc";
 
 // Status configuration for badges and cards
+// Running = blue (brand), Completed = green (success), Draft = gray (neutral)
 const STATUS_CONFIG: Record<
   ExperimentStatus,
   {
     variant: "success" | "neutral" | "warning" | "brand";
     icon: React.ReactNode;
+    cardIcon: React.ReactNode;
     label: string;
     cardBg: string;
-    cardBorder: string;
   }
 > = {
-  enabled: {
-    variant: "success",
-    icon: <CheckCircle className="size-3.5" />,
-    label: "Enabled",
-    cardBg: "bg-success-50",
-    cardBorder: "border-success-200",
-  },
-  disabled: {
-    variant: "neutral",
-    icon: <XCircle className="size-3.5" />,
-    label: "Disabled",
-    cardBg: "bg-neutral-50",
-    cardBorder: "border-neutral-200",
-  },
-  draft: {
-    variant: "warning",
-    icon: <PencilLine className="size-3.5" />,
-    label: "Draft",
-    cardBg: "bg-warning-50",
-    cardBorder: "border-warning-200",
+  running: {
+    variant: "brand",
+    icon: <Play className="size-3" />,
+    cardIcon: <Play className="size-4" />,
+    label: "Running",
+    cardBg: "bg-brand-100",
   },
   completed: {
-    variant: "brand",
-    icon: <Clock className="size-3.5" />,
+    variant: "success",
+    icon: <CheckCircle2 className="size-3" />,
+    cardIcon: <CheckCircle2 className="size-4" />,
     label: "Completed",
-    cardBg: "bg-brand-50",
-    cardBorder: "border-brand-200",
+    cardBg: "bg-success-100",
+  },
+  draft: {
+    variant: "neutral",
+    icon: <FileText className="size-3" />,
+    cardIcon: <FileText className="size-4" />,
+    label: "Draft",
+    cardBg: "bg-neutral-100",
   },
 };
 
@@ -120,7 +112,7 @@ function formatName(email: string): string {
     .join(" ");
 }
 
-// Status summary card component
+// Status summary card component - matches Subframe design
 function StatusCard({
   status,
   count,
@@ -137,15 +129,14 @@ function StatusCard({
     <button
       onClick={onClick}
       className={cn(
-        "flex flex-1 items-center gap-3 rounded-lg border px-4 py-3 text-left transition-all",
+        "flex flex-1 items-center gap-6 rounded-md px-6 py-8 text-left transition-all",
         config.cardBg,
-        config.cardBorder,
-        isActive && "ring-2 ring-brand-500 ring-offset-1"
+        isActive && "ring-2 ring-brand-500 ring-offset-2"
       )}
     >
-      <span className="text-heading-2 text-neutral-900">{count}</span>
-      <div className="flex items-center gap-1.5 text-neutral-700">
-        {config.icon}
+      <span className="text-heading-2 text-default-font">{count}</span>
+      <div className="flex items-center justify-center gap-1 text-default-font">
+        {config.cardIcon}
         <span className="text-body">{config.label}</span>
       </div>
     </button>
@@ -181,10 +172,9 @@ export function ExperimentsTable() {
   // Calculate status counts
   const statusCounts = useMemo(() => {
     return {
-      enabled: experiments.filter((e) => e.status === "enabled").length,
-      disabled: experiments.filter((e) => e.status === "disabled").length,
-      draft: experiments.filter((e) => e.status === "draft").length,
+      running: experiments.filter((e) => e.status === "running").length,
       completed: experiments.filter((e) => e.status === "completed").length,
+      draft: experiments.filter((e) => e.status === "draft").length,
     };
   }, []);
 
@@ -229,28 +219,16 @@ export function ExperimentsTable() {
   return (
     <div className="space-y-6">
       {/* Status Summary Cards */}
-      <div>
-        <p className="mb-3 text-caption-bold tracking-wide text-neutral-500 uppercase">
+      <div className="flex flex-col gap-4">
+        <p className="text-caption-bold text-subtext-color uppercase">
           Quick Filters
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-4">
           <StatusCard
-            status="enabled"
-            count={statusCounts.enabled}
-            isActive={statusFilter === "enabled"}
-            onClick={() => handleStatusClick("enabled")}
-          />
-          <StatusCard
-            status="disabled"
-            count={statusCounts.disabled}
-            isActive={statusFilter === "disabled"}
-            onClick={() => handleStatusClick("disabled")}
-          />
-          <StatusCard
-            status="draft"
-            count={statusCounts.draft}
-            isActive={statusFilter === "draft"}
-            onClick={() => handleStatusClick("draft")}
+            status="running"
+            count={statusCounts.running}
+            isActive={statusFilter === "running"}
+            onClick={() => handleStatusClick("running")}
           />
           <StatusCard
             status="completed"
@@ -258,33 +236,38 @@ export function ExperimentsTable() {
             isActive={statusFilter === "completed"}
             onClick={() => handleStatusClick("completed")}
           />
+          <StatusCard
+            status="draft"
+            count={statusCounts.draft}
+            isActive={statusFilter === "draft"}
+            onClick={() => handleStatusClick("draft")}
+          />
         </div>
       </div>
 
       {/* Filters Section */}
-      <div>
-        <p className="mb-3 text-caption-bold tracking-wide text-neutral-500 uppercase">
+      <div className="flex flex-col gap-4">
+        <p className="text-caption-bold text-subtext-color uppercase">
           Filters
         </p>
-        <div className="flex items-center gap-3">
-          <div className="max-w-md flex-1">
-            <TextField
-              className="w-full"
-              iconLeft={<Search className="size-4" />}
-            >
-              <TextField.Input
-                placeholder="Search experiments..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-              />
-            </TextField>
+        <div className="flex items-center gap-4">
+          <div className="flex h-10 flex-1 items-center gap-4 rounded-md px-4 shadow-md">
+            <Search className="size-4 text-subtext-color" />
+            <input
+              type="text"
+              placeholder="Search experiments..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="flex-1 bg-transparent text-body text-default-font placeholder:text-subtext-color focus:outline-none"
+            />
           </div>
-          <span className="text-body text-neutral-400">or</span>
+          <span className="text-body text-subtext-color">or</span>
           <Button
             variant="neutral-secondary"
+            size="large"
             icon={<SlidersHorizontal className="size-4" />}
           >
             Add filters

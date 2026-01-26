@@ -27,18 +27,17 @@ export const COMPARISON_OPTIONS = [
 
 // Experiment statuses
 export const EXPERIMENT_STATUS = {
-  ENABLED: "enabled",
-  DISABLED: "disabled",
-  DRAFT: "draft",
+  RUNNING: "running",
   COMPLETED: "completed",
+  DRAFT: "draft",
 } as const;
 
 // Status colors (for badges) - Using Subframe semantic colors
+// Running = blue (brand), Completed = green (success), Draft = gray (neutral)
 export const STATUS_COLORS = {
-  enabled: "bg-success-50 text-success-700 border-success-200",
-  disabled: "bg-neutral-100 text-neutral-600 border-neutral-200",
-  draft: "bg-warning-50 text-warning-700 border-warning-200",
-  completed: "bg-brand-50 text-brand-700 border-brand-200",
+  running: "bg-brand-50 text-brand-700 border-brand-200",
+  completed: "bg-success-50 text-success-700 border-success-200",
+  draft: "bg-neutral-100 text-neutral-600 border-neutral-200",
 } as const;
 
 // KPI metric types

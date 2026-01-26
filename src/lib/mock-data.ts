@@ -123,6 +123,7 @@ export const activeCampaigns: Campaign[] = [
 
 // Experiments list for Experiments page
 // IDs are random 3-4 digit numbers that correlate with creation date (higher ID = more recent)
+// Balanced distribution: ~10 running, ~10 completed, ~10 draft
 export const experiments: Experiment[] = [
   // Oldest experiments (May-July 2023) - IDs: 102-289
   {
@@ -154,7 +155,7 @@ export const experiments: Experiment[] = [
   {
     id: 218,
     name: "MOV Surge Test - Berlin Central",
-    status: "disabled",
+    status: "completed",
     alreadyStarted: false,
     targetGroups: 2,
     variations: 2,
@@ -167,8 +168,8 @@ export const experiments: Experiment[] = [
   {
     id: 289,
     name: "Dummy - BVDF Restaurants Test",
-    status: "disabled",
-    alreadyStarted: true,
+    status: "draft",
+    alreadyStarted: false,
     targetGroups: 2,
     variations: 2,
     createdOn: "25.07.2023",
@@ -181,7 +182,7 @@ export const experiments: Experiment[] = [
   {
     id: 341,
     name: "DE_Berlin_DF_Elasticity_McDonalds",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 2,
     variations: 2,
@@ -194,7 +195,7 @@ export const experiments: Experiment[] = [
   {
     id: 387,
     name: "FP_DE_DF_Distance_Tier_Test",
-    status: "disabled",
+    status: "draft",
     alreadyStarted: false,
     targetGroups: 6,
     variations: 6,
@@ -207,7 +208,7 @@ export const experiments: Experiment[] = [
   {
     id: 456,
     name: "FP_DE_MOV_Premium_Brands_Loyal",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 1,
     variations: 1,
@@ -220,7 +221,7 @@ export const experiments: Experiment[] = [
   {
     id: 512,
     name: "Hamburg DF + MOV Combined Test",
-    status: "enabled",
+    status: "completed",
     alreadyStarted: true,
     targetGroups: 11,
     variations: 11,
@@ -273,7 +274,7 @@ export const experiments: Experiment[] = [
   {
     id: 823,
     name: "Weather Surge - Rainy Days Berlin",
-    status: "disabled",
+    status: "completed",
     alreadyStarted: true,
     targetGroups: 8,
     variations: 3,
@@ -300,7 +301,7 @@ export const experiments: Experiment[] = [
   {
     id: 1047,
     name: "DE_Berlin_Burger_King_DF_15Jan",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 3,
     variations: 3,
@@ -326,7 +327,7 @@ export const experiments: Experiment[] = [
   {
     id: 1203,
     name: "FP_DE_High_Value_Orders_SF_Test",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 4,
     variations: 2,
@@ -339,7 +340,7 @@ export const experiments: Experiment[] = [
   {
     id: 1356,
     name: "DE_Peak_Hours_Surge_Pricing",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 5,
     variations: 4,
@@ -378,7 +379,7 @@ export const experiments: Experiment[] = [
   {
     id: 1689,
     name: "Berlin Central Zone DF Tier Test",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 6,
     variations: 3,
@@ -405,7 +406,7 @@ export const experiments: Experiment[] = [
   {
     id: 2034,
     name: "DE_Late_Night_Premium_Pricing",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 3,
     variations: 2,
@@ -431,7 +432,7 @@ export const experiments: Experiment[] = [
   {
     id: 2456,
     name: "FP_DE_Mitte_Lunch_Rush_Test",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 5,
     variations: 2,
@@ -444,7 +445,7 @@ export const experiments: Experiment[] = [
   {
     id: 2789,
     name: "DE_Weekend_Brunch_Elasticity",
-    status: "enabled",
+    status: "completed",
     alreadyStarted: true,
     targetGroups: 7,
     variations: 4,
@@ -470,7 +471,7 @@ export const experiments: Experiment[] = [
   {
     id: 3567,
     name: "FP_DE_New_User_DF_Waiver",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 2,
     variations: 2,
@@ -483,8 +484,8 @@ export const experiments: Experiment[] = [
   {
     id: 3891,
     name: "DE_Residential_vs_Commercial_SF",
-    status: "disabled",
-    alreadyStarted: true,
+    status: "draft",
+    alreadyStarted: false,
     targetGroups: 6,
     variations: 2,
     createdOn: "08.04.2024",
@@ -496,7 +497,7 @@ export const experiments: Experiment[] = [
   {
     id: 4234,
     name: "Healthy Food Vertical - MOV Test",
-    status: "enabled",
+    status: "running",
     alreadyStarted: true,
     targetGroups: 3,
     variations: 3,
