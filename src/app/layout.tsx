@@ -35,7 +35,7 @@ export default function RootLayout({
         <TooltipProvider delayDuration={300}>
           <div className="flex min-h-screen bg-neutral-100">
             <Sidebar />
-            <main className="flex-1 overflow-auto p-3">
+            <main className="flex-1 overflow-auto p-2.5">
               {children}
             </main>
           </div>

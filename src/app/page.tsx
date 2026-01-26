@@ -21,7 +21,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-full rounded-md border border-neutral-border bg-default-background shadow-sm">
+    <div className="min-h-full rounded-md border border-neutral-border-subtle bg-default-background shadow-sm">
       <div className="mx-auto max-w-[1600px] space-y-6 p-6">
       {/* Page Header */}
       <div className="flex items-center justify-between">
