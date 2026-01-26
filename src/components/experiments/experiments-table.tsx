@@ -296,14 +296,14 @@ export function ExperimentsTable() {
       <div className="-mx-6">
         <table className="w-full">
           <thead>
-            <tr className="border-y border-neutral-border">
+            <tr className="border-y border-neutral-border bg-neutral-50">
               <th
                 className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("name")}
               >
-                <div className="flex h-8 items-center gap-1 pr-3 pl-6">
+                <div className="flex h-10 items-center gap-1 pr-3 pl-6">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
-                    EXPERIMENT
+                    Experiment
                   </span>
                   <SortIndicator columnKey="name" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
@@ -312,31 +312,31 @@ export function ExperimentsTable() {
                 className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("status")}
               >
-                <div className="flex h-8 items-center gap-1 px-3">
+                <div className="flex h-10 items-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
-                    STATUS
+                    Status
                   </span>
                   <SortIndicator columnKey="status" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
               <th className="text-left">
-                <div className="flex h-8 items-center gap-1 px-3">
+                <div className="flex h-10 items-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
-                    OWNER
+                    Owner
                   </span>
                 </div>
               </th>
               <th className="text-center">
-                <div className="flex h-8 items-center justify-center gap-1 px-3">
+                <div className="flex h-10 items-center justify-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
-                    TARGET GROUPS
+                    Target Groups
                   </span>
                 </div>
               </th>
               <th className="text-center">
-                <div className="flex h-8 items-center justify-center gap-1 px-3">
+                <div className="flex h-10 items-center justify-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
-                    STARTED
+                    Started
                   </span>
                 </div>
               </th>
@@ -344,15 +344,15 @@ export function ExperimentsTable() {
                 className="cursor-pointer text-left select-none"
                 onClick={() => handleSort("createdOn")}
               >
-                <div className="flex h-8 items-center gap-1 px-3">
+                <div className="flex h-10 items-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
-                    CREATED
+                    Created
                   </span>
                   <SortIndicator columnKey="createdOn" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
               <th className="w-[120px]">
-                <div className="h-8 pr-6 pl-3" />
+                <div className="h-10 pr-6 pl-3" />
               </th>
             </tr>
           </thead>
@@ -468,8 +468,9 @@ export function ExperimentsTable() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="15">15</SelectItem>
+              <SelectItem value="20">20</SelectItem>
+              <SelectItem value="30">30</SelectItem>
             </SelectContent>
           </Select>
         </div>
