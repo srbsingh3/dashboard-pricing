@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X, Split, RefreshCw, ChevronDown } from "lucide-react";
@@ -294,30 +295,7 @@ export function ExperimentFormDialog({
       serviceFee: string | null;
       priorityFee: string | null;
     }>;
-  }[]>(() => [
-    {
-      id: 1,
-      isExpanded: true,
-      vendorFilters: [],
-      vendorCount: generateRandomVendorCount(),
-      conditions: [],
-      controlDeliveryFee: null,
-      controlMov: null,
-      controlFleetDelay: null,
-      controlBasketValue: null,
-      controlServiceFee: null,
-      controlPriorityFee: null,
-      enabledColumns: [],
-      variations: Array.from({ length: 1 }, () => ({
-        deliveryFee: "same_as_control",
-        mov: "same_as_control",
-        fleetDelay: "same_as_control",
-        basketValue: "same_as_control",
-        serviceFee: "same_as_control",
-        priorityFee: "same_as_control",
-      })),
-    }
-  ]);
+  }[]>(() => []);
 
   // Add a new filter to a specific priority group
   const addVendorFilter = useCallback((groupId: number, fieldValue: string) => {
@@ -385,7 +363,7 @@ export function ExperimentFormDialog({
   // Add a new priority group at the top
   const addPriorityGroup = useCallback(() => {
     setPriorityGroups((prev) => {
-      const newId = Math.max(...prev.map((g) => g.id)) + 1;
+      const newId = prev.length === 0 ? 1 : Math.max(...prev.map((g) => g.id)) + 1;
       return [{
         id: newId,
         isExpanded: true,
@@ -419,12 +397,9 @@ export function ExperimentFormDialog({
     );
   }, [allExpanded]);
 
-  // Delete a priority group (only if more than one exists)
+  // Delete a priority group
   const deletePriorityGroup = useCallback((groupId: number) => {
-    setPriorityGroups((prev) => {
-      if (prev.length <= 1) return prev;
-      return prev.filter((group) => group.id !== groupId);
-    });
+    setPriorityGroups((prev) => prev.filter((group) => group.id !== groupId));
   }, []);
 
   // Duplicate a priority group
@@ -701,28 +676,7 @@ export function ExperimentFormDialog({
       setParticipantShare("");
       setAllExpanded(true);
       setImportPopoverOpen(false);
-      setPriorityGroups([{
-        id: 1,
-        isExpanded: true,
-        vendorFilters: [],
-        vendorCount: generateRandomVendorCount(),
-        conditions: [],
-        controlDeliveryFee: null,
-        controlMov: null,
-        controlFleetDelay: null,
-        controlBasketValue: null,
-        controlServiceFee: null,
-        controlPriorityFee: null,
-        enabledColumns: [],
-        variations: Array.from({ length: 1 }, () => ({
-          deliveryFee: "same_as_control",
-          mov: "same_as_control",
-          fleetDelay: "same_as_control",
-          basketValue: "same_as_control",
-          serviceFee: "same_as_control",
-          priorityFee: "same_as_control",
-        })),
-      }]);
+      setPriorityGroups([]);
     }, 200);
   };
 
@@ -1018,7 +972,39 @@ export function ExperimentFormDialog({
               {/* Priority Cards Content */}
               <div className="px-6 pb-6">
               <div className="mx-auto space-y-4 transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
+
+              {/* Empty State */}
+              {priorityGroups.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
+                  className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-white px-8 py-16"
+                >
+                  <Image
+                    src="/piggy-bank.png"
+                    alt=""
+                    width={200}
+                    height={200}
+                    className="mb-8 object-contain"
+                  />
+                  <h4 className="text-body-bold text-neutral-900">No target groups yet</h4>
+                  <p className="mt-1 text-center text-body text-neutral-500">
+                    Add a target group to define vendor segments for your experiment
+                  </p>
+                  <button
+                    type="button"
+                    onClick={addPriorityGroup}
+                    className="mt-6 flex items-center gap-2 rounded-md bg-brand-600 px-4 py-2 text-body-bold text-white transition-colors hover:bg-brand-500 active:bg-brand-700"
+                  >
+                    <Plus className="size-4" />
+                    Add Target Group
+                  </button>
+                </motion.div>
+              )}
+
               {/* Priority Cards - rendered from state with drag and drop */}
+              {priorityGroups.length > 0 && (
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
@@ -1057,16 +1043,14 @@ export function ExperimentFormDialog({
                                 Priority {index + 1}
                               </span>
                             </button>
-                            {priorityGroups.length > 1 && (
-                              <button
-                                type="button"
-                                onClick={() => deletePriorityGroup(group.id)}
-                                className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
-                                aria-label="Remove priority group"
-                              >
-                                <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
-                              </button>
-                            )}
+                            <button
+                              type="button"
+                              onClick={() => deletePriorityGroup(group.id)}
+                              className="group/delete -my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-error-50"
+                              aria-label="Remove priority group"
+                            >
+                              <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
+                            </button>
                             <button
                               type="button"
                               onClick={() => duplicatePriorityGroup(group.id)}
@@ -1615,6 +1599,7 @@ export function ExperimentFormDialog({
                   ))}
                 </SortableContext>
               </DndContext>
+              )}
               </div>
               </div>
             </ScrollContainer>
