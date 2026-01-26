@@ -22,31 +22,45 @@ import {
   deliveryFeeDistribution,
 } from "@/lib/mock-data";
 
-// Custom tooltip style for bar/line charts (matches Subframe design)
-const tooltipStyle = {
-  backgroundColor: "#FFFFFF",
-  border: "1px solid #E4E4E7",
-  borderRadius: "4px",
-  padding: "8px",
-  boxShadow: "none",
-};
-
-const tooltipLabelStyle = {
-  fontSize: "12px",
-  fontWeight: 400,
-  color: "#3F3F46",
-  marginBottom: "4px",
-};
-
-const tooltipItemStyle = {
-  fontSize: "12px",
-  color: "#71717A",
-};
-
-// Cursor style for chart hover (Subframe uses gray-300)
-const cursorStyle = {
-  stroke: "#D1D5DB",
-  strokeWidth: 1,
+// Subframe-aligned chart styling constants
+const CHART_STYLES = {
+  // Axis styling (matches Subframe typography)
+  axisTick: {
+    fontSize: 12,
+    fill: "#71717A", // neutral-500/subtext-color
+  },
+  axisLine: {
+    stroke: "#E5E5E5", // neutral-200
+  },
+  grid: {
+    stroke: "#F5F5F5", // neutral-100
+  },
+  // Tooltip styling
+  tooltip: {
+    backgroundColor: "#FFFFFF",
+    border: "1px solid #E5E5E5",
+    borderRadius: "4px",
+    padding: "8px 12px",
+    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+  },
+  tooltipLabel: {
+    fontSize: "12px",
+    fontWeight: 500,
+    color: "#171717", // neutral-900/default-font
+    marginBottom: "4px",
+  },
+  tooltipItem: {
+    fontSize: "12px",
+    color: "#737373", // neutral-500
+  },
+  // Cursor for hover
+  cursor: {
+    stroke: "#D4D4D4", // neutral-300
+    strokeWidth: 1,
+  },
+  barCursor: {
+    fill: "#FAFAFA", // neutral-50
+  },
 };
 
 // Custom tooltip component for Pie Chart (Subframe-style)
@@ -70,19 +84,16 @@ function PieChartTooltip({ active, payload }: PieTooltipProps) {
     const data = payload[0];
     return (
       <div
-        className="flex animate-in flex-col gap-2 rounded-sm border bg-white p-2 duration-100 fade-in"
-        style={{
-          minWidth: "100px",
-          borderColor: "#E4E4E7",
-        }}
+        className="flex animate-in flex-col gap-2 rounded-md border border-neutral-200 bg-white px-3 py-2 shadow-sm duration-100 fade-in"
+        style={{ minWidth: "100px" }}
       >
         <div className="flex items-center gap-2">
           <span
             className="size-2 rounded-full"
             style={{ backgroundColor: data.payload.color }}
           />
-          <span className="text-caption" style={{ color: "#71717A" }}>{data.name}</span>
-          <span className="ml-auto text-caption" style={{ color: "#3F3F46" }}>
+          <span className="text-caption text-neutral-500">{data.name}</span>
+          <span className="ml-auto text-caption text-neutral-900">
             {data.value}%
           </span>
         </div>
@@ -95,12 +106,9 @@ function PieChartTooltip({ active, payload }: PieTooltipProps) {
 // Orders Trend Chart
 export function OrdersTrendChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Orders Trend</h3>
-        <p className="text-caption text-neutral-500">Daily orders over the last 30 days</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Orders Trend</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={dailyOrdersData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
@@ -109,25 +117,25 @@ export function OrdersTrendChart() {
                 <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
-              axisLine={{ stroke: "#e2e8f0" }}
+              axisLine={CHART_STYLES.axisLine}
               interval="preserveStartEnd"
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `${(value / 1000).toFixed(1)}k`}
             />
             <Tooltip
-              contentStyle={tooltipStyle}
-              labelStyle={tooltipLabelStyle}
-              itemStyle={tooltipItemStyle}
-              cursor={cursorStyle}
+              contentStyle={CHART_STYLES.tooltip}
+              labelStyle={CHART_STYLES.tooltipLabel}
+              itemStyle={CHART_STYLES.tooltipItem}
+              cursor={CHART_STYLES.cursor}
               formatter={(value: number) => [value.toLocaleString(), "Orders"]}
             />
             <Area
@@ -147,12 +155,9 @@ export function OrdersTrendChart() {
 // Delivery Fee Trend Chart
 export function DeliveryFeeTrendChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Avg. Delivery Fee Trend</h3>
-        <p className="text-caption text-neutral-500">Average delivery fee over time</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Avg. Delivery Fee Trend</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={dailyOrdersData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>
@@ -161,26 +166,26 @@ export function DeliveryFeeTrendChart() {
                 <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
-              axisLine={{ stroke: "#e2e8f0" }}
+              axisLine={CHART_STYLES.axisLine}
               interval="preserveStartEnd"
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
               axisLine={false}
               domain={[2.0, 2.4]}
               tickFormatter={(value) => `€${value.toFixed(2)}`}
             />
             <Tooltip
-              contentStyle={tooltipStyle}
-              labelStyle={tooltipLabelStyle}
-              itemStyle={tooltipItemStyle}
-              cursor={cursorStyle}
+              contentStyle={CHART_STYLES.tooltip}
+              labelStyle={CHART_STYLES.tooltipLabel}
+              itemStyle={CHART_STYLES.tooltipItem}
+              cursor={CHART_STYLES.cursor}
               formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
             />
             <Area
@@ -200,39 +205,36 @@ export function DeliveryFeeTrendChart() {
 // City Performance Bar Chart
 export function CityPerformanceChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Orders by City</h3>
-        <p className="text-caption text-neutral-500">Total orders per city this month</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Orders by City</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={cityPerformanceData}
             layout="vertical"
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={true} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} horizontal={true} vertical={false} />
             <XAxis
               type="number"
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
-              axisLine={{ stroke: "#e2e8f0" }}
+              axisLine={CHART_STYLES.axisLine}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
             />
             <YAxis
               type="category"
               dataKey="city"
-              tick={{ fontSize: 12, fill: "#374151" }}
+              tick={{ fontSize: 12, fill: "#404040" }}
               tickLine={false}
               axisLine={false}
               width={70}
             />
             <Tooltip
-              contentStyle={tooltipStyle}
-              labelStyle={tooltipLabelStyle}
-              itemStyle={tooltipItemStyle}
-              cursor={{ fill: "#F4F4F5" }}
+              contentStyle={CHART_STYLES.tooltip}
+              labelStyle={CHART_STYLES.tooltipLabel}
+              itemStyle={CHART_STYLES.tooltipItem}
+              cursor={CHART_STYLES.barCursor}
               formatter={(value: number) => [value.toLocaleString(), "Orders"]}
             />
             <Bar dataKey="orders" fill="#6366f1" radius={[0, 4, 4, 0]} barSize={24} />
@@ -246,36 +248,33 @@ export function CityPerformanceChart() {
 // Delivery Fee by City Chart
 export function DeliveryFeeByCityChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Avg. Delivery Fee by City</h3>
-        <p className="text-caption text-neutral-500">Compare pricing across cities</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Avg. Delivery Fee by City</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={cityPerformanceData}
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
             <XAxis
               dataKey="city"
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
-              axisLine={{ stroke: "#e2e8f0" }}
+              axisLine={CHART_STYLES.axisLine}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
               axisLine={false}
               domain={[0, 3]}
               tickFormatter={(value) => `€${value.toFixed(1)}`}
             />
             <Tooltip
-              contentStyle={tooltipStyle}
-              labelStyle={tooltipLabelStyle}
-              itemStyle={tooltipItemStyle}
-              cursor={{ fill: "#F4F4F5" }}
+              contentStyle={CHART_STYLES.tooltip}
+              labelStyle={CHART_STYLES.tooltipLabel}
+              itemStyle={CHART_STYLES.tooltipItem}
+              cursor={CHART_STYLES.barCursor}
               formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
             />
             <Bar dataKey="avgDeliveryFee" fill="#22c55e" radius={[4, 4, 0, 0]} barSize={40} />
@@ -289,12 +288,9 @@ export function DeliveryFeeByCityChart() {
 // Vertical Breakdown Pie Chart (Subframe-style donut)
 export function VerticalBreakdownChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Order Share by Vertical</h3>
-        <p className="text-caption text-neutral-500">Distribution across business verticals</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Order Share by Vertical</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -335,35 +331,32 @@ export function VerticalBreakdownChart() {
 // Delivery Fee Distribution Chart
 export function DeliveryFeeDistributionChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Delivery Fee Distribution</h3>
-        <p className="text-caption text-neutral-500">Orders by fee range</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Delivery Fee Distribution</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={deliveryFeeDistribution}
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
             <XAxis
               dataKey="range"
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
-              axisLine={{ stroke: "#e2e8f0" }}
+              axisLine={CHART_STYLES.axisLine}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
             />
             <Tooltip
-              contentStyle={tooltipStyle}
-              labelStyle={tooltipLabelStyle}
-              itemStyle={tooltipItemStyle}
-              cursor={{ fill: "#F4F4F5" }}
+              contentStyle={CHART_STYLES.tooltip}
+              labelStyle={CHART_STYLES.tooltipLabel}
+              itemStyle={CHART_STYLES.tooltipItem}
+              cursor={CHART_STYLES.barCursor}
               formatter={(value: number, name: string) => {
                 if (name === "count") return [value.toLocaleString(), "Orders"];
                 return [value, name];
@@ -380,36 +373,33 @@ export function DeliveryFeeDistributionChart() {
 // Conversion Rate by City Chart
 export function ConversionByCityChart() {
   return (
-    <div className="rounded-lg border border-neutral-200 bg-white p-5">
-      <div className="mb-4">
-        <h3 className="text-body-bold text-neutral-900">Conversion Rate by City</h3>
-        <p className="text-caption text-neutral-500">CVR comparison across cities</p>
-      </div>
-      <div className="h-[240px]">
+    <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
+      <h3 className="text-heading-3 text-default-font">Conversion Rate by City</h3>
+      <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={cityPerformanceData}
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
             <XAxis
               dataKey="city"
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
-              axisLine={{ stroke: "#e2e8f0" }}
+              axisLine={CHART_STYLES.axisLine}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#64748b" }}
+              tick={CHART_STYLES.axisTick}
               tickLine={false}
               axisLine={false}
               domain={[50, 70]}
               tickFormatter={(value) => `${value}%`}
             />
             <Tooltip
-              contentStyle={tooltipStyle}
-              labelStyle={tooltipLabelStyle}
-              itemStyle={tooltipItemStyle}
-              cursor={{ fill: "#F4F4F5" }}
+              contentStyle={CHART_STYLES.tooltip}
+              labelStyle={CHART_STYLES.tooltipLabel}
+              itemStyle={CHART_STYLES.tooltipItem}
+              cursor={CHART_STYLES.barCursor}
               formatter={(value: number) => [`${value.toFixed(1)}%`, "CVR"]}
             />
             <Bar dataKey="cvr" fill="#ec4899" radius={[4, 4, 0, 0]} barSize={40} />
