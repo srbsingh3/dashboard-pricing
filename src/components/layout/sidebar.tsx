@@ -15,7 +15,7 @@ import {
   FeatherSettings,
   FeatherGlobe,
 } from "@subframe/core";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Gift } from "lucide-react";
 import { NAV_ITEMS, REGIONS } from "@/lib/constants";
 import {
   DropdownMenu,
@@ -207,6 +207,19 @@ export function Sidebar() {
             </Link>
           );
         })}
+
+        {/* Separator */}
+        <div className="my-2 h-px bg-neutral-200" />
+
+        {/* Storybook */}
+        <Link href="/storybook" className="w-full">
+          <SidebarWithSections.NavItem
+            icon={<Gift className="size-4" />}
+            selected={pathname === "/storybook"}
+          >
+            Storybook
+          </SidebarWithSections.NavItem>
+        </Link>
       </div>
 
     </SidebarWithSections>

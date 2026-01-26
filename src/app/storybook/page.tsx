@@ -196,7 +196,7 @@ export default function StorybookPage() {
               <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
                 <div className="flex items-baseline justify-between">
                   <span className="text-heading-1 text-default-font">Heading 1</span>
-                  <span className="font-mono text-caption text-neutral-400">32px / 2rem</span>
+                  <span className="font-mono text-caption text-neutral-400">30px / 1.875rem · 500</span>
                 </div>
                 <p className="text-caption text-neutral-500">
                   Used for primary page titles and major section headings
@@ -206,7 +206,7 @@ export default function StorybookPage() {
               <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
                 <div className="flex items-baseline justify-between">
                   <span className="text-heading-2 text-default-font">Heading 2</span>
-                  <span className="font-mono text-caption text-neutral-400">24px / 1.5rem</span>
+                  <span className="font-mono text-caption text-neutral-400">20px / 1.25rem · 500</span>
                 </div>
                 <p className="text-caption text-neutral-500">
                   Used for section titles and card headers
@@ -216,7 +216,7 @@ export default function StorybookPage() {
               <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
                 <div className="flex items-baseline justify-between">
                   <span className="text-heading-3 text-default-font">Heading 3</span>
-                  <span className="font-mono text-caption text-neutral-400">18px / 1.125rem</span>
+                  <span className="font-mono text-caption text-neutral-400">16px / 1rem · 500</span>
                 </div>
                 <p className="text-caption text-neutral-500">
                   Used for subsection titles and component headers
@@ -226,7 +226,7 @@ export default function StorybookPage() {
               <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
                 <div className="flex items-baseline justify-between">
                   <span className="text-body-bold text-default-font">Body Bold</span>
-                  <span className="font-mono text-caption text-neutral-400">14px / 0.875rem · 600</span>
+                  <span className="font-mono text-caption text-neutral-400">14px / 0.875rem · 500</span>
                 </div>
                 <p className="text-caption text-neutral-500">
                   Used for labels, table headers, and emphasized body text
@@ -256,7 +256,7 @@ export default function StorybookPage() {
               <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
                 <div className="flex items-baseline justify-between">
                   <span className="text-caption-bold text-default-font">Caption Bold</span>
-                  <span className="font-mono text-caption text-neutral-400">12px / 0.75rem · 600</span>
+                  <span className="font-mono text-caption text-neutral-400">12px / 0.75rem · 500</span>
                 </div>
                 <p className="text-caption text-neutral-500">
                   Used for small labels and emphasized captions
@@ -799,10 +799,7 @@ export default function StorybookPage() {
             <div className="flex size-8 items-center justify-center rounded-md bg-brand-600">
               <Box className="size-4 text-white" />
             </div>
-            <div>
-              <h1 className="text-body-bold text-default-font">Design System</h1>
-              <p className="text-caption text-subtext-color">Component Library</p>
-            </div>
+            <h1 className="text-heading-3 text-default-font">Design System</h1>
           </div>
 
           {/* Mobile menu button */}
