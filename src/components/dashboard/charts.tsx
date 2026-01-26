@@ -22,13 +22,31 @@ import {
   deliveryFeeDistribution,
 } from "@/lib/mock-data";
 
-// Custom tooltip style for bar/line charts
+// Custom tooltip style for bar/line charts (matches Subframe design)
 const tooltipStyle = {
-  backgroundColor: "white",
-  border: "1px solid #e5e7eb",
-  borderRadius: "8px",
-  padding: "12px",
-  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+  backgroundColor: "#FFFFFF",
+  border: "1px solid #E4E4E7",
+  borderRadius: "4px",
+  padding: "8px",
+  boxShadow: "none",
+};
+
+const tooltipLabelStyle = {
+  fontSize: "12px",
+  fontWeight: 400,
+  color: "#3F3F46",
+  marginBottom: "4px",
+};
+
+const tooltipItemStyle = {
+  fontSize: "12px",
+  color: "#71717A",
+};
+
+// Cursor style for chart hover (Subframe uses gray-300)
+const cursorStyle = {
+  stroke: "#D1D5DB",
+  strokeWidth: 1,
 };
 
 // Custom tooltip component for Pie Chart (Subframe-style)
@@ -52,16 +70,19 @@ function PieChartTooltip({ active, payload }: PieTooltipProps) {
     const data = payload[0];
     return (
       <div
-        className="flex animate-in flex-col gap-2 rounded-sm border border-neutral-200 bg-white p-2 shadow-md duration-100 fade-in"
-        style={{ minWidth: "100px" }}
+        className="flex animate-in flex-col gap-2 rounded-sm border bg-white p-2 duration-100 fade-in"
+        style={{
+          minWidth: "100px",
+          borderColor: "#E4E4E7",
+        }}
       >
         <div className="flex items-center gap-2">
           <span
             className="size-2 rounded-full"
             style={{ backgroundColor: data.payload.color }}
           />
-          <span className="text-caption text-neutral-500">{data.name}</span>
-          <span className="ml-auto text-caption font-medium text-neutral-900">
+          <span className="text-caption" style={{ color: "#71717A" }}>{data.name}</span>
+          <span className="ml-auto text-caption" style={{ color: "#3F3F46" }}>
             {data.value}%
           </span>
         </div>
@@ -104,8 +125,10 @@ export function OrdersTrendChart() {
             />
             <Tooltip
               contentStyle={tooltipStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
+              cursor={cursorStyle}
               formatter={(value: number) => [value.toLocaleString(), "Orders"]}
-              labelStyle={{ fontWeight: 600, marginBottom: 4 }}
             />
             <Area
               type="monotone"
@@ -155,8 +178,10 @@ export function DeliveryFeeTrendChart() {
             />
             <Tooltip
               contentStyle={tooltipStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
+              cursor={cursorStyle}
               formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
-              labelStyle={{ fontWeight: 600, marginBottom: 4 }}
             />
             <Area
               type="monotone"
@@ -205,8 +230,10 @@ export function CityPerformanceChart() {
             />
             <Tooltip
               contentStyle={tooltipStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
+              cursor={{ fill: "#F4F4F5" }}
               formatter={(value: number) => [value.toLocaleString(), "Orders"]}
-              labelStyle={{ fontWeight: 600, marginBottom: 4 }}
             />
             <Bar dataKey="orders" fill="#6366f1" radius={[0, 4, 4, 0]} barSize={24} />
           </BarChart>
@@ -246,8 +273,10 @@ export function DeliveryFeeByCityChart() {
             />
             <Tooltip
               contentStyle={tooltipStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
+              cursor={{ fill: "#F4F4F5" }}
               formatter={(value: number) => [`€${value.toFixed(2)}`, "Avg. Fee"]}
-              labelStyle={{ fontWeight: 600, marginBottom: 4 }}
             />
             <Bar dataKey="avgDeliveryFee" fill="#22c55e" radius={[4, 4, 0, 0]} barSize={40} />
           </BarChart>
@@ -332,11 +361,13 @@ export function DeliveryFeeDistributionChart() {
             />
             <Tooltip
               contentStyle={tooltipStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
+              cursor={{ fill: "#F4F4F5" }}
               formatter={(value: number, name: string) => {
                 if (name === "count") return [value.toLocaleString(), "Orders"];
                 return [value, name];
               }}
-              labelStyle={{ fontWeight: 600, marginBottom: 4 }}
             />
             <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} barSize={45} />
           </BarChart>
@@ -376,8 +407,10 @@ export function ConversionByCityChart() {
             />
             <Tooltip
               contentStyle={tooltipStyle}
+              labelStyle={tooltipLabelStyle}
+              itemStyle={tooltipItemStyle}
+              cursor={{ fill: "#F4F4F5" }}
               formatter={(value: number) => [`${value.toFixed(1)}%`, "CVR"]}
-              labelStyle={{ fontWeight: 600, marginBottom: 4 }}
             />
             <Bar dataKey="cvr" fill="#ec4899" radius={[4, 4, 0, 0]} barSize={40} />
           </BarChart>
