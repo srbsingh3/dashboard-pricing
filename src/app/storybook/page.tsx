@@ -31,6 +31,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { ChipMultiSelect } from "@/components/ui/chip-multi-select";
 import {
   Table,
   TableBody,
@@ -141,6 +143,8 @@ export default function StorybookPage() {
   const [activeSection, setActiveSection] = useState<Section>("colors");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
+  const [chipMultiSelectValue, setChipMultiSelectValue] = useState<string[]>([]);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -555,6 +559,47 @@ export default function StorybookPage() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Multi-Select (Count)</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <MultiSelect
+                    options={[
+                      { value: "zone1", label: "North Zone", id: "NZ-001" },
+                      { value: "zone2", label: "South Zone", id: "SZ-002" },
+                      { value: "zone3", label: "East Zone", id: "EZ-003" },
+                      { value: "zone4", label: "West Zone", id: "WZ-004" },
+                      { value: "zone5", label: "Central Zone", id: "CZ-005" },
+                    ]}
+                    value={multiSelectValue}
+                    onValueChange={setMultiSelectValue}
+                    placeholder="Select zones"
+                    label="Select Zones"
+                    itemLabel="zone"
+                    className="w-80"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Multi-Select (Chips)</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <ChipMultiSelect
+                    options={[
+                      { value: "tag1", label: "Design", id: "T-001" },
+                      { value: "tag2", label: "Development", id: "T-002" },
+                      { value: "tag3", label: "Marketing", id: "T-003" },
+                      { value: "tag4", label: "Sales", id: "T-004" },
+                      { value: "tag5", label: "Support", id: "T-005" },
+                    ]}
+                    value={chipMultiSelectValue}
+                    onValueChange={setChipMultiSelectValue}
+                    placeholder="Select tags"
+                    label="Select Tags"
+                    className="w-80"
+                  />
                 </div>
               </div>
 
