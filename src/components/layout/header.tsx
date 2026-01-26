@@ -27,23 +27,21 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
       <div className="flex h-14 items-center px-6">
         {/* Logo */}
-        <Link href="/" className="mr-8 flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="text-primary"
-            >
-              <circle cx="8" cy="16" r="4" fill="currentColor" opacity="0.8" />
-              <circle cx="16" cy="8" r="4" fill="currentColor" opacity="0.6" />
-              <circle cx="24" cy="16" r="4" fill="currentColor" opacity="0.8" />
-              <circle cx="16" cy="24" r="4" fill="currentColor" />
-            </svg>
-            <span className="text-lg font-semibold tracking-tight">dps</span>
-          </div>
+        <Link href="/dashboard" className="mr-8 flex items-center gap-2 transition-opacity hover:opacity-80">
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 32 32"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="text-primary"
+          >
+            <circle cx="8" cy="16" r="4" fill="currentColor" opacity="0.8" />
+            <circle cx="16" cy="8" r="4" fill="currentColor" opacity="0.6" />
+            <circle cx="24" cy="16" r="4" fill="currentColor" opacity="0.8" />
+            <circle cx="16" cy="24" r="4" fill="currentColor" />
+          </svg>
+          <span className="text-heading-2 text-default-font">Dynamic Pricing</span>
         </Link>
 
         {/* Navigation */}

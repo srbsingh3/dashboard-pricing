@@ -15,7 +15,7 @@ export default function ExperimentsPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-heading-2 text-neutral-900">Experiments</h1>
+          <h1 className="text-heading-2 text-default-font">Experiments</h1>
         </div>
 
         <Button
