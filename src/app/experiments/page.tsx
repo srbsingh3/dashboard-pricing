@@ -10,7 +10,8 @@ export default function ExperimentsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
-    <div className="mx-auto max-w-[1600px] space-y-6 p-6">
+    <div className="min-h-full rounded-md border border-neutral-border bg-default-background shadow-sm">
+      <div className="mx-auto max-w-[1600px] space-y-6 p-6">
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -33,6 +34,7 @@ export default function ExperimentsPage() {
         open={isFormOpen}
         onOpenChange={setIsFormOpen}
       />
+      </div>
     </div>
   );
 }

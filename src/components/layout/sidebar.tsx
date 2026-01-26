@@ -44,7 +44,7 @@ export function Sidebar() {
 
   return (
     <SidebarWithSections
-      className="sticky top-0 h-screen shrink-0"
+      className="sticky top-0 h-screen shrink-0 border-r-0! bg-neutral-100!"
       header={
         <div className="flex items-center gap-2">
           <svg

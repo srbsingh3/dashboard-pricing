@@ -33,9 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <TooltipProvider delayDuration={300}>
-          <div className="flex min-h-screen">
+          <div className="flex min-h-screen bg-neutral-100">
             <Sidebar />
-            <main className="flex-1 overflow-auto bg-white">
+            <main className="flex-1 overflow-auto p-3">
               {children}
             </main>
           </div>
