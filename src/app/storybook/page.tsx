@@ -791,9 +791,9 @@ export default function StorybookPage() {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-neutral-50">
+    <div className="flex h-full flex-col overflow-hidden rounded-md border border-neutral-border-subtle bg-neutral-50 shadow-sm">
       {/* Header */}
-      <header className="border-b border-neutral-border bg-default-background shadow-sm">
+      <header className="border-b border-neutral-border bg-default-background">
         <div className="flex h-16 items-center justify-between px-6">
           <div className="flex items-center gap-3">
             <div className="flex size-8 items-center justify-center rounded-md bg-brand-600">
