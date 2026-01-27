@@ -20,7 +20,6 @@ import {
   Trophy,
   MoreVertical,
 } from "lucide-react";
-import * as SubframeCore from "@subframe/core";
 import { cn } from "@/lib/utils";
 import { experiments } from "@/lib/mock-data";
 import type { Experiment, ExperimentStatus, ExperimentType } from "@/lib/types";
@@ -30,7 +29,13 @@ import { IconButton } from "@/subframe/components/IconButton";
 import { Badge } from "@/subframe/components/Badge";
 import { TextField } from "@/subframe/components/TextField";
 import { Avatar } from "@/subframe/components/Avatar";
-import { DropdownMenu } from "@/subframe/components/DropdownMenu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -816,10 +821,10 @@ export function ExperimentsTable() {
                       "transition-opacity",
                       openMenuId === experiment.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                     )}>
-                      <SubframeCore.DropdownMenu.Root
+                      <DropdownMenu
                         onOpenChange={(open) => setOpenMenuId(open ? experiment.id : null)}
                       >
-                        <SubframeCore.DropdownMenu.Trigger asChild>
+                        <DropdownMenuTrigger asChild>
                           <IconButton
                             size="medium"
                             icon={<MoreVertical className="size-4 text-subtext-color" />}
@@ -827,41 +832,27 @@ export function ExperimentsTable() {
                               openMenuId === experiment.id && "bg-neutral-100"
                             )}
                           />
-                        </SubframeCore.DropdownMenu.Trigger>
-                        <SubframeCore.DropdownMenu.Portal>
-                          <SubframeCore.DropdownMenu.Content
-                            side="bottom"
-                            align="end"
-                            sideOffset={4}
-                            asChild
-                          >
-                            <DropdownMenu>
-                              <DropdownMenu.DropdownItem
-                                icon={<AreaChart className="size-3.5" />}
-                              >
-                                View Results
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Pencil className="size-3.5" />}
-                              >
-                                Edit
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownItem
-                                icon={<Copy className="size-3.5" />}
-                              >
-                                Duplicate
-                              </DropdownMenu.DropdownItem>
-                              <DropdownMenu.DropdownDivider />
-                              <DropdownMenu.DropdownItem
-                                icon={<Trash2 className="size-3.5 text-error-600" />}
-                                className="text-error-600"
-                              >
-                                Delete
-                              </DropdownMenu.DropdownItem>
-                            </DropdownMenu>
-                          </SubframeCore.DropdownMenu.Content>
-                        </SubframeCore.DropdownMenu.Portal>
-                      </SubframeCore.DropdownMenu.Root>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="bottom" align="end">
+                          <DropdownMenuItem>
+                            <AreaChart className="size-3.5" />
+                            View Results
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Pencil className="size-3.5" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Copy className="size-3.5" />
+                            Duplicate
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem variant="destructive">
+                            <Trash2 className="size-3.5" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </td>
