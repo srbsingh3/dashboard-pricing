@@ -222,7 +222,7 @@ export function Sidebar() {
           }
 
           return (
-            <Link key={item.id} href={item.href} className="w-full">
+            <Link key={item.id} href={item.href} className="w-full" data-tour={item.id === "experiments" ? "nav-experiments" : undefined}>
               <SidebarWithSections.NavItem
                 icon={NAV_ICONS[item.id]}
                 selected={isActive}

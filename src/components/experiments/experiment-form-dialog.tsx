@@ -725,7 +725,7 @@ export function ExperimentFormDialog({
       <div className="w-full flex-1 overflow-hidden bg-white">
         <div className="flex h-full">
           {/* Left Panel - Experiment Details Form */}
-          <div className="hidden w-96 border-r border-neutral-200 bg-white p-6 lg:block">
+          <div data-tour="form-left-panel" className="hidden w-96 border-r border-neutral-200 bg-white p-6 lg:block">
             <div className="space-y-5">
               {/* Experiment Name */}
               <TextField label="Experiment Name" className="w-full gap-2">
@@ -764,7 +764,7 @@ export function ExperimentFormDialog({
               </div>
 
               {/* Experiment Type */}
-              <div className="flex flex-col gap-2">
+              <div data-tour="form-type" className="flex flex-col gap-2">
                 <span className="text-caption-bold text-neutral-700">
                   Experiment Type
                 </span>
@@ -884,7 +884,7 @@ export function ExperimentFormDialog({
           <div className="flex-1 bg-neutral-50">
             <ScrollContainer>
               {/* Sticky Section Header */}
-              <div className="sticky top-0 z-10 bg-neutral-50 px-6 pt-6 pb-4">
+              <div data-tour="form-target-groups" className="sticky top-0 z-10 bg-neutral-50 px-6 pt-6 pb-4">
                 <div className="mx-auto transition-[max-width] duration-200 ease-out" style={{ maxWidth: `${Math.max(946, 946 + Math.max(0, ...priorityGroups.map(g => g.enabledColumns.length - 1)) * 140)}px` }}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -1130,7 +1130,7 @@ export function ExperimentFormDialog({
                     >
                     <div className="flex w-full flex-col items-start p-2">
                       {/* Target Vendors */}
-                      <div className="flex w-full items-center gap-4 p-4">
+                      <div data-tour={index === 0 ? "form-vendor-filters" : undefined} className="flex w-full items-center gap-4 p-4">
                         <div className="flex size-8 items-center justify-center rounded-full bg-brand-50">
                           <Store className="size-4 text-brand-600" />
                         </div>
@@ -1246,7 +1246,7 @@ export function ExperimentFormDialog({
                       )}
 
                       {/* Conditions */}
-                      <div className="flex w-full items-center gap-4 p-4">
+                      <div data-tour={index === 0 ? "form-conditions" : undefined} className="flex w-full items-center gap-4 p-4">
                         <div className="flex size-8 items-center justify-center rounded-full bg-warning-50">
                           <SlidersHorizontal className="size-4 text-warning-600" />
                         </div>
@@ -1306,7 +1306,7 @@ export function ExperimentFormDialog({
                       )}
 
                       {/* Control and Variation */}
-                      <div className="flex w-full items-center gap-4 p-4">
+                      <div data-tour={index === 0 ? "form-components" : undefined} className="flex w-full items-center gap-4 p-4">
                         <div className="flex size-8 items-center justify-center rounded-full bg-success-50">
                           <GitBranch className="size-4 text-success-600" />
                         </div>

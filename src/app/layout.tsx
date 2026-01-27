@@ -5,6 +5,8 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { MainContent } from "@/components/layout/main-content";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@subframe/core";
+import { TourProvider } from "@/components/tour/tour-provider";
+import { TourOverlay } from "@/components/tour/tour-overlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +36,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <TooltipProvider delayDuration={300}>
-          <div className="flex h-screen bg-neutral-100">
-            <Sidebar />
-            <MainContent>{children}</MainContent>
-          </div>
+          <TourProvider>
+            <div className="flex h-screen bg-neutral-100">
+              <Sidebar />
+              <MainContent>{children}</MainContent>
+            </div>
+            <TourOverlay />
+          </TourProvider>
         </TooltipProvider>
         <Toaster position="top-right" />
       </body>

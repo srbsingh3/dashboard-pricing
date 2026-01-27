@@ -24,16 +24,20 @@ export default function ExperimentsPage() {
               <h1 className="text-heading-2 text-default-font">Experiments</h1>
             </div>
 
-            <Button
-              onClick={() => setIsFormOpen(true)}
-              icon={<Plus className="size-4" />}
-            >
-              Create New Experiment
-            </Button>
+            <div data-tour="experiments-create">
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                icon={<Plus className="size-4" />}
+              >
+                Create New Experiment
+              </Button>
+            </div>
           </div>
 
           {/* Experiments Table */}
-          <ExperimentsTable />
+          <div data-tour="experiments-table">
+            <ExperimentsTable />
+          </div>
 
           {/* Experiment Form Dialog */}
           <ExperimentFormDialog

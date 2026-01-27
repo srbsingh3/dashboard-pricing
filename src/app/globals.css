@@ -702,3 +702,26 @@ button:focus-visible,
   border-color: var(--color-neutral-300);
 }
 
+/* ============================================
+   TOUR BEACON PULSE ANIMATION
+   ============================================ */
+
+@keyframes tour-beacon-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@utility animate-tour-pulse {
+  animation: tour-beacon-pulse 1.5s ease-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+

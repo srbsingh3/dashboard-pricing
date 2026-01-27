@@ -480,7 +480,7 @@ export function ExperimentsTable() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex items-center gap-3">
+      <div data-tour="experiments-filters" className="flex items-center gap-3">
         <div className="w-[280px]">
           <TextField
             className="w-full [&>div]:h-9"

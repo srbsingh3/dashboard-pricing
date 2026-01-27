@@ -105,11 +105,13 @@ export default function DashboardPage() {
           {/* Page Header */}
           <div className="flex items-center justify-between">
             <h1 className="text-heading-2 text-default-font">Dashboard</h1>
-            <DateRangePicker defaultPreset="30d" />
+            <div data-tour="dashboard-date-range">
+              <DateRangePicker defaultPreset="30d" />
+            </div>
           </div>
 
           {/* KPI Summary Strip - Subframe Reporting Dashboard Style */}
-          <div className="flex w-full flex-wrap items-start rounded-md border border-solid border-neutral-border bg-default-background">
+          <div data-tour="dashboard-kpis" className="flex w-full flex-wrap items-start rounded-md border border-solid border-neutral-border bg-default-background">
             {kpiMetrics.map((metric, index) => (
               <KPICell
                 key={metric.id}
@@ -120,7 +122,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Row 1: Trend Charts */}
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <div data-tour="dashboard-charts" className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <OrdersTrendChart />
             <DeliveryFeeTrendChart />
           </div>
