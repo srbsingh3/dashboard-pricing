@@ -475,9 +475,9 @@ export function ExperimentsTable() {
 
       {/* Filter Bar */}
       <div className="flex items-center gap-3">
-        <div className="flex-1">
+        <div className="w-[280px]">
           <TextField
-            className="w-full"
+            className="w-full [&>div]:h-9"
             icon={<Search className="size-4" />}
           >
             <TextField.Input
@@ -491,83 +491,85 @@ export function ExperimentsTable() {
           </TextField>
         </div>
 
-        {/* Status Filter */}
-        <Select
-          value={statusFilter}
-          onValueChange={(value) => {
-            setStatusFilter(value as ExperimentStatus | "all");
-            setQuickFilter(null);
-            setCurrentPage(1);
-          }}
-        >
-          <SelectTrigger className="w-[140px] border-neutral-border">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="running">Running</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-            <SelectItem value="draft">Draft</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="ml-auto flex items-center gap-3">
+          {/* Status Filter */}
+          <Select
+            value={statusFilter}
+            onValueChange={(value) => {
+              setStatusFilter(value as ExperimentStatus | "all");
+              setQuickFilter(null);
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[140px] border-neutral-border">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="running">Running</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+            </SelectContent>
+          </Select>
 
-        {/* Objective Filter */}
-        <Select
-          value={objectiveFilter}
-          onValueChange={(value) => {
-            setObjectiveFilter(value);
-            setCurrentPage(1);
-          }}
-        >
-          <SelectTrigger className="w-[170px] border-neutral-border">
-            <SelectValue placeholder="Objective" />
-          </SelectTrigger>
-          <SelectContent>
-            {objectives.map((obj) => (
-              <SelectItem key={obj} value={obj}>
-                {obj === "all" ? "All Objectives" : obj}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {/* Objective Filter */}
+          <Select
+            value={objectiveFilter}
+            onValueChange={(value) => {
+              setObjectiveFilter(value);
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[170px] border-neutral-border">
+              <SelectValue placeholder="Objective" />
+            </SelectTrigger>
+            <SelectContent>
+              {objectives.map((obj) => (
+                <SelectItem key={obj} value={obj}>
+                  {obj === "all" ? "All Objectives" : obj}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        {/* Type Filter */}
-        <Select
-          value={typeFilter}
-          onValueChange={(value) => {
-            setTypeFilter(value as ExperimentType | "all");
-            setCurrentPage(1);
-          }}
-        >
-          <SelectTrigger className="w-[140px] border-neutral-border">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value="ab">A/B Test</SelectItem>
-            <SelectItem value="switchback">Switchback</SelectItem>
-          </SelectContent>
-        </Select>
+          {/* Type Filter */}
+          <Select
+            value={typeFilter}
+            onValueChange={(value) => {
+              setTypeFilter(value as ExperimentType | "all");
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[140px] border-neutral-border">
+              <SelectValue placeholder="Type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
+              <SelectItem value="ab">A/B Test</SelectItem>
+              <SelectItem value="switchback">Switchback</SelectItem>
+            </SelectContent>
+          </Select>
 
-        {/* Region Filter */}
-        <Select
-          value={regionFilter}
-          onValueChange={(value) => {
-            setRegionFilter(value);
-            setCurrentPage(1);
-          }}
-        >
-          <SelectTrigger className="w-[150px] border-neutral-border">
-            <SelectValue placeholder="Region" />
-          </SelectTrigger>
-          <SelectContent>
-            {regions.map((region) => (
-              <SelectItem key={region} value={region}>
-                {region === "all" ? "All Regions" : region}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          {/* Region Filter */}
+          <Select
+            value={regionFilter}
+            onValueChange={(value) => {
+              setRegionFilter(value);
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[150px] border-neutral-border">
+              <SelectValue placeholder="Region" />
+            </SelectTrigger>
+            <SelectContent>
+              {regions.map((region) => (
+                <SelectItem key={region} value={region}>
+                  {region === "all" ? "All Regions" : region}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Filter Chips + Result Count */}
