@@ -9,7 +9,7 @@ import {
   ChevronDown,
   ChevronUp,
   Search,
-  SlidersHorizontal,
+  X,
   Play,
   CheckCircle2,
   FileText,
@@ -45,38 +45,31 @@ import {
 
 type SortKey = keyof Experiment | null;
 type SortDirection = "asc" | "desc";
+type QuickFilter = "nearSignificance" | "winners" | null;
 
-// Status configuration for badges and cards
+// Status configuration for badges
 const STATUS_CONFIG: Record<
   ExperimentStatus,
   {
     variant: "success" | "neutral" | "warning" | "brand";
     icon: React.ReactNode;
-    cardIcon: React.ReactNode;
     label: string;
-    cardBg: string;
   }
 > = {
   running: {
     variant: "brand",
     icon: <Play className="size-3" />,
-    cardIcon: <Play className="size-4" />,
     label: "Running",
-    cardBg: "bg-brand-100",
   },
   completed: {
     variant: "success",
     icon: <CheckCircle2 className="size-3" />,
-    cardIcon: <CheckCircle2 className="size-4" />,
     label: "Completed",
-    cardBg: "bg-success-100",
   },
   draft: {
     variant: "neutral",
     icon: <FileText className="size-3" />,
-    cardIcon: <FileText className="size-4" />,
     label: "Draft",
-    cardBg: "bg-neutral-100",
   },
 };
 
@@ -117,7 +110,7 @@ function TypeBadge({ type }: { type: ExperimentType }) {
 }
 
 function SignificanceBar({ value }: { value?: number }) {
-  if (value === undefined) return <span className="text-neutral-400">—</span>;
+  if (value === undefined) return <span className="text-neutral-400">&mdash;</span>;
 
   const isSignificant = value >= SIGNIFICANCE_THRESHOLD;
   const percentage = Math.min(value, 100);
@@ -139,13 +132,13 @@ function SignificanceBar({ value }: { value?: number }) {
             "text-caption whitespace-nowrap tabular-nums",
             isSignificant ? "font-medium text-success-600" : "text-neutral-600"
           )}>
-            {value}%{isSignificant && " ✓"}
+            {value}%{isSignificant && " \u2713"}
           </span>
         </div>
       </TooltipTrigger>
       <TooltipContent>
         {isSignificant
-          ? "Statistically significant (≥95%)"
+          ? "Statistically significant (\u226595%)"
           : `${SIGNIFICANCE_THRESHOLD - value}% more needed for significance`}
       </TooltipContent>
     </Tooltip>
@@ -153,7 +146,7 @@ function SignificanceBar({ value }: { value?: number }) {
 }
 
 function LiftValue({ value }: { value?: number }) {
-  if (value === undefined) return <span className="text-neutral-400">—</span>;
+  if (value === undefined) return <span className="text-neutral-400">&mdash;</span>;
 
   const isPositive = value >= 0;
 
@@ -184,62 +177,44 @@ function formatName(email: string): string {
     .join(" ");
 }
 
-// Summary stat card component
+// Summary stat card component — now supports onClick + isActive
 function SummaryStatCard({
   label,
   value,
   icon,
   variant = "default",
+  onClick,
+  isActive = false,
 }: {
   label: string;
   value: string | number;
   icon: React.ReactNode;
   variant?: "default" | "success" | "warning";
+  onClick?: () => void;
+  isActive?: boolean;
 }) {
+  const isClickable = !!onClick;
   return (
-    <div className={cn(
-      "flex flex-col gap-1 rounded-md border px-4 py-3",
-      variant === "success" && "border-success-200 bg-success-50",
-      variant === "warning" && "border-warning-200 bg-warning-50",
-      variant === "default" && "border-neutral-200 bg-white"
-    )}>
+    <div
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onClick={onClick}
+      onKeyDown={isClickable ? (e) => { if (e.key === "Enter" || e.key === " ") onClick?.(); } : undefined}
+      className={cn(
+        "flex flex-col gap-1 rounded-md border px-4 py-3",
+        variant === "success" && "border-success-200 bg-success-50",
+        variant === "warning" && "border-warning-200 bg-warning-50",
+        variant === "default" && "border-neutral-200 bg-white",
+        isClickable && "cursor-pointer transition-all hover:ring-2 hover:ring-brand-300",
+        isActive && "ring-2 ring-brand-500",
+      )}
+    >
       <div className="flex items-center gap-2 text-neutral-500">
         {icon}
         <span className="text-caption">{label}</span>
       </div>
       <span className="text-heading-3 text-default-font">{value}</span>
     </div>
-  );
-}
-
-// Status summary card component
-function StatusCard({
-  status,
-  count,
-  isActive,
-  onClick,
-}: {
-  status: ExperimentStatus;
-  count: number;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  const config = STATUS_CONFIG[status];
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "flex flex-1 items-center gap-6 rounded-md px-6 py-8 text-left transition-all",
-        config.cardBg,
-        isActive && "ring-2 ring-brand-500 ring-offset-2"
-      )}
-    >
-      <span className="text-heading-2 text-default-font">{count}</span>
-      <div className="flex items-center justify-center gap-1 text-default-font">
-        {config.cardIcon}
-        <span className="text-body">{config.label}</span>
-      </div>
-    </button>
   );
 }
 
@@ -267,9 +242,11 @@ export function ExperimentsTable() {
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<ExperimentStatus | null>(null);
+  const [statusFilter, setStatusFilter] = useState<ExperimentStatus | "all">("all");
   const [typeFilter, setTypeFilter] = useState<ExperimentType | "all">("all");
   const [regionFilter, setRegionFilter] = useState<string>("all");
+  const [objectiveFilter, setObjectiveFilter] = useState<string>("all");
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>(null);
 
   // Calculate summary stats
   const summaryStats = useMemo(() => {
@@ -280,7 +257,6 @@ export function ExperimentsTable() {
     const avgDaysToSignificance = completed
       .filter((e) => e.daysRunning || (e.startedOn && e.endedOn))
       .reduce((acc, e) => {
-        // Calculate days from startedOn to endedOn if available
         if (e.startedOn && e.endedOn) {
           const start = new Date(e.startedOn.split('.').reverse().join('-'));
           const end = new Date(e.endedOn.split('.').reverse().join('-'));
@@ -307,15 +283,31 @@ export function ExperimentsTable() {
     return ["all", ...uniqueRegions.sort()];
   }, []);
 
+  // Get unique objectives
+  const objectives = useMemo(() => {
+    const uniqueObjectives = [...new Set(experiments.map((e) => e.objective))];
+    return ["all", ...uniqueObjectives.sort()];
+  }, []);
+
   // Filter and sort experiments
   const filteredExperiments = experiments.filter((exp) => {
     const matchesSearch =
       exp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       exp.createdBy.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter ? exp.status === statusFilter : true;
+    const matchesStatus = statusFilter === "all" || exp.status === statusFilter;
     const matchesType = typeFilter === "all" || exp.type === typeFilter;
     const matchesRegion = regionFilter === "all" || exp.city === regionFilter;
-    return matchesSearch && matchesStatus && matchesType && matchesRegion;
+    const matchesObjective = objectiveFilter === "all" || exp.objective === objectiveFilter;
+
+    // Quick filters from stat cards
+    let matchesQuickFilter = true;
+    if (quickFilter === "nearSignificance") {
+      matchesQuickFilter = exp.status === "running" && !!exp.significance && exp.significance >= 90 && exp.significance < 95;
+    } else if (quickFilter === "winners") {
+      matchesQuickFilter = exp.status === "completed" && !!exp.lift && exp.lift > 0;
+    }
+
+    return matchesSearch && matchesStatus && matchesType && matchesRegion && matchesObjective && matchesQuickFilter;
   });
 
   const sortedExperiments = [...filteredExperiments].sort((a, b) => {
@@ -344,14 +336,106 @@ export function ExperimentsTable() {
     }
   };
 
-  const handleStatusClick = (status: ExperimentStatus) => {
-    setStatusFilter(statusFilter === status ? null : status);
+  // Clickable stat card handlers
+  const handleRunningClick = () => {
+    if (statusFilter === "running" && quickFilter === null) {
+      setStatusFilter("all");
+    } else {
+      setStatusFilter("running");
+      setQuickFilter(null);
+    }
+    setCurrentPage(1);
+  };
+
+  const handleNearSignificanceClick = () => {
+    if (quickFilter === "nearSignificance") {
+      setQuickFilter(null);
+      setStatusFilter("all");
+    } else {
+      setQuickFilter("nearSignificance");
+      setStatusFilter("all");
+    }
+    setCurrentPage(1);
+  };
+
+  const handleWinRateClick = () => {
+    if (quickFilter === "winners") {
+      setQuickFilter(null);
+      setStatusFilter("all");
+    } else {
+      setQuickFilter("winners");
+      setStatusFilter("all");
+    }
+    setCurrentPage(1);
+  };
+
+  // Active filter helpers
+  const hasActiveFilters =
+    searchQuery !== "" ||
+    statusFilter !== "all" ||
+    typeFilter !== "all" ||
+    regionFilter !== "all" ||
+    objectiveFilter !== "all" ||
+    quickFilter !== null;
+
+  const activeFilterChips: { label: string; onClear: () => void }[] = [];
+
+  if (searchQuery) {
+    activeFilterChips.push({
+      label: `Search: "${searchQuery}"`,
+      onClear: () => { setSearchQuery(""); setCurrentPage(1); },
+    });
+  }
+  if (statusFilter !== "all") {
+    activeFilterChips.push({
+      label: `Status: ${STATUS_CONFIG[statusFilter as ExperimentStatus].label}`,
+      onClear: () => { setStatusFilter("all"); setCurrentPage(1); },
+    });
+  }
+  if (objectiveFilter !== "all") {
+    activeFilterChips.push({
+      label: `Objective: ${objectiveFilter}`,
+      onClear: () => { setObjectiveFilter("all"); setCurrentPage(1); },
+    });
+  }
+  if (typeFilter !== "all") {
+    activeFilterChips.push({
+      label: `Type: ${typeFilter === "ab" ? "A/B Test" : "Switchback"}`,
+      onClear: () => { setTypeFilter("all"); setCurrentPage(1); },
+    });
+  }
+  if (regionFilter !== "all") {
+    activeFilterChips.push({
+      label: `Region: ${regionFilter}`,
+      onClear: () => { setRegionFilter("all"); setCurrentPage(1); },
+    });
+  }
+  if (quickFilter === "nearSignificance") {
+    activeFilterChips.push({
+      label: "Near Significance",
+      onClear: () => { setQuickFilter(null); setCurrentPage(1); },
+    });
+  }
+  if (quickFilter === "winners") {
+    activeFilterChips.push({
+      label: "Winners",
+      onClear: () => { setQuickFilter(null); setCurrentPage(1); },
+    });
+  }
+
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    setStatusFilter("all");
+    setTypeFilter("all");
+    setRegionFilter("all");
+    setObjectiveFilter("all");
+    setQuickFilter(null);
     setCurrentPage(1);
   };
 
   return (
     <div className="space-y-6">
-      {/* Summary Stats Bar */}
+      {/* Overview Stats */}
       <div className="flex flex-col gap-4">
         <p className="text-caption-bold text-subtext-color uppercase">
           Overview
@@ -366,18 +450,24 @@ export function ExperimentsTable() {
             label="Running"
             value={summaryStats.running}
             icon={<Play className="size-4" />}
+            onClick={handleRunningClick}
+            isActive={statusFilter === "running" && quickFilter === null}
           />
           <SummaryStatCard
             label="Near Significance"
             value={summaryStats.nearSignificant}
             icon={<Target className="size-4" />}
             variant={summaryStats.nearSignificant > 0 ? "warning" : "default"}
+            onClick={handleNearSignificanceClick}
+            isActive={quickFilter === "nearSignificance"}
           />
           <SummaryStatCard
             label="Win Rate"
             value={`${summaryStats.winRate}%`}
             icon={<Trophy className="size-4" />}
             variant={summaryStats.winRate > 50 ? "success" : "default"}
+            onClick={handleWinRateClick}
+            isActive={quickFilter === "winners"}
           />
           <SummaryStatCard
             label="Avg. Days to Significance"
@@ -387,101 +477,130 @@ export function ExperimentsTable() {
         </div>
       </div>
 
-      {/* Status Summary Cards */}
-      <div className="flex flex-col gap-4">
-        <p className="text-caption-bold text-subtext-color uppercase">
-          Quick Filters
-        </p>
-        <div className="flex gap-4">
-          <StatusCard
-            status="running"
-            count={summaryStats.running}
-            isActive={statusFilter === "running"}
-            onClick={() => handleStatusClick("running")}
-          />
-          <StatusCard
-            status="completed"
-            count={summaryStats.completed}
-            isActive={statusFilter === "completed"}
-            onClick={() => handleStatusClick("completed")}
-          />
-          <StatusCard
-            status="draft"
-            count={summaryStats.draft}
-            isActive={statusFilter === "draft"}
-            onClick={() => handleStatusClick("draft")}
-          />
+      {/* Filter Bar */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1">
+          <TextField
+            className="w-full"
+            icon={<Search className="size-4" />}
+          >
+            <TextField.Input
+              placeholder="Search experiments..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </TextField>
         </div>
+
+        {/* Status Filter */}
+        <Select
+          value={statusFilter}
+          onValueChange={(value) => {
+            setStatusFilter(value as ExperimentStatus | "all");
+            setQuickFilter(null);
+            setCurrentPage(1);
+          }}
+        >
+          <SelectTrigger className="w-[140px] border-neutral-border">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="running">Running</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+            <SelectItem value="draft">Draft</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Objective Filter */}
+        <Select
+          value={objectiveFilter}
+          onValueChange={(value) => {
+            setObjectiveFilter(value);
+            setCurrentPage(1);
+          }}
+        >
+          <SelectTrigger className="w-[170px] border-neutral-border">
+            <SelectValue placeholder="Objective" />
+          </SelectTrigger>
+          <SelectContent>
+            {objectives.map((obj) => (
+              <SelectItem key={obj} value={obj}>
+                {obj === "all" ? "All Objectives" : obj}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Type Filter */}
+        <Select
+          value={typeFilter}
+          onValueChange={(value) => {
+            setTypeFilter(value as ExperimentType | "all");
+            setCurrentPage(1);
+          }}
+        >
+          <SelectTrigger className="w-[140px] border-neutral-border">
+            <SelectValue placeholder="Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="ab">A/B Test</SelectItem>
+            <SelectItem value="switchback">Switchback</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Region Filter */}
+        <Select
+          value={regionFilter}
+          onValueChange={(value) => {
+            setRegionFilter(value);
+            setCurrentPage(1);
+          }}
+        >
+          <SelectTrigger className="w-[150px] border-neutral-border">
+            <SelectValue placeholder="Region" />
+          </SelectTrigger>
+          <SelectContent>
+            {regions.map((region) => (
+              <SelectItem key={region} value={region}>
+                {region === "all" ? "All Regions" : region}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Filters Section */}
-      <div className="flex flex-col gap-4">
-        <p className="text-caption-bold text-subtext-color uppercase">
-          Filters
-        </p>
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <TextField
-              className="w-full"
-              icon={<Search className="size-4" />}
+      {/* Filter Chips + Result Count */}
+      {hasActiveFilters && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-caption-bold text-neutral-500">
+            Showing {filteredExperiments.length} of {experiments.length}
+          </span>
+          <span className="text-neutral-300">|</span>
+          {activeFilterChips.map((chip) => (
+            <button
+              key={chip.label}
+              onClick={chip.onClear}
+              className="group/chip flex items-center gap-1 rounded-md border border-brand-200 bg-brand-50 px-2 py-1 transition-colors hover:bg-brand-100"
             >
-              <TextField.Input
-                placeholder="Search experiments..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setCurrentPage(1);
-                }}
-              />
-            </TextField>
-          </div>
-
-          {/* Type Filter */}
-          <Select
-            value={typeFilter}
-            onValueChange={(value) => {
-              setTypeFilter(value as ExperimentType | "all");
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[140px] border-neutral-border">
-              <SelectValue placeholder="Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="ab">A/B Test</SelectItem>
-              <SelectItem value="switchback">Switchback</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Region Filter */}
-          <Select
-            value={regionFilter}
-            onValueChange={(value) => {
-              setRegionFilter(value);
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[150px] border-neutral-border">
-              <SelectValue placeholder="Region" />
-            </SelectTrigger>
-            <SelectContent>
-              {regions.map((region) => (
-                <SelectItem key={region} value={region}>
-                  {region === "all" ? "All Regions" : region}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Button
-            variant="neutral-secondary"
-            icon={<SlidersHorizontal className="size-4" />}
-          >
-            More filters
-          </Button>
+              <span className="text-caption text-brand-700">{chip.label}</span>
+              <X className="size-3 text-brand-500 group-hover/chip:text-brand-700" />
+            </button>
+          ))}
+          {activeFilterChips.length >= 2 && (
+            <button
+              onClick={clearAllFilters}
+              className="text-caption text-brand-600 hover:text-brand-800 hover:underline"
+            >
+              Clear all
+            </button>
+          )}
         </div>
-      </div>
+      )}
 
       {/* Table */}
       <div className="-mx-6 2xl:mx-0 2xl:overflow-hidden 2xl:rounded-md 2xl:border 2xl:border-neutral-border">
@@ -508,6 +627,17 @@ export function ExperimentsTable() {
                     Experiment
                   </span>
                   <SortIndicator columnKey="name" sortKey={sortKey} sortDirection={sortDirection} />
+                </div>
+              </th>
+              <th
+                className="cursor-pointer text-left select-none"
+                onClick={() => handleSort("objective")}
+              >
+                <div className="flex h-10 items-center gap-1 px-3">
+                  <span className="text-caption-bold whitespace-nowrap text-subtext-color">
+                    Objective
+                  </span>
+                  <SortIndicator columnKey="objective" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
               <th className="text-left">
@@ -568,11 +698,15 @@ export function ExperimentsTable() {
                   <SortIndicator columnKey="lift" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
-              <th className="text-left">
+              <th
+                className="cursor-pointer text-left select-none"
+                onClick={() => handleSort("createdBy")}
+              >
                 <div className="flex h-10 items-center gap-1 px-3">
                   <span className="text-caption-bold whitespace-nowrap text-subtext-color">
                     Owner
                   </span>
+                  <SortIndicator columnKey="createdBy" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
               <th className="w-[120px]">
@@ -600,9 +734,16 @@ export function ExperimentsTable() {
                     </span>
                     <div className="mt-0.5 flex items-center gap-2">
                       <span className="text-caption text-neutral-500">
-                        {experiment.variations} variations • {experiment.targetGroups} groups
+                        {experiment.variations} variations &bull; {experiment.targetGroups} groups
                       </span>
                     </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="flex h-14 items-center px-3">
+                    <span className="text-body whitespace-nowrap text-neutral-600">
+                      {experiment.objective}
+                    </span>
                   </div>
                 </td>
                 <td>
@@ -625,7 +766,7 @@ export function ExperimentsTable() {
                 <td>
                   <div className="flex h-14 items-center px-3">
                     {experiment.status === "draft" ? (
-                      <span className="text-neutral-400">—</span>
+                      <span className="text-neutral-400">&mdash;</span>
                     ) : experiment.status === "running" ? (
                       <span className="text-body text-neutral-600">
                         {experiment.daysRunning} days
@@ -636,7 +777,7 @@ export function ExperimentsTable() {
                           <span className="text-body text-neutral-600">
                             {experiment.startedOn && experiment.endedOn
                               ? `${experiment.startedOn.slice(0, 5)} - ${experiment.endedOn.slice(0, 5)}`
-                              : "—"}
+                              : "\u2014"}
                           </span>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -725,13 +866,7 @@ export function ExperimentsTable() {
           </p>
           <Button
             variant="neutral-secondary"
-            onClick={() => {
-              setSearchQuery("");
-              setStatusFilter(null);
-              setTypeFilter("all");
-              setRegionFilter("all");
-              setCurrentPage(1);
-            }}
+            onClick={clearAllFilters}
           >
             Clear all filters
           </Button>
