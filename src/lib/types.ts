@@ -127,3 +127,18 @@ export interface SortState {
   column: string | null;
   direction: "asc" | "desc";
 }
+
+// Component detail tier (for component details popover)
+export interface ComponentTier {
+  range: string;
+  value: string;
+}
+
+export interface ComponentDetail {
+  label: string;
+  id: string;
+  type: "distance_based" | "fixed" | "time_based" | "percentage_based";
+  tierLabel: string;
+  valueLabel: string;
+  tiers: ComponentTier[];
+}

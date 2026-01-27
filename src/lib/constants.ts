@@ -566,3 +566,318 @@ export const CUSTOMER_LOCATIONS = [
   { value: "university", label: "University District" },
 ] as const;
 
+// Component detail configurations for popover display
+// Maps component value keys to their tier breakdown
+import type { ComponentDetail } from "@/lib/types";
+
+export const COMPONENT_DETAILS: Record<string, ComponentDetail> = {
+  // --- Delivery Fee components ---
+  df_standard: {
+    label: "Standard Delivery Fee",
+    id: "847",
+    type: "distance_based",
+    tierLabel: "Distance",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "0 – 2 km", value: "€0.99" },
+      { range: "2 – 4 km", value: "€1.99" },
+      { range: "4 – 7 km", value: "€2.99" },
+      { range: "7+ km", value: "€3.99" },
+    ],
+  },
+  df_express: {
+    label: "Express Delivery Fee",
+    id: "731",
+    type: "distance_based",
+    tierLabel: "Distance",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "0 – 2 km", value: "€1.49" },
+      { range: "2 – 4 km", value: "€2.49" },
+      { range: "4 – 7 km", value: "€3.99" },
+      { range: "7+ km", value: "€5.49" },
+    ],
+  },
+  df_scheduled: {
+    label: "Scheduled Delivery Fee",
+    id: "592",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "All distances", value: "€0.49" },
+    ],
+  },
+  df_peak: {
+    label: "Peak Hour Fee",
+    id: "486",
+    type: "time_based",
+    tierLabel: "Time Period",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "Off-peak", value: "€0.99" },
+      { range: "Peak (11–14h)", value: "€2.49" },
+      { range: "Peak (18–21h)", value: "€2.99" },
+      { range: "Late night (22–02h)", value: "€1.99" },
+    ],
+  },
+  df_distance_based: {
+    label: "Distance-Based Fee",
+    id: "253",
+    type: "distance_based",
+    tierLabel: "Distance",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "0 – 1.5 km", value: "€0.79" },
+      { range: "1.5 – 3 km", value: "€1.59" },
+      { range: "3 – 5 km", value: "€2.39" },
+      { range: "5+ km", value: "€3.49" },
+    ],
+  },
+  df_flat_rate: {
+    label: "Flat Rate Fee",
+    id: "118",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "All distances", value: "€1.99" },
+    ],
+  },
+
+  // --- MOV components ---
+  mov_standard: {
+    label: "Standard MOV",
+    id: "924",
+    type: "distance_based",
+    tierLabel: "Distance",
+    valueLabel: "Min. Order",
+    tiers: [
+      { range: "0 – 2 km", value: "€8.00" },
+      { range: "2 – 4 km", value: "€10.00" },
+      { range: "4 – 7 km", value: "€12.00" },
+      { range: "7+ km", value: "€15.00" },
+    ],
+  },
+  mov_express: {
+    label: "Express MOV",
+    id: "756",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Min. Order",
+    tiers: [
+      { range: "All orders", value: "€15.00" },
+    ],
+  },
+  mov_free_delivery: {
+    label: "Free Delivery MOV",
+    id: "612",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Min. Order",
+    tiers: [
+      { range: "Free delivery threshold", value: "€25.00" },
+    ],
+  },
+  mov_premium: {
+    label: "Premium MOV",
+    id: "483",
+    type: "distance_based",
+    tierLabel: "Distance",
+    valueLabel: "Min. Order",
+    tiers: [
+      { range: "0 – 2 km", value: "€5.00" },
+      { range: "2 – 4 km", value: "€7.00" },
+      { range: "4 – 7 km", value: "€9.00" },
+      { range: "7+ km", value: "€12.00" },
+    ],
+  },
+  mov_promotional: {
+    label: "Promotional MOV",
+    id: "291",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Min. Order",
+    tiers: [
+      { range: "Promotional period", value: "€5.00" },
+    ],
+  },
+
+  // --- Fleet Delay components ---
+  fd_standard: {
+    label: "Standard Delay",
+    id: "738",
+    type: "time_based",
+    tierLabel: "Time Period",
+    valueLabel: "Delay",
+    tiers: [
+      { range: "Off-peak", value: "0 min" },
+      { range: "Peak (11–14h)", value: "5 min" },
+      { range: "Peak (18–21h)", value: "8 min" },
+    ],
+  },
+  fd_express: {
+    label: "Express Delay",
+    id: "594",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Delay",
+    tiers: [
+      { range: "All orders", value: "0 min" },
+    ],
+  },
+  fd_peak: {
+    label: "Peak Hour Delay",
+    id: "427",
+    type: "time_based",
+    tierLabel: "Time Period",
+    valueLabel: "Delay",
+    tiers: [
+      { range: "Off-peak", value: "0 min" },
+      { range: "Lunch peak", value: "10 min" },
+      { range: "Dinner peak", value: "12 min" },
+      { range: "Late night", value: "5 min" },
+    ],
+  },
+  fd_scheduled: {
+    label: "Scheduled Delay",
+    id: "263",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Delay",
+    tiers: [
+      { range: "Scheduled window", value: "15 min" },
+    ],
+  },
+
+  // --- Basket Value components ---
+  bv_minimum: {
+    label: "Minimum Basket",
+    id: "856",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Value",
+    tiers: [
+      { range: "Minimum threshold", value: "€5.00" },
+    ],
+  },
+  bv_standard: {
+    label: "Standard Basket",
+    id: "642",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Value",
+    tiers: [
+      { range: "Standard threshold", value: "€10.00" },
+    ],
+  },
+  bv_premium: {
+    label: "Premium Basket",
+    id: "471",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Value",
+    tiers: [
+      { range: "Premium threshold", value: "€20.00" },
+    ],
+  },
+  bv_promotional: {
+    label: "Promotional Basket",
+    id: "318",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Value",
+    tiers: [
+      { range: "Promo threshold", value: "€3.00" },
+    ],
+  },
+
+  // --- Service Fee components ---
+  sf_standard: {
+    label: "Standard Service Fee",
+    id: "793",
+    type: "percentage_based",
+    tierLabel: "Order Value",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "€0 – €15", value: "€0.99" },
+      { range: "€15 – €30", value: "€1.49" },
+      { range: "€30+", value: "€1.99" },
+    ],
+  },
+  sf_premium: {
+    label: "Premium Service Fee",
+    id: "651",
+    type: "percentage_based",
+    tierLabel: "Order Value",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "€0 – €20", value: "€0.49" },
+      { range: "€20 – €40", value: "€0.99" },
+      { range: "€40+", value: "€1.49" },
+    ],
+  },
+  sf_promotional: {
+    label: "Promotional Service Fee",
+    id: "429",
+    type: "percentage_based",
+    tierLabel: "Order Value",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "All orders", value: "€0.49" },
+    ],
+  },
+  sf_waived: {
+    label: "Waived Service Fee",
+    id: "287",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "All orders", value: "€0.00" },
+    ],
+  },
+
+  // --- Priority Fee components ---
+  pf_standard: {
+    label: "Standard Priority",
+    id: "682",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "Standard priority", value: "€0.99" },
+    ],
+  },
+  pf_express: {
+    label: "Express Priority",
+    id: "514",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "Express priority", value: "€1.99" },
+    ],
+  },
+  pf_vip: {
+    label: "VIP Priority",
+    id: "376",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "VIP priority", value: "€2.99" },
+    ],
+  },
+  pf_none: {
+    label: "No Priority",
+    id: "198",
+    type: "fixed",
+    tierLabel: "Tier",
+    valueLabel: "Fee",
+    tiers: [
+      { range: "No priority", value: "€0.00" },
+    ],
+  },
+};
+

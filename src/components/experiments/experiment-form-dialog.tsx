@@ -99,6 +99,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ParticipantSplitChart } from "./participant-split-chart";
+import { ComponentDetailCell } from "./component-details-popover";
 import {
   ConditionsGrid,
   Condition,
@@ -1469,69 +1470,63 @@ export function ExperimentFormDialog({
                             <TableRow className="group/row border-0 hover:bg-neutral-50">
                               <TableCell className="py-2 pl-3 text-body text-neutral-500">Control</TableCell>
                               <TableCell className="px-3 py-2">
-                                <SearchSelect
+                                <ComponentDetailCell
                                   options={DELIVERY_FEE_COMPONENTS}
                                   value={group.controlDeliveryFee}
                                   onValueChange={(value) => updateControlSelection(group.id, 'deliveryFee', value)}
                                   placeholder="Select component"
-                                  variant="ghost"
                                   showDetailsIcon={Boolean(group.controlDeliveryFee)}
                                 />
                               </TableCell>
                               <TableCell className="px-3 py-2">
-                                <SearchSelect
+                                <ComponentDetailCell
                                   options={MOV_COMPONENTS}
                                   value={group.controlMov}
                                   onValueChange={(value) => updateControlSelection(group.id, 'mov', value)}
                                   placeholder="Select component"
-                                  variant="ghost"
                                   showDetailsIcon={Boolean(group.controlMov)}
                                 />
                               </TableCell>
                               {group.enabledColumns.includes("fleet_delay") && (
                                 <TableCell className="px-3 py-2">
-                                  <SearchSelect
+                                  <ComponentDetailCell
                                     options={FLEET_DELAY_COMPONENTS}
                                     value={group.controlFleetDelay}
                                     onValueChange={(value) => updateControlSelection(group.id, 'fleetDelay', value)}
                                     placeholder="Select component"
-                                    variant="ghost"
                                     showDetailsIcon={Boolean(group.controlFleetDelay)}
                                   />
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("basket_value") && (
                                 <TableCell className="px-3 py-2">
-                                  <SearchSelect
+                                  <ComponentDetailCell
                                     options={BASKET_VALUE_COMPONENTS}
                                     value={group.controlBasketValue}
                                     onValueChange={(value) => updateControlSelection(group.id, 'basketValue', value)}
                                     placeholder="Select component"
-                                    variant="ghost"
                                     showDetailsIcon={Boolean(group.controlBasketValue)}
                                   />
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("service_fee") && (
                                 <TableCell className="px-3 py-2">
-                                  <SearchSelect
+                                  <ComponentDetailCell
                                     options={SERVICE_FEE_COMPONENTS}
                                     value={group.controlServiceFee}
                                     onValueChange={(value) => updateControlSelection(group.id, 'serviceFee', value)}
                                     placeholder="Select component"
-                                    variant="ghost"
                                     showDetailsIcon={Boolean(group.controlServiceFee)}
                                   />
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("priority_fee") && (
                                 <TableCell className="px-3 py-2">
-                                  <SearchSelect
+                                  <ComponentDetailCell
                                     options={PRIORITY_FEE_COMPONENTS}
                                     value={group.controlPriorityFee}
                                     onValueChange={(value) => updateControlSelection(group.id, 'priorityFee', value)}
                                     placeholder="Select component"
-                                    variant="ghost"
                                     showDetailsIcon={Boolean(group.controlPriorityFee)}
                                   />
                                 </TableCell>
@@ -1542,7 +1537,7 @@ export function ExperimentFormDialog({
                               <TableRow key={i} className="group/row border-0 hover:bg-neutral-50">
                                 <TableCell className="py-2 pl-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
                                 <TableCell className="px-3 py-2">
-                                  <SearchSelect
+                                  <ComponentDetailCell
                                     options={[
                                       { value: "same_as_control", label: "Same as control" },
                                       ...DELIVERY_FEE_COMPONENTS,
@@ -1550,12 +1545,11 @@ export function ExperimentFormDialog({
                                     value={group.variations[i]?.deliveryFee ?? null}
                                     onValueChange={(value) => updateVariationSelection(group.id, i, 'deliveryFee', value)}
                                     placeholder="Same as control"
-                                    variant="ghost"
                                     showDetailsIcon={Boolean(group.variations[i]?.deliveryFee) && group.variations[i]?.deliveryFee !== "same_as_control"}
                                   />
                                 </TableCell>
                                 <TableCell className="px-3 py-2">
-                                  <SearchSelect
+                                  <ComponentDetailCell
                                     options={[
                                       { value: "same_as_control", label: "Same as control" },
                                       ...MOV_COMPONENTS,
@@ -1563,13 +1557,12 @@ export function ExperimentFormDialog({
                                     value={group.variations[i]?.mov ?? null}
                                     onValueChange={(value) => updateVariationSelection(group.id, i, 'mov', value)}
                                     placeholder="Same as control"
-                                    variant="ghost"
                                     showDetailsIcon={Boolean(group.variations[i]?.mov) && group.variations[i]?.mov !== "same_as_control"}
                                   />
                                 </TableCell>
                                 {group.enabledColumns.includes("fleet_delay") && (
                                   <TableCell className="px-3 py-2">
-                                    <SearchSelect
+                                    <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
                                         ...FLEET_DELAY_COMPONENTS,
@@ -1577,14 +1570,13 @@ export function ExperimentFormDialog({
                                       value={group.variations[i]?.fleetDelay ?? null}
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'fleetDelay', value)}
                                       placeholder="Same as control"
-                                      variant="ghost"
                                       showDetailsIcon={Boolean(group.variations[i]?.fleetDelay) && group.variations[i]?.fleetDelay !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("basket_value") && (
                                   <TableCell className="px-3 py-2">
-                                    <SearchSelect
+                                    <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
                                         ...BASKET_VALUE_COMPONENTS,
@@ -1592,14 +1584,13 @@ export function ExperimentFormDialog({
                                       value={group.variations[i]?.basketValue ?? null}
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'basketValue', value)}
                                       placeholder="Same as control"
-                                      variant="ghost"
                                       showDetailsIcon={Boolean(group.variations[i]?.basketValue) && group.variations[i]?.basketValue !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("service_fee") && (
                                   <TableCell className="px-3 py-2">
-                                    <SearchSelect
+                                    <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
                                         ...SERVICE_FEE_COMPONENTS,
@@ -1607,14 +1598,13 @@ export function ExperimentFormDialog({
                                       value={group.variations[i]?.serviceFee ?? null}
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'serviceFee', value)}
                                       placeholder="Same as control"
-                                      variant="ghost"
                                       showDetailsIcon={Boolean(group.variations[i]?.serviceFee) && group.variations[i]?.serviceFee !== "same_as_control"}
                                     />
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("priority_fee") && (
                                   <TableCell className="px-3 py-2">
-                                    <SearchSelect
+                                    <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
                                         ...PRIORITY_FEE_COMPONENTS,
@@ -1622,7 +1612,6 @@ export function ExperimentFormDialog({
                                       value={group.variations[i]?.priorityFee ?? null}
                                       onValueChange={(value) => updateVariationSelection(group.id, i, 'priorityFee', value)}
                                       placeholder="Same as control"
-                                      variant="ghost"
                                       showDetailsIcon={Boolean(group.variations[i]?.priorityFee) && group.variations[i]?.priorityFee !== "same_as_control"}
                                     />
                                   </TableCell>
