@@ -14,6 +14,22 @@ import {
   X,
   Plus,
   Check,
+  TextCursorInput,
+  CheckSquare,
+  CircleUser,
+  PanelTop,
+  Activity,
+  Loader,
+  Minus,
+  Columns2,
+  ChevronDown,
+  Layers,
+  Circle,
+  Trash2,
+  Settings,
+  User,
+  LogOut,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/subframe/components/Button";
@@ -46,19 +62,96 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Label } from "@/components/ui/label";
 
-type Section = "colors" | "typography" | "button" | "badge" | "calendar" | "popover" | "select" | "table" | "tooltip";
+type Section =
+  | "colors"
+  | "typography"
+  | "shadows"
+  | "radius"
+  | "button"
+  | "badge"
+  | "input"
+  | "checkbox"
+  | "select"
+  | "avatar"
+  | "dialog"
+  | "dropdown"
+  | "tabs"
+  | "progress"
+  | "skeleton"
+  | "separator"
+  | "calendar"
+  | "popover"
+  | "table"
+  | "tooltip";
 
-const navigation = [
-  { id: "colors" as Section, label: "Colors", icon: Palette },
-  { id: "typography" as Section, label: "Typography", icon: Type },
-  { id: "button" as Section, label: "Button", icon: Box },
-  { id: "badge" as Section, label: "Badge", icon: Check },
-  { id: "calendar" as Section, label: "Calendar", icon: CalendarIcon },
-  { id: "popover" as Section, label: "Popover", icon: MousePointer },
-  { id: "select" as Section, label: "Select", icon: Menu },
-  { id: "table" as Section, label: "Table", icon: TableIcon },
-  { id: "tooltip" as Section, label: "Tooltip", icon: MessageSquare },
+const SECTION_GROUPS = [
+  {
+    label: "Foundations",
+    items: [
+      { id: "colors" as Section, label: "Colors", icon: Palette },
+      { id: "typography" as Section, label: "Typography", icon: Type },
+      { id: "shadows" as Section, label: "Shadows", icon: Layers },
+      { id: "radius" as Section, label: "Radius", icon: Circle },
+    ],
+  },
+  {
+    label: "Components",
+    items: [
+      { id: "button" as Section, label: "Button", icon: Box },
+      { id: "badge" as Section, label: "Badge", icon: Check },
+      { id: "input" as Section, label: "Input", icon: TextCursorInput },
+      { id: "checkbox" as Section, label: "Checkbox", icon: CheckSquare },
+      { id: "select" as Section, label: "Select", icon: Menu },
+      { id: "avatar" as Section, label: "Avatar", icon: CircleUser },
+    ],
+  },
+  {
+    label: "Overlays",
+    items: [
+      { id: "dialog" as Section, label: "Dialog", icon: PanelTop },
+      { id: "dropdown" as Section, label: "Dropdown", icon: ChevronDown },
+      { id: "popover" as Section, label: "Popover", icon: MousePointer },
+      { id: "tooltip" as Section, label: "Tooltip", icon: MessageSquare },
+    ],
+  },
+  {
+    label: "Data & Layout",
+    items: [
+      { id: "table" as Section, label: "Table", icon: TableIcon },
+      { id: "tabs" as Section, label: "Tabs", icon: Columns2 },
+      { id: "calendar" as Section, label: "Calendar", icon: CalendarIcon },
+      { id: "progress" as Section, label: "Progress", icon: Activity },
+      { id: "skeleton" as Section, label: "Skeleton", icon: Loader },
+      { id: "separator" as Section, label: "Separator", icon: Minus },
+    ],
+  },
 ];
 
 const colorGroups = [
@@ -139,12 +232,31 @@ const colorGroups = [
   },
 ];
 
+const shadowTokens = [
+  { name: "shadow-sm", cssClass: "shadow-sm", description: "Subtle depth for cards and inputs" },
+  { name: "shadow-default", cssClass: "shadow-default", description: "Default elevation for interactive surfaces" },
+  { name: "shadow-md", cssClass: "shadow-subframe-md", description: "Medium elevation for dropdowns and popovers" },
+  { name: "shadow-lg", cssClass: "shadow-subframe-lg", description: "High elevation for modals and overlays" },
+  { name: "shadow-overlay", cssClass: "shadow-subframe-overlay", description: "Overlay elevation for dialogs" },
+  { name: "shadow-soft", cssClass: "shadow-soft", description: "Warm soft shadow for neumorphic elements" },
+];
+
+const radiusTokens = [
+  { name: "radius-sm", value: "2px", cssClass: "rounded-sm" },
+  { name: "radius-md", value: "4px", cssClass: "rounded-md" },
+  { name: "radius-lg", value: "8px", cssClass: "rounded-lg" },
+  { name: "radius-xl", value: "12px", cssClass: "rounded-xl" },
+  { name: "radius-2xl", value: "16px", cssClass: "rounded-2xl" },
+  { name: "radius-full", value: "9999px", cssClass: "rounded-full" },
+];
+
 export default function StorybookPage() {
   const [activeSection, setActiveSection] = useState<Section>("colors");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
   const [chipMultiSelectValue, setChipMultiSelectValue] = useState<string[]>([]);
+  const [checkboxChecked, setCheckboxChecked] = useState(true);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -261,6 +373,69 @@ export default function StorybookPage() {
                 <p className="text-caption text-neutral-500">
                   Used for small labels and emphasized captions
                 </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "shadows":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Shadows</h2>
+              <p className="text-body text-subtext-color">
+                Elevation tokens for conveying depth and visual hierarchy.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {shadowTokens.map((shadow) => (
+                  <div key={shadow.name} className="space-y-3">
+                    <div
+                      className={cn(
+                        "flex h-28 items-center justify-center rounded-md border border-neutral-border bg-default-background",
+                        shadow.cssClass
+                      )}
+                    >
+                      <span className="text-body text-subtext-color">{shadow.name}</span>
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-caption-bold text-default-font">{shadow.name}</p>
+                      <p className="text-caption text-neutral-400">{shadow.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+
+      case "radius":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Border Radius</h2>
+              <p className="text-body text-subtext-color">
+                Radius tokens for consistent corner rounding across all components.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+                {radiusTokens.map((token) => (
+                  <div key={token.name} className="space-y-3">
+                    <div
+                      className={cn(
+                        "flex h-24 w-full items-center justify-center border-2 border-brand-400 bg-brand-50",
+                        token.cssClass
+                      )}
+                    >
+                      <span className="font-mono text-caption text-brand-700">{token.value}</span>
+                    </div>
+                    <p className="text-caption-bold text-default-font">{token.name}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -407,6 +582,794 @@ export default function StorybookPage() {
                     <Badge variant="brand">24</Badge>
                     <Badge variant="neutral">156</Badge>
                     <Badge variant="error">3</Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "input":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Input</h2>
+              <p className="text-body text-subtext-color">
+                Text fields for capturing user input across forms and search interfaces.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Default */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Default</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Input
+                    placeholder="Enter your name"
+                    className="max-w-80 border-neutral-border"
+                  />
+                </div>
+              </div>
+
+              {/* With Label */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">With Label</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="max-w-80 space-y-2">
+                    <Label className="text-body-bold text-default-font">Email address</Label>
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      className="border-neutral-border"
+                    />
+                    <p className="text-caption text-subtext-color">
+                      We will never share your email.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* With Value */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">With Value</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Input
+                    defaultValue="alice@delivery.com"
+                    className="max-w-80 border-neutral-border"
+                  />
+                </div>
+              </div>
+
+              {/* Disabled */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Disabled</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Input
+                    disabled
+                    placeholder="Cannot edit"
+                    className="max-w-80 border-neutral-border"
+                  />
+                </div>
+              </div>
+
+              {/* Types */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Input Types</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex max-w-80 flex-col gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-caption-bold text-subtext-color">Text</Label>
+                      <Input type="text" placeholder="Text input" className="border-neutral-border" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-caption-bold text-subtext-color">Password</Label>
+                      <Input type="password" placeholder="Password input" className="border-neutral-border" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-caption-bold text-subtext-color">Number</Label>
+                      <Input type="number" placeholder="0" className="border-neutral-border" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "checkbox":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Checkbox</h2>
+              <p className="text-body text-subtext-color">
+                Toggle controls for binary selections in forms and settings.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* States */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">States</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-center gap-3">
+                      <Checkbox id="unchecked" />
+                      <Label htmlFor="unchecked" className="text-body text-default-font">
+                        Unchecked
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="checked"
+                        checked={checkboxChecked}
+                        onCheckedChange={(v) => setCheckboxChecked(v === true)}
+                      />
+                      <Label htmlFor="checked" className="text-body text-default-font">
+                        Checked
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Checkbox id="disabled-unchecked" disabled />
+                      <Label htmlFor="disabled-unchecked" className="text-body text-neutral-400">
+                        Disabled (unchecked)
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Checkbox id="disabled-checked" checked disabled />
+                      <Label htmlFor="disabled-checked" className="text-body text-neutral-400">
+                        Disabled (checked)
+                      </Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* With Description */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">With Description</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex flex-col gap-5">
+                    <div className="flex items-start gap-3">
+                      <Checkbox id="terms" className="mt-0.5" defaultChecked />
+                      <div className="space-y-1">
+                        <Label htmlFor="terms" className="text-body-bold text-default-font">
+                          Accept terms and conditions
+                        </Label>
+                        <p className="text-caption text-subtext-color">
+                          You agree to our terms of service and privacy policy.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Checkbox id="notifications" className="mt-0.5" />
+                      <div className="space-y-1">
+                        <Label htmlFor="notifications" className="text-body-bold text-default-font">
+                          Email notifications
+                        </Label>
+                        <p className="text-caption text-subtext-color">
+                          Receive email updates about experiment results.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "avatar":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Avatar</h2>
+              <p className="text-body text-subtext-color">
+                User profile representations with image support and initial fallbacks.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Sizes */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Sizes</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex items-end gap-5">
+                    <div className="space-y-2 text-center">
+                      <Avatar className="size-6">
+                        <AvatarFallback className="bg-brand-100 text-caption text-brand-700">S</AvatarFallback>
+                      </Avatar>
+                      <p className="text-caption text-subtext-color">24px</p>
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <Avatar className="size-8">
+                        <AvatarFallback className="bg-brand-100 text-caption text-brand-700">SM</AvatarFallback>
+                      </Avatar>
+                      <p className="text-caption text-subtext-color">32px</p>
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <Avatar className="size-10">
+                        <AvatarFallback className="bg-brand-100 text-body text-brand-700">MD</AvatarFallback>
+                      </Avatar>
+                      <p className="text-caption text-subtext-color">40px</p>
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <Avatar className="size-12">
+                        <AvatarFallback className="bg-brand-100 text-body-bold text-brand-700">LG</AvatarFallback>
+                      </Avatar>
+                      <p className="text-caption text-subtext-color">48px</p>
+                    </div>
+                    <div className="space-y-2 text-center">
+                      <Avatar className="size-16">
+                        <AvatarFallback className="bg-brand-100 text-heading-3 text-brand-700">XL</AvatarFallback>
+                      </Avatar>
+                      <p className="text-caption text-subtext-color">64px</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fallback Colors */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Fallback Variants</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-brand-100 text-body-bold text-brand-700">AJ</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-success-100 text-body-bold text-success-700">BS</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-warning-100 text-body-bold text-warning-700">CW</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-error-100 text-body-bold text-error-700">DK</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-10">
+                      <AvatarFallback className="bg-neutral-200 text-body-bold text-neutral-600">EL</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+              </div>
+
+              {/* With Image */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">With Image</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="size-10">
+                      <AvatarImage src="https://avatar.vercel.sh/alice" alt="Alice" />
+                      <AvatarFallback className="bg-brand-100 text-body-bold text-brand-700">AJ</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-10">
+                      <AvatarImage src="https://avatar.vercel.sh/bob" alt="Bob" />
+                      <AvatarFallback className="bg-success-100 text-body-bold text-success-700">BS</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-10">
+                      <AvatarImage src="https://avatar.vercel.sh/carol" alt="Carol" />
+                      <AvatarFallback className="bg-warning-100 text-body-bold text-warning-700">CW</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+              </div>
+
+              {/* Avatar Group */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Avatar Group</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex -space-x-2">
+                    <Avatar className="size-9 border-2 border-white">
+                      <AvatarFallback className="bg-brand-100 text-caption-bold text-brand-700">AJ</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-9 border-2 border-white">
+                      <AvatarFallback className="bg-success-100 text-caption-bold text-success-700">BS</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-9 border-2 border-white">
+                      <AvatarFallback className="bg-warning-100 text-caption-bold text-warning-700">CW</AvatarFallback>
+                    </Avatar>
+                    <Avatar className="size-9 border-2 border-white">
+                      <AvatarFallback className="bg-neutral-200 text-caption-bold text-neutral-600">+3</AvatarFallback>
+                    </Avatar>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "dialog":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Dialog</h2>
+              <p className="text-body text-subtext-color">
+                Modal windows for focused interactions that require user attention.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Basic Dialog */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Basic Dialog</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="neutral-secondary">Open Dialog</Button>
+                    </DialogTrigger>
+                    <DialogContent className="border-neutral-border bg-default-background">
+                      <DialogHeader>
+                        <DialogTitle className="text-heading-3 text-default-font">
+                          Dialog Title
+                        </DialogTitle>
+                        <DialogDescription className="text-body text-subtext-color">
+                          This is a description of the dialog content. It provides context for the action being taken.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button variant="neutral-secondary" size="small">Cancel</Button>
+                        <Button variant="brand-primary" size="small">Confirm</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+
+              {/* Destructive Dialog */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Destructive Confirmation</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="destructive-secondary">Delete Experiment</Button>
+                    </DialogTrigger>
+                    <DialogContent className="border-neutral-border bg-default-background">
+                      <DialogHeader>
+                        <DialogTitle className="text-heading-3 text-default-font">
+                          Delete experiment?
+                        </DialogTitle>
+                        <DialogDescription className="text-body text-subtext-color">
+                          This action cannot be undone. The experiment and all associated data will be permanently removed.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Button variant="neutral-secondary" size="small">Cancel</Button>
+                        <Button variant="destructive-primary" size="small">Delete</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+
+              {/* Form Dialog */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">With Form Content</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button icon={<Plus className="size-4" />}>New Experiment</Button>
+                    </DialogTrigger>
+                    <DialogContent className="border-neutral-border bg-default-background">
+                      <DialogHeader>
+                        <DialogTitle className="text-heading-3 text-default-font">
+                          Create Experiment
+                        </DialogTitle>
+                        <DialogDescription className="text-body text-subtext-color">
+                          Set up a new experiment with a name and description.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 py-2">
+                        <div className="space-y-2">
+                          <Label className="text-body-bold text-default-font">Name</Label>
+                          <Input placeholder="Experiment name" className="border-neutral-border" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-body-bold text-default-font">Description</Label>
+                          <Input placeholder="Brief description" className="border-neutral-border" />
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button variant="neutral-secondary" size="small">Cancel</Button>
+                        <Button variant="brand-primary" size="small">Create</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "dropdown":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Dropdown Menu</h2>
+              <p className="text-body text-subtext-color">
+                Contextual menus for actions triggered from a button or icon.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Basic Dropdown */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Basic Menu</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="neutral-secondary" iconRight={<ChevronDown className="size-4" />}>
+                        Options
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-48">
+                      <DropdownMenuLabel className="text-caption-bold text-subtext-color">
+                        Actions
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Settings className="size-4" />
+                        Settings
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <User className="size-4" />
+                        Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Mail className="size-4" />
+                        Notifications
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive">
+                        <Trash2 className="size-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+
+              {/* Grouped Dropdown */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Grouped Items</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="neutral-secondary" icon={<CircleUser className="size-4" />}>
+                        Account
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="w-52">
+                      <DropdownMenuLabel className="text-caption-bold text-subtext-color">
+                        My Account
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          <User className="size-4" />
+                          Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Settings className="size-4" />
+                          Settings
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem>
+                          <Mail className="size-4" />
+                          Email preferences
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem variant="destructive">
+                        <LogOut className="size-4" />
+                        Log out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "tabs":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Tabs</h2>
+              <p className="text-body text-subtext-color">
+                Segmented navigation for switching between related content panels.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Basic Tabs */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Basic Tabs</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Tabs defaultValue="overview">
+                    <TabsList>
+                      <TabsTrigger value="overview">Overview</TabsTrigger>
+                      <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                      <TabsTrigger value="settings">Settings</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="overview" className="pt-4">
+                      <p className="text-body text-subtext-color">
+                        Overview content with summary information and key metrics.
+                      </p>
+                    </TabsContent>
+                    <TabsContent value="analytics" className="pt-4">
+                      <p className="text-body text-subtext-color">
+                        Analytics content with charts, data tables, and detailed insights.
+                      </p>
+                    </TabsContent>
+                    <TabsContent value="settings" className="pt-4">
+                      <p className="text-body text-subtext-color">
+                        Settings content with configuration options and preferences.
+                      </p>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              </div>
+
+              {/* With Content Cards */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">With Content Cards</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Tabs defaultValue="experiment">
+                    <TabsList>
+                      <TabsTrigger value="experiment">Experiment</TabsTrigger>
+                      <TabsTrigger value="results">Results</TabsTrigger>
+                      <TabsTrigger value="history">History</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="experiment" className="pt-4">
+                      <div className="rounded-md border border-neutral-border bg-neutral-50 p-4">
+                        <p className="text-body-bold text-default-font">Delivery Fee Optimization</p>
+                        <p className="mt-1 text-caption text-subtext-color">
+                          A/B test comparing flat-rate vs. distance-based delivery fees across Berlin.
+                        </p>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="results" className="pt-4">
+                      <div className="rounded-md border border-neutral-border bg-neutral-50 p-4">
+                        <p className="text-body-bold text-default-font">+12.3% Conversion Rate</p>
+                        <p className="mt-1 text-caption text-subtext-color">
+                          Statistical significance reached at 95% confidence level.
+                        </p>
+                      </div>
+                    </TabsContent>
+                    <TabsContent value="history" className="pt-4">
+                      <div className="rounded-md border border-neutral-border bg-neutral-50 p-4">
+                        <p className="text-body-bold text-default-font">3 Previous Runs</p>
+                        <p className="mt-1 text-caption text-subtext-color">
+                          Most recent run completed on Jan 15, 2026.
+                        </p>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "progress":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Progress</h2>
+              <p className="text-body text-subtext-color">
+                Visual indicators showing completion status of tasks or processes.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Percentages */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Completion Levels</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="space-y-6">
+                    {[0, 25, 50, 75, 100].map((value) => (
+                      <div key={value} className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-caption-bold text-default-font">{value}%</span>
+                          <span className="text-caption text-subtext-color">
+                            {value === 0
+                              ? "Not started"
+                              : value === 100
+                                ? "Complete"
+                                : "In progress"}
+                          </span>
+                        </div>
+                        <Progress value={value} className="h-2" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Sizes */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Sizes</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="space-y-5">
+                    <div className="space-y-2">
+                      <span className="text-caption text-subtext-color">Thin (1px)</span>
+                      <Progress value={60} className="h-1" />
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-caption text-subtext-color">Default (8px)</span>
+                      <Progress value={60} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <span className="text-caption text-subtext-color">Large (12px)</span>
+                      <Progress value={60} className="h-3" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "skeleton":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Skeleton</h2>
+              <p className="text-body text-subtext-color">
+                Placeholder elements displayed while content is loading.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Text Lines */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Text Lines</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="space-y-3">
+                    <Skeleton className="h-5 w-48" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card Pattern */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Card Loading</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="space-y-3 rounded-md border border-neutral-border p-4">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-8 w-20" />
+                        <Skeleton className="h-3 w-full" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* User Row Pattern */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">User Row</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <Skeleton className="size-10 rounded-full" />
+                        <div className="flex-1 space-y-2">
+                          <Skeleton className="h-4 w-32" />
+                          <Skeleton className="h-3 w-48" />
+                        </div>
+                        <Skeleton className="h-6 w-16 rounded-full" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Table Pattern */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Table Loading</h3>
+                <div className="overflow-hidden rounded-md border border-neutral-border bg-default-background shadow-sm">
+                  <div className="border-b border-neutral-border bg-neutral-50 px-4 py-3">
+                    <div className="flex gap-8">
+                      <Skeleton className="h-3 w-20" />
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="border-b border-neutral-border px-4 py-3 last:border-b-0">
+                      <div className="flex gap-8">
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-28" />
+                        <Skeleton className="h-4 w-12" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "separator":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Separator</h2>
+              <p className="text-body text-subtext-color">
+                Visual dividers for separating content areas and grouping related elements.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Horizontal */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Horizontal</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-body-bold text-default-font">Section One</p>
+                      <p className="text-caption text-subtext-color">Content for the first section.</p>
+                    </div>
+                    <Separator />
+                    <div>
+                      <p className="text-body-bold text-default-font">Section Two</p>
+                      <p className="text-caption text-subtext-color">Content for the second section.</p>
+                    </div>
+                    <Separator />
+                    <div>
+                      <p className="text-body-bold text-default-font">Section Three</p>
+                      <p className="text-caption text-subtext-color">Content for the third section.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Vertical */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Vertical</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex h-8 items-center gap-4">
+                    <span className="text-body text-default-font">Dashboard</span>
+                    <Separator orientation="vertical" />
+                    <span className="text-body text-default-font">Experiments</span>
+                    <Separator orientation="vertical" />
+                    <span className="text-body text-default-font">Settings</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* In Context */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">In Context</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="rounded-md border border-neutral-border">
+                    <div className="p-4">
+                      <p className="text-body-bold text-default-font">Experiment Details</p>
+                      <p className="text-caption text-subtext-color">Delivery Fee A/B Test</p>
+                    </div>
+                    <Separator />
+                    <div className="p-4">
+                      <div className="flex justify-between">
+                        <span className="text-caption text-subtext-color">Status</span>
+                        <Badge variant="success">Running</Badge>
+                      </div>
+                    </div>
+                    <Separator />
+                    <div className="p-4">
+                      <div className="flex justify-between">
+                        <span className="text-caption text-subtext-color">Participants</span>
+                        <span className="text-body-bold text-default-font">12,450</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -818,26 +1781,33 @@ export default function StorybookPage() {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Desktop */}
-        <aside className="hidden w-64 border-r border-neutral-border bg-default-background lg:block">
-          <nav className="space-y-1 p-4">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveSection(item.id)}
-                  className={cn(
-                    "flex w-full items-center gap-3 rounded-md px-3 py-2 text-body transition-colors",
-                    activeSection === item.id
-                      ? "bg-brand-50 text-brand-700"
-                      : "text-neutral-700 hover:bg-neutral-100"
-                  )}
-                >
-                  <Icon className="size-4" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
+        <aside className="hidden scrollbar-auto-hide w-64 overflow-y-auto border-r border-neutral-border bg-default-background lg:block">
+          <nav className="p-4">
+            {SECTION_GROUPS.map((group) => (
+              <div key={group.label} className="mb-5">
+                <p className="mb-1 px-3 text-caption-bold text-neutral-400">{group.label}</p>
+                <div className="space-y-0.5">
+                  {group.items.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveSection(item.id)}
+                        className={cn(
+                          "flex w-full items-center gap-3 rounded-md px-3 py-2 text-body transition-colors",
+                          activeSection === item.id
+                            ? "bg-brand-50 text-brand-700"
+                            : "text-neutral-700 hover:bg-neutral-100"
+                        )}
+                      >
+                        <Icon className="size-4" />
+                        <span>{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
         </aside>
 
@@ -857,7 +1827,7 @@ export default function StorybookPage() {
                 animate={{ x: 0 }}
                 exit={{ x: -280 }}
                 transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                className="fixed inset-y-0 left-0 z-50 w-64 border-r border-neutral-border bg-default-background lg:hidden"
+                className="fixed inset-y-0 left-0 z-50 scrollbar-auto-hide w-64 overflow-y-auto border-r border-neutral-border bg-default-background lg:hidden"
               >
                 <div className="flex h-16 items-center justify-between border-b border-neutral-border px-6">
                   <h2 className="text-body-bold text-default-font">Navigation</h2>
@@ -868,28 +1838,35 @@ export default function StorybookPage() {
                     <X className="size-4 text-neutral-600" />
                   </button>
                 </div>
-                <nav className="space-y-1 p-4">
-                  {navigation.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          setActiveSection(item.id);
-                          setMobileMenuOpen(false);
-                        }}
-                        className={cn(
-                          "flex w-full items-center gap-3 rounded-md px-3 py-2 text-body transition-colors",
-                          activeSection === item.id
-                            ? "bg-brand-50 text-brand-700"
-                            : "text-neutral-700 hover:bg-neutral-100"
-                        )}
-                      >
-                        <Icon className="size-4" />
-                        <span>{item.label}</span>
-                      </button>
-                    );
-                  })}
+                <nav className="p-4">
+                  {SECTION_GROUPS.map((group) => (
+                    <div key={group.label} className="mb-5">
+                      <p className="mb-1 px-3 text-caption-bold text-neutral-400">{group.label}</p>
+                      <div className="space-y-0.5">
+                        {group.items.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <button
+                              key={item.id}
+                              onClick={() => {
+                                setActiveSection(item.id);
+                                setMobileMenuOpen(false);
+                              }}
+                              className={cn(
+                                "flex w-full items-center gap-3 rounded-md px-3 py-2 text-body transition-colors",
+                                activeSection === item.id
+                                  ? "bg-brand-50 text-brand-700"
+                                  : "text-neutral-700 hover:bg-neutral-100"
+                              )}
+                            >
+                              <Icon className="size-4" />
+                              <span>{item.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </nav>
               </motion.aside>
             </>
