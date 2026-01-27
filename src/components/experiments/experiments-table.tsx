@@ -15,8 +15,6 @@ import {
   FileText,
   RefreshCw,
   FlaskConical,
-  ArrowUp,
-  ArrowDown,
   Clock,
   Target,
   Trophy,
@@ -155,14 +153,9 @@ function LiftValue({ value }: { value?: number }) {
 
   return (
     <div className={cn(
-      "flex items-center gap-1 text-body-bold tabular-nums",
+      "text-body-bold tabular-nums",
       isPositive ? "text-success-600" : "text-error-600"
     )}>
-      {isPositive ? (
-        <ArrowUp className="size-3.5" />
-      ) : (
-        <ArrowDown className="size-3.5" />
-      )}
       <span>{isPositive ? "+" : ""}{value.toFixed(1)}%</span>
     </div>
   );
