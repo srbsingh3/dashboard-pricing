@@ -584,9 +584,9 @@ export function ExperimentsTable() {
             <button
               key={chip.label}
               onClick={chip.onClear}
-              className="group/chip flex items-center gap-1 rounded-md border border-brand-200 bg-brand-50 px-2 py-1 transition-colors hover:bg-brand-100"
+              className="group/chip flex items-center gap-1 rounded-md border border-brand-100 bg-brand-100 px-2 py-1 transition-colors hover:border-brand-200 hover:bg-brand-200"
             >
-              <span className="text-caption text-brand-700">{chip.label}</span>
+              <span className="text-caption text-brand-800">{chip.label}</span>
               <X className="size-3 text-brand-500 group-hover/chip:text-brand-700" />
             </button>
           ))}
