@@ -90,7 +90,7 @@ function TypeBadge({ type }: { type: ExperimentType }) {
         <TooltipTrigger>
           <div className="flex items-center gap-1 rounded-md bg-warning-100 px-2 py-1">
             <RefreshCw className="size-3 text-warning-700" />
-            <span className="text-caption-bold text-warning-700">SB</span>
+            <span className="text-caption text-warning-700">SB</span>
           </div>
         </TooltipTrigger>
         <TooltipContent>Switchback Test</TooltipContent>
@@ -102,7 +102,7 @@ function TypeBadge({ type }: { type: ExperimentType }) {
       <TooltipTrigger>
         <div className="flex items-center gap-1 rounded-md bg-brand-100 px-2 py-1">
           <FlaskConical className="size-3 text-brand-700" />
-          <span className="text-caption-bold text-brand-700">A/B</span>
+          <span className="text-caption text-brand-700">A/B</span>
         </div>
       </TooltipTrigger>
       <TooltipContent>A/B Test</TooltipContent>
