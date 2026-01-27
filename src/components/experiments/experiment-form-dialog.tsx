@@ -691,6 +691,7 @@ export function ExperimentFormDialog({
       {...{
         onPointerDownOutside: preventOutsideClose,
         onInteractOutside: preventOutsideClose,
+        onEscapeKeyDown: preventOutsideClose,
       }}
     >
       {/* Visually hidden title for accessibility */}
@@ -1663,7 +1664,7 @@ export function ExperimentFormDialog({
               Cancel
             </SubframeButton>
 
-            {/* Split Button: Save Experiment with dropdown for Save & Activate */}
+            {/* Split Button: Save as Draft with dropdown for Save & Activate */}
             <SubframeCore.DropdownMenu.Root>
               <div className="flex h-8 items-center rounded-md bg-brand-600">
                 <button
@@ -1671,7 +1672,7 @@ export function ExperimentFormDialog({
                   className="flex h-full cursor-pointer items-center justify-center rounded-l-md border-none bg-transparent px-3 hover:bg-brand-500 active:bg-brand-600"
                 >
                   <span className="text-body-bold whitespace-nowrap text-white">
-                    Save Experiment
+                    Save as Draft
                   </span>
                 </button>
                 {/* Vertical divider */}
