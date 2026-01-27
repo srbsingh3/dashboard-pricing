@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import {
-  BarChart3,
+  AreaChart,
   Pencil,
   Copy,
   Trash2,
@@ -15,12 +15,14 @@ import {
   FileText,
   RefreshCw,
   FlaskConical,
-  TrendingUp,
-  TrendingDown,
+  ArrowUp,
+  ArrowDown,
   Clock,
   Target,
   Trophy,
+  MoreVertical,
 } from "lucide-react";
+import * as SubframeCore from "@subframe/core";
 import { cn } from "@/lib/utils";
 import { experiments } from "@/lib/mock-data";
 import type { Experiment, ExperimentStatus, ExperimentType } from "@/lib/types";
@@ -30,6 +32,7 @@ import { IconButton } from "@/subframe/components/IconButton";
 import { Badge } from "@/subframe/components/Badge";
 import { TextField } from "@/subframe/components/TextField";
 import { Avatar } from "@/subframe/components/Avatar";
+import { DropdownMenu } from "@/subframe/components/DropdownMenu";
 import {
   Tooltip,
   TooltipContent,
@@ -132,7 +135,7 @@ function SignificanceBar({ value }: { value?: number }) {
             "text-caption whitespace-nowrap tabular-nums",
             isSignificant ? "font-medium text-success-600" : "text-neutral-600"
           )}>
-            {value}%{isSignificant && " \u2713"}
+            {value}%
           </span>
         </div>
       </TooltipTrigger>
@@ -156,9 +159,9 @@ function LiftValue({ value }: { value?: number }) {
       isPositive ? "text-success-600" : "text-error-600"
     )}>
       {isPositive ? (
-        <TrendingUp className="size-3.5" />
+        <ArrowUp className="size-3.5" />
       ) : (
-        <TrendingDown className="size-3.5" />
+        <ArrowDown className="size-3.5" />
       )}
       <span>{isPositive ? "+" : ""}{value.toFixed(1)}%</span>
     </div>
@@ -709,7 +712,7 @@ export function ExperimentsTable() {
                   <SortIndicator columnKey="createdBy" sortKey={sortKey} sortDirection={sortDirection} />
                 </div>
               </th>
-              <th className="w-[120px]">
+              <th className="w-[60px]">
                 <div className="h-10 pr-6 pl-3" />
               </th>
             </tr>
@@ -810,43 +813,48 @@ export function ExperimentsTable() {
                 </td>
                 <td>
                   <div className="flex h-14 items-center justify-end pr-6 pl-3">
-                    <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
+                    <div className="opacity-0 transition-opacity group-hover:opacity-100">
+                      <SubframeCore.DropdownMenu.Root>
+                        <SubframeCore.DropdownMenu.Trigger asChild>
                           <IconButton
                             size="medium"
-                            icon={<BarChart3 className="size-4 text-subtext-color" />}
+                            icon={<MoreVertical className="size-4 text-subtext-color" />}
                           />
-                        </TooltipTrigger>
-                        <TooltipContent>View Results</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <IconButton
-                            size="medium"
-                            icon={<Pencil className="size-4 text-subtext-color" />}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>Edit</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <IconButton
-                            size="medium"
-                            icon={<Copy className="size-4 text-subtext-color" />}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>Duplicate</TooltipContent>
-                      </Tooltip>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <IconButton
-                            size="medium"
-                            icon={<Trash2 className="size-4 text-subtext-color hover:text-error-600" />}
-                          />
-                        </TooltipTrigger>
-                        <TooltipContent>Delete</TooltipContent>
-                      </Tooltip>
+                        </SubframeCore.DropdownMenu.Trigger>
+                        <SubframeCore.DropdownMenu.Portal>
+                          <SubframeCore.DropdownMenu.Content
+                            side="bottom"
+                            align="end"
+                            sideOffset={4}
+                            asChild
+                          >
+                            <DropdownMenu>
+                              <DropdownMenu.DropdownItem
+                                icon={<AreaChart className="size-3.5" />}
+                              >
+                                View Results
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem
+                                icon={<Pencil className="size-3.5" />}
+                              >
+                                Edit
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownItem
+                                icon={<Copy className="size-3.5" />}
+                              >
+                                Duplicate
+                              </DropdownMenu.DropdownItem>
+                              <DropdownMenu.DropdownDivider />
+                              <DropdownMenu.DropdownItem
+                                icon={<Trash2 className="size-3.5 text-error-600" />}
+                                className="text-error-600"
+                              >
+                                Delete
+                              </DropdownMenu.DropdownItem>
+                            </DropdownMenu>
+                          </SubframeCore.DropdownMenu.Content>
+                        </SubframeCore.DropdownMenu.Portal>
+                      </SubframeCore.DropdownMenu.Root>
                     </div>
                   </div>
                 </td>
