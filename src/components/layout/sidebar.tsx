@@ -16,7 +16,12 @@ import {
   FeatherGlobe,
 } from "@subframe/core";
 import { ChevronDown, Gift } from "lucide-react";
-import { NAV_ITEMS, REGIONS } from "@/lib/constants";
+import { NAV_ITEMS, REGIONS, DISABLED_NAV_TOOLTIP } from "@/lib/constants";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -195,6 +200,26 @@ export function Sidebar() {
           const isActive =
             pathname === item.href ||
             (item.href !== "/" && pathname.startsWith(item.href));
+
+          if (item.disabled) {
+            return (
+              <Tooltip key={item.id}>
+                <TooltipTrigger asChild>
+                  <div className="w-full">
+                    <SidebarWithSections.NavItem
+                      icon={NAV_ICONS[item.id]}
+                      className="cursor-not-allowed opacity-40"
+                    >
+                      {item.label}
+                    </SidebarWithSections.NavItem>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={8}>
+                  {DISABLED_NAV_TOOLTIP}
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
 
           return (
             <Link key={item.id} href={item.href} className="w-full">

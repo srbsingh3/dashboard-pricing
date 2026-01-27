@@ -2,14 +2,17 @@
 
 // Navigation items
 export const NAV_ITEMS = [
-  { label: "Dashboard", href: "/", id: "dashboard" },
-  { label: "Components", href: "/components", id: "components" },
-  { label: "Price Rules", href: "/price-rules", id: "price-rules" },
-  { label: "Campaigns", href: "/campaigns", id: "campaigns" },
-  { label: "Experiments", href: "/experiments", id: "experiments" },
-  { label: "Subscriptions", href: "/subscriptions", id: "subscriptions" },
-  { label: "Vendors", href: "/vendors", id: "vendors" },
+  { label: "Dashboard", href: "/", id: "dashboard", disabled: false },
+  { label: "Experiments", href: "/experiments", id: "experiments", disabled: false },
+  { label: "Components", href: "/components", id: "components", disabled: true },
+  { label: "Price Rules", href: "/price-rules", id: "price-rules", disabled: true },
+  { label: "Campaigns", href: "/campaigns", id: "campaigns", disabled: true },
+  { label: "Subscriptions", href: "/subscriptions", id: "subscriptions", disabled: true },
+  { label: "Vendors", href: "/vendors", id: "vendors", disabled: true },
 ] as const;
+
+// Tooltip message for disabled navigation items
+export const DISABLED_NAV_TOOLTIP = "Only Dashboard and Experiments are available in this preview";
 
 // Filter options
 export const DURATION_OPTIONS = [
