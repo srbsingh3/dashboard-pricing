@@ -243,6 +243,7 @@ export function ExperimentsTable() {
   const [regionFilter, setRegionFilter] = useState<string>("all");
   const [objectiveFilter, setObjectiveFilter] = useState<string>("all");
   const [quickFilter, setQuickFilter] = useState<QuickFilter>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   // Calculate summary stats
   const summaryStats = useMemo(() => {
@@ -716,7 +717,10 @@ export function ExperimentsTable() {
             {paginatedExperiments.map((experiment) => (
               <tr
                 key={experiment.id}
-                className="group border-t border-neutral-border transition-colors hover:bg-neutral-50"
+                className={cn(
+                  "group border-t border-neutral-border transition-colors hover:bg-neutral-50",
+                  openMenuId === experiment.id && "bg-neutral-50"
+                )}
               >
                 <td>
                   <div className="flex h-14 items-center pr-3 pl-6">
@@ -808,12 +812,20 @@ export function ExperimentsTable() {
                 </td>
                 <td>
                   <div className="flex h-14 items-center justify-end pr-6 pl-3">
-                    <div className="opacity-0 transition-opacity group-hover:opacity-100">
-                      <SubframeCore.DropdownMenu.Root>
+                    <div className={cn(
+                      "transition-opacity",
+                      openMenuId === experiment.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    )}>
+                      <SubframeCore.DropdownMenu.Root
+                        onOpenChange={(open) => setOpenMenuId(open ? experiment.id : null)}
+                      >
                         <SubframeCore.DropdownMenu.Trigger asChild>
                           <IconButton
                             size="medium"
                             icon={<MoreVertical className="size-4 text-subtext-color" />}
+                            className={cn(
+                              openMenuId === experiment.id && "bg-neutral-100"
+                            )}
                           />
                         </SubframeCore.DropdownMenu.Trigger>
                         <SubframeCore.DropdownMenu.Portal>
