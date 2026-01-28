@@ -2,11 +2,27 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Sidebar } from './sidebar'
 import { TourProvider } from '@/components/tour/tour-provider'
+import { ThemeProvider } from '@/components/theme/theme-provider'
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }))
+
+// Mock window.matchMedia for theme provider
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation((query: string) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+})
 
 // Mock Subframe components
 vi.mock('@/subframe/components/SidebarWithSections', () => ({
@@ -60,9 +76,11 @@ vi.mock('@subframe/core', () => ({
 
 const renderSidebar = () =>
   render(
-    <TourProvider>
-      <Sidebar />
-    </TourProvider>
+    <ThemeProvider>
+      <TourProvider>
+        <Sidebar />
+      </TourProvider>
+    </ThemeProvider>
   )
 
 describe('Sidebar', () => {

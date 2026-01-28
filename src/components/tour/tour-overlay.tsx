@@ -112,16 +112,20 @@ export function TourOverlay() {
               </div>
             </div>
 
-            {/* Tooltip card */}
+            {/* Tooltip card - uses fixed dark colors that don't change with theme */}
             <div
-              className="pointer-events-auto absolute w-64 rounded-lg border border-neutral-800 bg-neutral-900 p-3 shadow-xl"
-              style={TOOLTIP_STYLE[currentStep.position]}
+              className="pointer-events-auto absolute w-64 rounded-lg border p-3 shadow-xl"
+              style={{
+                ...TOOLTIP_STYLE[currentStep.position],
+                backgroundColor: "rgb(23, 23, 23)",
+                borderColor: "rgb(38, 38, 38)",
+              }}
             >
-              <p className="text-caption leading-relaxed text-neutral-200">
+              <p className="text-caption leading-relaxed" style={{ color: "rgb(229, 229, 229)" }}>
                 {currentStep.message}
               </p>
               <div className="mt-2 flex items-center justify-between">
-                <span className="text-caption text-neutral-500 tabular-nums">
+                <span className="text-caption tabular-nums" style={{ color: "rgb(115, 115, 115)" }}>
                   {currentStepIndex + 1} / {totalSteps}
                 </span>
                 <div className="flex items-center gap-0.5">
@@ -131,7 +135,8 @@ export function TourOverlay() {
                       prevStep();
                     }}
                     disabled={currentStepIndex === 0}
-                    className="rounded-sm p-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200 disabled:pointer-events-none disabled:opacity-30"
+                    className="rounded-sm p-1 transition-colors disabled:pointer-events-none disabled:opacity-30"
+                    style={{ color: "rgb(163, 163, 163)" }}
                     aria-label="Previous step"
                   >
                     <ChevronLeft className="size-3.5" />
@@ -142,7 +147,8 @@ export function TourOverlay() {
                       nextStep();
                     }}
                     disabled={currentStepIndex === totalSteps - 1}
-                    className="rounded-sm p-1 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-neutral-200 disabled:pointer-events-none disabled:opacity-30"
+                    className="rounded-sm p-1 transition-colors disabled:pointer-events-none disabled:opacity-30"
+                    style={{ color: "rgb(163, 163, 163)" }}
                     aria-label="Next step"
                   >
                     <ChevronRight className="size-3.5" />

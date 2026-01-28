@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import {
   AreaChart,
   Area,
@@ -46,46 +47,77 @@ const CHART_ANIMATION = {
   },
 };
 
-// Subframe-aligned chart styling constants
-const CHART_STYLES = {
-  // Axis styling (matches Subframe typography)
-  axisTick: {
-    fontSize: 12,
-    fill: "#71717A", // neutral-500/subtext-color
-  },
-  axisLine: {
-    stroke: "#E5E5E5", // neutral-200
-  },
-  grid: {
-    stroke: "#F5F5F5", // neutral-100
-  },
-  // Tooltip styling
-  tooltip: {
-    backgroundColor: "#FFFFFF",
-    border: "1px solid #E5E5E5",
-    borderRadius: "4px",
-    padding: "8px 12px",
-    boxShadow: "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
-  },
-  tooltipLabel: {
-    fontSize: "12px",
-    fontWeight: 500,
-    color: "#171717", // neutral-900/default-font
-    marginBottom: "4px",
-  },
-  tooltipItem: {
-    fontSize: "12px",
-    color: "#737373", // neutral-500
-  },
-  // Cursor for hover
-  cursor: {
-    stroke: "#D4D4D4", // neutral-300
-    strokeWidth: 1,
-  },
-  barCursor: {
-    fill: "#FAFAFA", // neutral-50
-  },
-};
+// Chart styles that adapt to theme via CSS variables
+// These are computed at render time to pick up dark mode changes
+function getChartStyles(isDark: boolean) {
+  return {
+    // Axis styling (matches Subframe typography)
+    axisTick: {
+      fontSize: 12,
+      fill: isDark ? "#A3A3A3" : "#71717A", // neutral-400 in dark, neutral-500 in light
+    },
+    axisLine: {
+      stroke: isDark ? "#404040" : "#E5E5E5", // neutral-700 in dark, neutral-200 in light
+    },
+    grid: {
+      stroke: isDark ? "#262626" : "#F5F5F5", // neutral-800 in dark, neutral-100 in light
+    },
+    // Tooltip styling
+    tooltip: {
+      backgroundColor: isDark ? "#1E1E1E" : "#FFFFFF",
+      border: `1px solid ${isDark ? "#404040" : "#E5E5E5"}`,
+      borderRadius: "4px",
+      padding: "8px 12px",
+      boxShadow: isDark
+        ? "0px 4px 16px -2px rgba(0, 0, 0, 0.4)"
+        : "0px 1px 2px 0px rgba(0, 0, 0, 0.05)",
+    },
+    tooltipLabel: {
+      fontSize: "12px",
+      fontWeight: 500,
+      color: isDark ? "#FAFAFA" : "#171717", // neutral-50 in dark, neutral-900 in light
+      marginBottom: "4px",
+    },
+    tooltipItem: {
+      fontSize: "12px",
+      color: isDark ? "#A3A3A3" : "#737373", // neutral-400 in dark, neutral-500 in light
+    },
+    // Cursor for hover
+    cursor: {
+      stroke: isDark ? "#525252" : "#D4D4D4", // neutral-600 in dark, neutral-300 in light
+      strokeWidth: 1,
+    },
+    barCursor: {
+      fill: isDark ? "#262626" : "#FAFAFA", // neutral-800 in dark, neutral-50 in light
+    },
+  };
+}
+
+// Hook to get theme-aware chart styles
+function useChartStyles() {
+  // Check if we're in dark mode by looking at the document class
+  const [isDark, setIsDark] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    };
+
+    checkDarkMode();
+
+    // Watch for class changes on html element
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return getChartStyles(isDark);
+}
+
 
 // Custom tooltip component for Pie Chart (Subframe-style)
 interface PieTooltipPayload {
@@ -108,7 +140,7 @@ function PieChartTooltip({ active, payload }: PieTooltipProps) {
     const data = payload[0];
     return (
       <div
-        className="flex animate-in flex-col gap-2 rounded-md border border-neutral-200 bg-white px-3 py-2 shadow-sm duration-100 fade-in"
+        className="flex animate-in flex-col gap-2 rounded-md border border-neutral-border bg-card px-3 py-2 shadow-sm duration-100 fade-in"
         style={{ minWidth: "100px" }}
       >
         <div className="flex items-center gap-2">
@@ -116,8 +148,8 @@ function PieChartTooltip({ active, payload }: PieTooltipProps) {
             className="size-2 rounded-full"
             style={{ backgroundColor: data.payload.color }}
           />
-          <span className="text-caption text-neutral-500">{data.name}</span>
-          <span className="ml-auto text-caption text-neutral-900">
+          <span className="text-caption text-muted-foreground">{data.name}</span>
+          <span className="ml-auto text-caption text-foreground">
             {data.value}%
           </span>
         </div>
@@ -129,6 +161,7 @@ function PieChartTooltip({ active, payload }: PieTooltipProps) {
 
 // Orders Trend Chart
 export function OrdersTrendChart() {
+  const chartStyles = useChartStyles();
   return (
     <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
       <h3 className="text-heading-3 text-default-font">Orders Trend</h3>
@@ -141,25 +174,25 @@ export function OrdersTrendChart() {
                 <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartStyles.grid.stroke} vertical={false} />
             <XAxis
               dataKey="date"
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
-              axisLine={CHART_STYLES.axisLine}
+              axisLine={chartStyles.axisLine}
               interval="preserveStartEnd"
             />
             <YAxis
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `${(value / 1000).toFixed(1)}k`}
             />
             <Tooltip
-              contentStyle={CHART_STYLES.tooltip}
-              labelStyle={CHART_STYLES.tooltipLabel}
-              itemStyle={CHART_STYLES.tooltipItem}
-              cursor={CHART_STYLES.cursor}
+              contentStyle={chartStyles.tooltip}
+              labelStyle={chartStyles.tooltipLabel}
+              itemStyle={chartStyles.tooltipItem}
+              cursor={chartStyles.cursor}
               formatter={(value) => [Number(value).toLocaleString(), "Orders"]}
             />
             <Area
@@ -180,6 +213,7 @@ export function OrdersTrendChart() {
 
 // Delivery Fee Trend Chart
 export function DeliveryFeeTrendChart() {
+  const chartStyles = useChartStyles();
   return (
     <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
       <h3 className="text-heading-3 text-default-font">Avg. Delivery Fee Trend</h3>
@@ -192,26 +226,26 @@ export function DeliveryFeeTrendChart() {
                 <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartStyles.grid.stroke} vertical={false} />
             <XAxis
               dataKey="date"
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
-              axisLine={CHART_STYLES.axisLine}
+              axisLine={chartStyles.axisLine}
               interval="preserveStartEnd"
             />
             <YAxis
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
               axisLine={false}
               domain={[2.0, 2.4]}
               tickFormatter={(value) => `€${value.toFixed(2)}`}
             />
             <Tooltip
-              contentStyle={CHART_STYLES.tooltip}
-              labelStyle={CHART_STYLES.tooltipLabel}
-              itemStyle={CHART_STYLES.tooltipItem}
-              cursor={CHART_STYLES.cursor}
+              contentStyle={chartStyles.tooltip}
+              labelStyle={chartStyles.tooltipLabel}
+              itemStyle={chartStyles.tooltipItem}
+              cursor={chartStyles.cursor}
               formatter={(value) => [`€${Number(value).toFixed(2)}`, "Avg. Fee"]}
             />
             <Area
@@ -232,6 +266,7 @@ export function DeliveryFeeTrendChart() {
 
 // City Performance Bar Chart
 export function CityPerformanceChart() {
+  const chartStyles = useChartStyles();
   return (
     <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
       <h3 className="text-heading-3 text-default-font">Orders by City</h3>
@@ -242,27 +277,27 @@ export function CityPerformanceChart() {
             layout="vertical"
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} horizontal={true} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartStyles.grid.stroke} horizontal={true} vertical={false} />
             <XAxis
               type="number"
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
-              axisLine={CHART_STYLES.axisLine}
+              axisLine={chartStyles.axisLine}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
             />
             <YAxis
               type="category"
               dataKey="city"
-              tick={{ fontSize: 12, fill: "#404040" }}
+              tick={chartStyles.axisTick}
               tickLine={false}
               axisLine={false}
               width={70}
             />
             <Tooltip
-              contentStyle={CHART_STYLES.tooltip}
-              labelStyle={CHART_STYLES.tooltipLabel}
-              itemStyle={CHART_STYLES.tooltipItem}
-              cursor={CHART_STYLES.barCursor}
+              contentStyle={chartStyles.tooltip}
+              labelStyle={chartStyles.tooltipLabel}
+              itemStyle={chartStyles.tooltipItem}
+              cursor={chartStyles.barCursor}
               formatter={(value) => [Number(value).toLocaleString(), "Orders"]}
             />
             <Bar
@@ -282,6 +317,7 @@ export function CityPerformanceChart() {
 
 // Delivery Fee by City Chart
 export function DeliveryFeeByCityChart() {
+  const chartStyles = useChartStyles();
   return (
     <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
       <h3 className="text-heading-3 text-default-font">Avg. Delivery Fee by City</h3>
@@ -291,25 +327,25 @@ export function DeliveryFeeByCityChart() {
             data={cityPerformanceData}
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartStyles.grid.stroke} vertical={false} />
             <XAxis
               dataKey="city"
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
-              axisLine={CHART_STYLES.axisLine}
+              axisLine={chartStyles.axisLine}
             />
             <YAxis
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
               axisLine={false}
               domain={[0, 3]}
               tickFormatter={(value) => `€${value.toFixed(1)}`}
             />
             <Tooltip
-              contentStyle={CHART_STYLES.tooltip}
-              labelStyle={CHART_STYLES.tooltipLabel}
-              itemStyle={CHART_STYLES.tooltipItem}
-              cursor={CHART_STYLES.barCursor}
+              contentStyle={chartStyles.tooltip}
+              labelStyle={chartStyles.tooltipLabel}
+              itemStyle={chartStyles.tooltipItem}
+              cursor={chartStyles.barCursor}
               formatter={(value) => [`€${Number(value).toFixed(2)}`, "Avg. Fee"]}
             />
             <Bar
@@ -362,7 +398,7 @@ export function VerticalBreakdownChart() {
               iconSize={8}
               wrapperStyle={{ paddingLeft: "16px" }}
               formatter={(value) => (
-                <span className="text-caption text-neutral-500">{value}</span>
+                <span className="text-caption text-muted-foreground">{value}</span>
               )}
             />
           </PieChart>
@@ -374,6 +410,7 @@ export function VerticalBreakdownChart() {
 
 // Delivery Fee Distribution Chart
 export function DeliveryFeeDistributionChart() {
+  const chartStyles = useChartStyles();
   return (
     <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
       <h3 className="text-heading-3 text-default-font">Delivery Fee Distribution</h3>
@@ -383,24 +420,24 @@ export function DeliveryFeeDistributionChart() {
             data={deliveryFeeDistribution}
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartStyles.grid.stroke} vertical={false} />
             <XAxis
               dataKey="range"
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
-              axisLine={CHART_STYLES.axisLine}
+              axisLine={chartStyles.axisLine}
             />
             <YAxis
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
             />
             <Tooltip
-              contentStyle={CHART_STYLES.tooltip}
-              labelStyle={CHART_STYLES.tooltipLabel}
-              itemStyle={CHART_STYLES.tooltipItem}
-              cursor={CHART_STYLES.barCursor}
+              contentStyle={chartStyles.tooltip}
+              labelStyle={chartStyles.tooltipLabel}
+              itemStyle={chartStyles.tooltipItem}
+              cursor={chartStyles.barCursor}
               formatter={(value, name) => {
                 if (name === "count") return [Number(value).toLocaleString(), "Orders"];
                 return [value, String(name)];
@@ -423,6 +460,7 @@ export function DeliveryFeeDistributionChart() {
 
 // Conversion Rate by City Chart
 export function ConversionByCityChart() {
+  const chartStyles = useChartStyles();
   return (
     <div className="flex flex-col gap-6 rounded-md border border-neutral-border bg-default-background p-6 shadow-sm">
       <h3 className="text-heading-3 text-default-font">Conversion Rate by City</h3>
@@ -432,25 +470,25 @@ export function ConversionByCityChart() {
             data={cityPerformanceData}
             margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" stroke={CHART_STYLES.grid.stroke} vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={chartStyles.grid.stroke} vertical={false} />
             <XAxis
               dataKey="city"
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
-              axisLine={CHART_STYLES.axisLine}
+              axisLine={chartStyles.axisLine}
             />
             <YAxis
-              tick={CHART_STYLES.axisTick}
+              tick={chartStyles.axisTick}
               tickLine={false}
               axisLine={false}
               domain={[50, 70]}
               tickFormatter={(value) => `${value}%`}
             />
             <Tooltip
-              contentStyle={CHART_STYLES.tooltip}
-              labelStyle={CHART_STYLES.tooltipLabel}
-              itemStyle={CHART_STYLES.tooltipItem}
-              cursor={CHART_STYLES.barCursor}
+              contentStyle={chartStyles.tooltip}
+              labelStyle={chartStyles.tooltipLabel}
+              itemStyle={chartStyles.tooltipItem}
+              cursor={chartStyles.barCursor}
               formatter={(value) => [`${Number(value).toFixed(1)}%`, "CVR"]}
             />
             <Bar

@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@subframe/core";
 import { TourProvider } from "@/components/tour/tour-provider";
 import { TourOverlay } from "@/components/tour/tour-overlay";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,20 +32,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <TooltipProvider delayDuration={300}>
-          <TourProvider>
-            <div className="flex h-screen bg-neutral-50">
-              <Sidebar />
-              <MainContent>{children}</MainContent>
-            </div>
-            <TourOverlay />
-          </TourProvider>
-        </TooltipProvider>
-        <Toaster position="top-right" />
+        <ThemeProvider>
+          <TooltipProvider delayDuration={300}>
+            <TourProvider>
+              <div className="flex h-screen bg-neutral-50">
+                <Sidebar />
+                <MainContent>{children}</MainContent>
+              </div>
+              <TourOverlay />
+            </TourProvider>
+          </TooltipProvider>
+          <Toaster position="top-right" />
+        </ThemeProvider>
       </body>
     </html>
   );
