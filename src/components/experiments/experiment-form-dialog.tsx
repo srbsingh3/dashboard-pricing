@@ -793,7 +793,7 @@ export function ExperimentFormDialog({
                       className="flex-1"
                     >
                       <div className="flex flex-col items-start gap-4 py-2">
-                        <RefreshCw className="size-4 text-success-500" />
+                        <RefreshCw className="size-4 text-cyan-600" />
                         <span className="text-body-bold text-neutral-900">
                           Switchback Test
                         </span>

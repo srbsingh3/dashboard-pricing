@@ -93,9 +93,9 @@ function TypeBadge({ type }: { type: ExperimentType }) {
     return (
       <Tooltip>
         <TooltipTrigger>
-          <div className="flex items-center gap-1 rounded-md bg-warning-100 px-2 py-1">
-            <RefreshCw className="size-3 text-warning-700" />
-            <span className="text-caption text-warning-700">SB</span>
+          <div className="flex items-center gap-1 rounded-md bg-cyan-100 px-2 py-1">
+            <RefreshCw className="size-3 text-cyan-700" />
+            <span className="text-caption text-cyan-700">SB</span>
           </div>
         </TooltipTrigger>
         <TooltipContent>Switchback Test</TooltipContent>
