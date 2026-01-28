@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { ChevronRight, ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTour } from "./tour-provider";
 
@@ -17,7 +17,6 @@ const TOOLTIP_STYLE: Record<string, React.CSSProperties> = {
 export function TourOverlay() {
   const {
     isActive,
-    toggleTour,
     currentStep,
     currentStepIndex,
     totalSteps,
@@ -155,24 +154,6 @@ export function TourOverlay() {
         )}
       </AnimatePresence>
 
-      {/* Toggle button — always visible */}
-      <button
-        onClick={toggleTour}
-        className="fixed right-4 bottom-4 z-9999 flex items-center gap-1.5 rounded-full border border-neutral-200 bg-default-background px-3 py-1.5 text-caption shadow-md transition-all hover:shadow-lg"
-        title="Press ? to toggle"
-      >
-        {isActive ? (
-          <>
-            <EyeOff className="size-3.5 text-neutral-500" />
-            <span className="text-neutral-600">Hide guide</span>
-          </>
-        ) : (
-          <>
-            <Eye className="size-3.5 text-brand-500" />
-            <span className="text-neutral-600">Show guide</span>
-          </>
-        )}
-      </button>
     </>,
     document.body
   );

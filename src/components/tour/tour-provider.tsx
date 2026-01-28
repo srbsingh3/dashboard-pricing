@@ -31,7 +31,7 @@ export function useTour() {
 
 export function TourProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
 
   // When route changes, jump to first step for that route

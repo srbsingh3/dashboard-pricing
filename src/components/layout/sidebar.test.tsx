@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Sidebar } from './sidebar'
+import { TourProvider } from '@/components/tour/tour-provider'
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
@@ -57,25 +58,32 @@ vi.mock('@subframe/core', () => ({
   FeatherChevronDown: () => <span>ChevronIcon</span>,
 }))
 
+const renderSidebar = () =>
+  render(
+    <TourProvider>
+      <Sidebar />
+    </TourProvider>
+  )
+
 describe('Sidebar', () => {
   it('renders the sidebar with logo', () => {
-    render(<Sidebar />)
+    renderSidebar()
     expect(screen.getByText('Dynamic Pricing')).toBeInTheDocument()
   })
 
   it('renders navigation items', () => {
-    render(<Sidebar />)
+    renderSidebar()
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
     expect(screen.getByText('Experiments')).toBeInTheDocument()
   })
 
   it('renders user name in footer', () => {
-    render(<Sidebar />)
+    renderSidebar()
     expect(screen.getByText('Saurabh Singh')).toBeInTheDocument()
   })
 
   it('renders region selector', () => {
-    render(<Sidebar />)
+    renderSidebar()
     expect(screen.getByText('Germany')).toBeInTheDocument()
   })
 })

@@ -29,6 +29,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { useTour } from "@/components/tour/tour-provider";
 
 // Map nav item IDs to icons
 const NAV_ICONS: Record<string, React.ReactNode> = {
@@ -44,6 +46,7 @@ const NAV_ICONS: Record<string, React.ReactNode> = {
 export function Sidebar() {
   const pathname = usePathname();
   const currentRegion = "Germany";
+  const { isActive: isTourActive, toggleTour } = useTour();
 
   return (
     <SidebarWithSections
@@ -188,6 +191,16 @@ export function Sidebar() {
             <DropdownMenuContent align="start" className="w-48">
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Account settings</DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => e.preventDefault()}
+                className="flex items-center justify-between"
+              >
+                <span>Show guide</span>
+                <Switch
+                  checked={isTourActive}
+                  onCheckedChange={toggleTour}
+                />
+              </DropdownMenuItem>
               <DropdownMenuItem>Sign out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
