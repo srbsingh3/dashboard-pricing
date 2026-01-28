@@ -37,7 +37,7 @@ export default function RootLayout({
       >
         <TooltipProvider delayDuration={300}>
           <TourProvider>
-            <div className="flex h-screen bg-neutral-100">
+            <div className="flex h-screen bg-neutral-50">
               <Sidebar />
               <MainContent>{children}</MainContent>
             </div>
