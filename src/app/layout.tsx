@@ -23,8 +23,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "DPS - Dynamic Pricing Service",
-  description: "Configure and manage dynamic pricing experiments",
+  title: "Dynamic Pricing — Design Prototype",
+  description:
+    "A product design prototype for a pricing experimentation tool. Looks real, entirely fictional. Made by a designer who cares about the details.",
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+  openGraph: {
+    title: "Dynamic Pricing — Design Prototype",
+    description:
+      "A product design prototype for a pricing experimentation tool. Looks real, entirely fictional. Made by a designer who cares about the details.",
+    siteName: "Design Prototype by Saurabh",
+  },
 };
 
 export default function RootLayout({
