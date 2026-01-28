@@ -77,3 +77,38 @@ Always use `src/lib/constants.ts` instead of hardcoded values:
 1. Run `npm run lint` — fix all errors
 2. Run `npm run test:run` — ensure tests pass
 3. Provide a table summarizing what changed and why
+
+## Design Context
+
+### Users
+**Pricing Analysts** — data-savvy business users who analyze A/B experiment results and optimize delivery fees for a food delivery platform. They work with complex data tables, charts, and experiment configurations. Their context is focused, analytical work where they need to make confident decisions based on the data presented.
+
+### Brand Personality
+**Modern, Precise, Capable** — the interface should feel like a sophisticated tool built by experts for experts. Every pixel should feel intentional. The design communicates competence through restraint and attention to detail.
+
+### Emotional Goals
+- **Confident & In Control** — users feel empowered to make data-driven decisions
+- **Efficient & Productive** — users can accomplish tasks quickly without friction
+
+### Aesthetic Direction
+**Reference**: Linear — clean, fast, keyboard-first. The dashboard should feel like a precision instrument.
+
+**Visual Tone**: Professional B2B SaaS with a modern edge. Data-dense but never cluttered. Subtle sophistication over flashy effects.
+
+**Anti-references** (what to avoid):
+- Consumer/playful apps (Slack, Discord) — no rounded everything, excessive color, or emoji
+- Generic Bootstrap look — no templated, personality-free designs
+- Over-designed dashboards — no gratuitous gradients, animations, or visual noise
+- Heavy enterprise tools (SAP, Oracle) — no dated, cluttered complexity
+
+### Design Principles
+
+1. **Precision over decoration** — every element earns its place. No ornamental flourishes. If it doesn't serve the user's task, remove it.
+
+2. **Data density with clarity** — show rich information without overwhelming. Use hierarchy, whitespace, and subtle dividers to organize. Tables and charts should be scannable at a glance.
+
+3. **Consistent rhythm** — uniform spacing, predictable patterns, same solution for same problems. Visual consistency builds trust and reduces cognitive load.
+
+4. **Subtle feedback** — hover states, transitions, and focus indicators should be present but restrained. Animations serve function (guiding attention, confirming actions), never decoration.
+
+5. **Typography as structure** — the limited type scale (caption/body/heading-1/2/3) creates hierarchy. Let weight and size do the work; avoid adding colors or effects to text for emphasis.
