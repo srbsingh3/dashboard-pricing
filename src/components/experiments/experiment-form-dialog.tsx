@@ -347,12 +347,12 @@ export function ExperimentFormDialog({
   }, []);
 
   // Toggle expansion of a single priority group
-  // Also clears the "new" indicator when a group is opened for the first time
+  // Also clears the "new" indicator on any interaction (expand or collapse)
   const toggleGroupExpanded = useCallback((groupId: number) => {
     setPriorityGroups((prev) => {
       const newGroups = prev.map((group) =>
         group.id === groupId
-          ? { ...group, isExpanded: !group.isExpanded, isNew: group.isExpanded ? group.isNew : false }
+          ? { ...group, isExpanded: !group.isExpanded, isNew: false }
           : group
       );
       // Update allExpanded based on whether all groups are now expanded
@@ -395,14 +395,14 @@ export function ExperimentFormDialog({
   }, [numberOfVariations]);
 
   // Toggle all priority groups expanded/collapsed with animation
-  // Also clears "new" indicators when expanding all
+  // Also clears "new" indicators on any toggle
   const toggleAllExpanded = useCallback(() => {
     setAllExpanded((prev) => !prev);
     setPriorityGroups((prevGroups) =>
       prevGroups.map((group) => ({
         ...group,
         isExpanded: !allExpanded,
-        isNew: !allExpanded ? false : group.isNew,
+        isNew: false,
       }))
     );
   }, [allExpanded]);
@@ -422,7 +422,7 @@ export function ExperimentFormDialog({
       const duplicatedGroup = {
         ...groupToDuplicate,
         id: newId,
-        isNew: false,
+        isNew: true,
         vendorFilters: groupToDuplicate.vendorFilters.map((f) => ({ ...f, id: generateFilterId() })),
         vendorCount: groupToDuplicate.vendorCount,
         conditions: groupToDuplicate.conditions.map((c) => ({ ...c, data: { ...c.data } })),
@@ -1099,18 +1099,6 @@ export function ExperimentFormDialog({
                                 Priority {index + 1}
                               </span>
                               <AnimatePresence>
-                                {group.isNew && (
-                                  <motion.div
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
-                                    transition={{ duration: 0.15, ease: [0.25, 1, 0.5, 1] }}
-                                  >
-                                    <Badge variant="brand">New</Badge>
-                                  </motion.div>
-                                )}
-                              </AnimatePresence>
-                              <AnimatePresence>
                                 {!group.isExpanded && group.vendorFilters.length > 0 && (
                                   <motion.div
                                     initial={{ opacity: 0, scale: 0.8 }}
@@ -1130,6 +1118,18 @@ export function ExperimentFormDialog({
                                         Number of vendors
                                       </TooltipContent>
                                     </Tooltip>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                              <AnimatePresence>
+                                {group.isNew && (
+                                  <motion.div
+                                    initial={{ opacity: 0, scale: 0.8 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    transition={{ duration: 0.15, ease: [0.25, 1, 0.5, 1] }}
+                                  >
+                                    <Badge variant="brand">New</Badge>
                                   </motion.div>
                                 )}
                               </AnimatePresence>
