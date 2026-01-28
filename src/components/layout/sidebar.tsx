@@ -15,7 +15,7 @@ import {
   FeatherSettings,
   FeatherGlobe,
 } from "@subframe/core";
-import { ChevronDown, Gift, Sun, Moon } from "lucide-react";
+import { ChevronDown, Gift } from "lucide-react";
 import { NAV_ITEMS, REGIONS, DISABLED_NAV_TOOLTIP } from "@/lib/constants";
 import {
   Tooltip,
@@ -31,7 +31,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useTour } from "@/components/tour/tour-provider";
-import { useTheme } from "@/components/theme/theme-provider";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 // Map nav item IDs to icons
 const NAV_ICONS: Record<string, React.ReactNode> = {
@@ -48,7 +48,6 @@ export function Sidebar() {
   const pathname = usePathname();
   const currentRegion = "Germany";
   const { isActive: isTourActive, toggleTour } = useTour();
-  const { theme, toggleTheme } = useTheme();
 
   return (
     <SidebarWithSections
@@ -165,21 +164,7 @@ export function Sidebar() {
           </DropdownMenu>
 
           {/* Theme toggle */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className="w-full justify-between text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200"
-          >
-            <span className="flex items-center gap-2">
-              {theme === "light" ? (
-                <Moon className="size-4" />
-              ) : (
-                <Sun className="size-4" />
-              )}
-              {theme === "light" ? "Dark mode" : "Light mode"}
-            </span>
-          </Button>
+          <ThemeToggle />
 
           {/* Settings */}
           <SidebarWithSections.NavItem icon={<FeatherSettings />}>

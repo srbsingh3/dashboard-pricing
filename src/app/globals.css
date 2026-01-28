@@ -639,6 +639,11 @@ button:focus-visible,
   animation: slide-down 0.3s ease-out;
 }
 
+/* Custom easing curves for refined animations */
+@utility ease-out-expo {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Toggle Button Press Animation */
 @keyframes toggle-press {
   0% {
