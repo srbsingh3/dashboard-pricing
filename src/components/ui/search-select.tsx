@@ -124,7 +124,7 @@ export function SearchSelect({
               }}
               className={cn(
                 "flex size-6 shrink-0 items-center justify-center rounded-sm transition-opacity hover:bg-neutral-200",
-                variant === "ghost" && "opacity-0 group-hover:opacity-100 group-hover/row:opacity-100"
+                variant === "ghost" && "opacity-0 group-hover:opacity-100 group-hover/row:opacity-100 group-has-data-[state=open]/row:opacity-100 group-data-[state=open]:opacity-100"
               )}
               aria-label="View details"
             >
@@ -135,7 +135,7 @@ export function SearchSelect({
           <FeatherChevronDown
             className={cn(
               "shrink-0 text-body text-subtext-color transition duration-200",
-              variant === "ghost" && "mr-2 opacity-0 group-hover:opacity-100 group-hover/row:opacity-100",
+              variant === "ghost" && "mr-2 opacity-0 group-hover:opacity-100 group-hover/row:opacity-100 group-has-data-[state=open]/row:opacity-100 group-data-[state=open]:opacity-100",
               open && "rotate-180",
               open && variant === "ghost" && "opacity-100"
             )}

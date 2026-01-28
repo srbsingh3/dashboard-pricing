@@ -935,6 +935,7 @@ export function ExperimentFormDialog({
                               <IconButton
                                 size="medium"
                                 icon={<Import className="size-4 text-subtext-color" />}
+                                className={cn(importPopoverOpen && "bg-neutral-100")}
                               />
                             </PopoverTrigger>
                           </TooltipTrigger>
@@ -1514,7 +1515,7 @@ export function ExperimentFormDialog({
                           </TableHeader>
                           <TableBody>
                             {/* Control Row */}
-                            <TableRow className="group/row border-0 hover:bg-neutral-50">
+                            <TableRow className="group/row border-0 hover:bg-neutral-50 has-data-[state=open]:bg-neutral-50">
                               <TableCell className="py-2 pl-3 text-body text-neutral-500">Control</TableCell>
                               <TableCell className="px-3 py-2">
                                 <ComponentDetailCell
@@ -1581,7 +1582,7 @@ export function ExperimentFormDialog({
                             </TableRow>
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
-                              <TableRow key={i} className="group/row border-0 hover:bg-neutral-50">
+                              <TableRow key={i} className="group/row border-0 hover:bg-neutral-50 has-data-[state=open]:bg-neutral-50">
                                 <TableCell className="py-2 pl-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
                                 <TableCell className="px-3 py-2">
                                   <ComponentDetailCell
