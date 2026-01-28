@@ -15,9 +15,6 @@ import {
   FileText,
   RefreshCw,
   FlaskConical,
-  Clock,
-  Target,
-  Trophy,
   MoreVertical,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -51,7 +48,6 @@ import {
 
 type SortKey = keyof Experiment | null;
 type SortDirection = "asc" | "desc";
-type QuickFilter = "nearSignificance" | "winners" | null;
 
 // Status configuration for badges
 const STATUS_CONFIG: Record<
@@ -178,47 +174,6 @@ function formatName(email: string): string {
     .join(" ");
 }
 
-// Summary stat card component — now supports onClick + isActive
-function SummaryStatCard({
-  label,
-  value,
-  icon,
-  variant = "default",
-  onClick,
-  isActive = false,
-}: {
-  label: string;
-  value: string | number;
-  icon: React.ReactNode;
-  variant?: "default" | "success" | "warning";
-  onClick?: () => void;
-  isActive?: boolean;
-}) {
-  const isClickable = !!onClick;
-  return (
-    <div
-      role={isClickable ? "button" : undefined}
-      tabIndex={isClickable ? 0 : undefined}
-      onClick={onClick}
-      onKeyDown={isClickable ? (e) => { if (e.key === "Enter" || e.key === " ") onClick?.(); } : undefined}
-      className={cn(
-        "flex flex-col gap-1 rounded-md border px-4 py-3",
-        variant === "success" && "border-success-200 bg-success-50",
-        variant === "warning" && "border-warning-200 bg-warning-50",
-        variant === "default" && "border-neutral-200 bg-white",
-        isClickable && "cursor-pointer transition-all hover:ring-2 hover:ring-brand-300",
-        isActive && "ring-2 ring-brand-500",
-      )}
-    >
-      <div className="flex items-center gap-2 text-neutral-500">
-        {icon}
-        <span className="text-caption">{label}</span>
-      </div>
-      <span className="text-heading-3 text-default-font">{value}</span>
-    </div>
-  );
-}
-
 // Sort indicator component
 function SortIndicator({
   columnKey,
@@ -247,37 +202,8 @@ export function ExperimentsTable() {
   const [typeFilter, setTypeFilter] = useState<ExperimentType | "all">("all");
   const [regionFilter, setRegionFilter] = useState<string>("all");
   const [objectiveFilter, setObjectiveFilter] = useState<string>("all");
-  const [quickFilter, setQuickFilter] = useState<QuickFilter>(null);
+  const [significanceFilter, setSignificanceFilter] = useState<string>("all");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-
-  // Calculate summary stats
-  const summaryStats = useMemo(() => {
-    const running = experiments.filter((e) => e.status === "running");
-    const completed = experiments.filter((e) => e.status === "completed");
-    const nearSignificant = running.filter((e) => e.significance && e.significance >= 90 && e.significance < 95);
-    const wins = completed.filter((e) => e.lift && e.lift > 0);
-    const avgDaysToSignificance = completed
-      .filter((e) => e.daysRunning || (e.startedOn && e.endedOn))
-      .reduce((acc, e) => {
-        if (e.startedOn && e.endedOn) {
-          const start = new Date(e.startedOn.split('.').reverse().join('-'));
-          const end = new Date(e.endedOn.split('.').reverse().join('-'));
-          const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-          return acc + days;
-        }
-        return acc + (e.daysRunning || 0);
-      }, 0) / Math.max(completed.length, 1);
-
-    return {
-      total: experiments.length,
-      running: running.length,
-      completed: completed.length,
-      draft: experiments.filter((e) => e.status === "draft").length,
-      nearSignificant: nearSignificant.length,
-      winRate: completed.length > 0 ? Math.round((wins.length / completed.length) * 100) : 0,
-      avgDays: Math.round(avgDaysToSignificance),
-    };
-  }, []);
 
   // Get unique regions
   const regions = useMemo(() => {
@@ -301,15 +227,16 @@ export function ExperimentsTable() {
     const matchesRegion = regionFilter === "all" || exp.city === regionFilter;
     const matchesObjective = objectiveFilter === "all" || exp.objective === objectiveFilter;
 
-    // Quick filters from stat cards
-    let matchesQuickFilter = true;
-    if (quickFilter === "nearSignificance") {
-      matchesQuickFilter = exp.status === "running" && !!exp.significance && exp.significance >= 90 && exp.significance < 95;
-    } else if (quickFilter === "winners") {
-      matchesQuickFilter = exp.status === "completed" && !!exp.lift && exp.lift > 0;
+    let matchesSignificance = true;
+    if (significanceFilter === "significant") {
+      matchesSignificance = exp.significance !== undefined && exp.significance >= SIGNIFICANCE_THRESHOLD;
+    } else if (significanceFilter === "near") {
+      matchesSignificance = exp.significance !== undefined && exp.significance >= 90 && exp.significance < SIGNIFICANCE_THRESHOLD;
+    } else if (significanceFilter === "below") {
+      matchesSignificance = exp.significance !== undefined && exp.significance < 90;
     }
 
-    return matchesSearch && matchesStatus && matchesType && matchesRegion && matchesObjective && matchesQuickFilter;
+    return matchesSearch && matchesStatus && matchesType && matchesRegion && matchesObjective && matchesSignificance;
   });
 
   const sortedExperiments = [...filteredExperiments].sort((a, b) => {
@@ -338,39 +265,6 @@ export function ExperimentsTable() {
     }
   };
 
-  // Clickable stat card handlers
-  const handleRunningClick = () => {
-    if (statusFilter === "running" && quickFilter === null) {
-      setStatusFilter("all");
-    } else {
-      setStatusFilter("running");
-      setQuickFilter(null);
-    }
-    setCurrentPage(1);
-  };
-
-  const handleNearSignificanceClick = () => {
-    if (quickFilter === "nearSignificance") {
-      setQuickFilter(null);
-      setStatusFilter("all");
-    } else {
-      setQuickFilter("nearSignificance");
-      setStatusFilter("all");
-    }
-    setCurrentPage(1);
-  };
-
-  const handleWinRateClick = () => {
-    if (quickFilter === "winners") {
-      setQuickFilter(null);
-      setStatusFilter("all");
-    } else {
-      setQuickFilter("winners");
-      setStatusFilter("all");
-    }
-    setCurrentPage(1);
-  };
-
   // Active filter helpers
   const hasActiveFilters =
     searchQuery !== "" ||
@@ -378,7 +272,7 @@ export function ExperimentsTable() {
     typeFilter !== "all" ||
     regionFilter !== "all" ||
     objectiveFilter !== "all" ||
-    quickFilter !== null;
+    significanceFilter !== "all";
 
   const activeFilterChips: { label: string; onClear: () => void }[] = [];
 
@@ -412,16 +306,15 @@ export function ExperimentsTable() {
       onClear: () => { setRegionFilter("all"); setCurrentPage(1); },
     });
   }
-  if (quickFilter === "nearSignificance") {
+  if (significanceFilter !== "all") {
+    const sigLabels: Record<string, string> = {
+      significant: `Significant (\u2265${SIGNIFICANCE_THRESHOLD}%)`,
+      near: "Near Significant (90-95%)",
+      below: "Below 90%",
+    };
     activeFilterChips.push({
-      label: "Near Significance",
-      onClear: () => { setQuickFilter(null); setCurrentPage(1); },
-    });
-  }
-  if (quickFilter === "winners") {
-    activeFilterChips.push({
-      label: "Winners",
-      onClear: () => { setQuickFilter(null); setCurrentPage(1); },
+      label: `Significance: ${sigLabels[significanceFilter] || significanceFilter}`,
+      onClear: () => { setSignificanceFilter("all"); setCurrentPage(1); },
     });
   }
 
@@ -431,54 +324,12 @@ export function ExperimentsTable() {
     setTypeFilter("all");
     setRegionFilter("all");
     setObjectiveFilter("all");
-    setQuickFilter(null);
+    setSignificanceFilter("all");
     setCurrentPage(1);
   };
 
   return (
     <div className="space-y-6">
-      {/* Overview Stats */}
-      <div className="flex flex-col gap-4">
-        <p className="text-caption-bold text-subtext-color uppercase">
-          Overview
-        </p>
-        <div className="grid grid-cols-5 gap-4">
-          <SummaryStatCard
-            label="Total Experiments"
-            value={summaryStats.total}
-            icon={<FlaskConical className="size-4" />}
-          />
-          <SummaryStatCard
-            label="Running"
-            value={summaryStats.running}
-            icon={<Play className="size-4" />}
-            onClick={handleRunningClick}
-            isActive={statusFilter === "running" && quickFilter === null}
-          />
-          <SummaryStatCard
-            label="Near Significance"
-            value={summaryStats.nearSignificant}
-            icon={<Target className="size-4" />}
-            variant={summaryStats.nearSignificant > 0 ? "warning" : "default"}
-            onClick={handleNearSignificanceClick}
-            isActive={quickFilter === "nearSignificance"}
-          />
-          <SummaryStatCard
-            label="Win Rate"
-            value={`${summaryStats.winRate}%`}
-            icon={<Trophy className="size-4" />}
-            variant={summaryStats.winRate > 50 ? "success" : "default"}
-            onClick={handleWinRateClick}
-            isActive={quickFilter === "winners"}
-          />
-          <SummaryStatCard
-            label="Avg. Days to Significance"
-            value={summaryStats.avgDays}
-            icon={<Clock className="size-4" />}
-          />
-        </div>
-      </div>
-
       {/* Filter Bar */}
       <div data-tour="experiments-filters" className="flex items-center gap-3">
         <div className="w-[280px]">
@@ -503,7 +354,6 @@ export function ExperimentsTable() {
             value={statusFilter}
             onValueChange={(value) => {
               setStatusFilter(value as ExperimentStatus | "all");
-              setQuickFilter(null);
               setCurrentPage(1);
             }}
           >
@@ -573,6 +423,25 @@ export function ExperimentsTable() {
                   {region === "all" ? "All Regions" : region}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+
+          {/* Significance Filter */}
+          <Select
+            value={significanceFilter}
+            onValueChange={(value) => {
+              setSignificanceFilter(value);
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[180px] border-neutral-border">
+              <SelectValue placeholder="Significance" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Significance</SelectItem>
+              <SelectItem value="significant">Significant ({"\u2265"}{SIGNIFICANCE_THRESHOLD}%)</SelectItem>
+              <SelectItem value="near">Near Significant</SelectItem>
+              <SelectItem value="below">Below 90%</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -772,25 +641,12 @@ export function ExperimentsTable() {
                 </td>
                 <td>
                   <div className="flex h-14 items-center px-3">
-                    {experiment.status === "draft" ? (
-                      <span className="text-neutral-400">&mdash;</span>
-                    ) : experiment.status === "running" ? (
+                    {experiment.status === "running" ? (
                       <span className="text-body text-neutral-600">
                         {experiment.daysRunning} days
                       </span>
                     ) : (
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <span className="text-body text-neutral-600">
-                            {experiment.startedOn && experiment.endedOn
-                              ? `${experiment.startedOn.slice(0, 5)} - ${experiment.endedOn.slice(0, 5)}`
-                              : "\u2014"}
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          {experiment.startedOn} to {experiment.endedOn}
-                        </TooltipContent>
-                      </Tooltip>
+                      <span className="text-neutral-400">&mdash;</span>
                     )}
                   </div>
                 </td>
