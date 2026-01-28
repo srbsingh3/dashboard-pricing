@@ -203,7 +203,7 @@ export function ExperimentsTable() {
   const [regionFilter, setRegionFilter] = useState<string>("all");
   const [objectiveFilter, setObjectiveFilter] = useState<string>("all");
   const [significanceFilter, setSignificanceFilter] = useState<string>("all");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
 
   // Get unique regions
   const regions = useMemo(() => {
