@@ -25,13 +25,9 @@ function getInitialTheme(): Theme {
   // Server-side: return light as default
   if (typeof window === "undefined") return "light";
 
-  // Client-side: check localStorage first, then system preference
+  // Client-side: check localStorage first, default to light
   const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
   if (stored) return stored;
-
-  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    return "dark";
-  }
 
   return "light";
 }
