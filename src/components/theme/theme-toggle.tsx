@@ -1,6 +1,8 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Construction } from "lucide-react";
+import * as SubframeCore from "@subframe/core";
+import { Toast } from "@/subframe/components/Toast";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme/theme-provider";
 import { cn } from "@/lib/utils";
@@ -11,12 +13,27 @@ interface ThemeToggleProps {
 
 export function ThemeToggle({ className }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
+  const handleToggle = () => {
+    const goingDark = theme === "light";
+    toggleTheme();
+
+    if (goingDark) {
+      SubframeCore.toast.custom(() => (
+        <Toast
+          variant="neutral"
+          icon={<Construction className="size-4" />}
+          title="You found dark mode!"
+          description="Fair warning — light mode got all the love. Things may look a little rough in here."
+        />
+      ));
+    }
+  };
 
   return (
     <Button
       variant="ghost"
       size="sm"
-      onClick={toggleTheme}
+      onClick={handleToggle}
       className={cn(
         "group/theme w-full justify-between text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200",
         "transition-transform duration-100 active:scale-[0.98]",
