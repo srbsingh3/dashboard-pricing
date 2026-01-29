@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Palette,
@@ -257,6 +257,30 @@ export default function StorybookPage() {
   const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
   const [chipMultiSelectValue, setChipMultiSelectValue] = useState<string[]>([]);
   const [checkboxChecked, setCheckboxChecked] = useState(true);
+
+  // Sliding hover indicator for storybook sidebar
+  const navRef = useRef<HTMLElement>(null);
+  const isHovering = useRef(false);
+  const [hoverStyle, setHoverStyle] = useState<{ top: number; height: number; instant: boolean } | null>(null);
+
+  const handleNavMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const navRect = nav.getBoundingClientRect();
+    const btnRect = e.currentTarget.getBoundingClientRect();
+    const firstEntry = !isHovering.current;
+    isHovering.current = true;
+    setHoverStyle({
+      top: btnRect.top - navRect.top,
+      height: btnRect.height,
+      instant: firstEntry,
+    });
+  }, []);
+
+  const handleNavMouseLeave = useCallback(() => {
+    isHovering.current = false;
+    setHoverStyle(null);
+  }, []);
 
   const renderContent = () => {
     switch (activeSection) {
@@ -1782,7 +1806,18 @@ export default function StorybookPage() {
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar - Desktop */}
         <aside className="hidden scrollbar-auto-hide w-64 overflow-y-auto border-r border-neutral-border bg-default-background lg:block">
-          <nav className="p-4">
+          <nav ref={navRef} className="relative p-4" onMouseLeave={handleNavMouseLeave}>
+            {/* Sliding hover indicator */}
+            <motion.div
+              className="pointer-events-none absolute right-4 left-4 rounded-md bg-neutral-100"
+              initial={false}
+              animate={{
+                top: hoverStyle?.top ?? 0,
+                height: hoverStyle?.height ?? 0,
+                opacity: hoverStyle ? 1 : 0,
+              }}
+              transition={hoverStyle && !hoverStyle.instant ? { type: "spring", stiffness: 700, damping: 38, mass: 0.4 } : { duration: 0 }}
+            />
             {SECTION_GROUPS.map((group) => (
               <div key={group.label} className="mb-5">
                 <p className="mb-1 px-3 text-caption-bold text-neutral-400">{group.label}</p>
@@ -1793,11 +1828,12 @@ export default function StorybookPage() {
                       <button
                         key={item.id}
                         onClick={() => setActiveSection(item.id)}
+                        onMouseEnter={handleNavMouseEnter}
                         className={cn(
-                          "flex w-full items-center gap-3 rounded-md px-3 py-2 text-body transition-colors",
+                          "relative flex w-full items-center gap-3 rounded-md px-3 py-2 text-body transition-colors",
                           activeSection === item.id
                             ? "bg-brand-50 text-brand-700"
-                            : "text-neutral-700 hover:bg-neutral-100"
+                            : "text-neutral-700"
                         )}
                       >
                         <Icon className="size-4" />
