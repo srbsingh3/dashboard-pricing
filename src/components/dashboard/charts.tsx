@@ -386,7 +386,7 @@ export function VerticalBreakdownChart() {
               animationEasing={CHART_ANIMATION.pie.easing}
             >
               {verticalBreakdownData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
+                <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
               ))}
             </Pie>
             <Tooltip content={<PieChartTooltip />} isAnimationActive={false} />
