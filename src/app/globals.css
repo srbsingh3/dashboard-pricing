@@ -239,11 +239,12 @@
   --color-neutral-900: rgb(250, 250, 250);
   --color-neutral-950: rgb(255, 255, 255);
 
-  /* Brand colors - slightly adjusted for dark mode contrast */
+  /* Brand colors - adjusted for dark mode contrast */
   --color-brand-50: rgba(79, 70, 229, 0.15);
   --color-brand-100: rgba(79, 70, 229, 0.25);
   --color-brand-200: rgb(165, 180, 252);
   --color-brand-700: rgb(165, 180, 252);
+  --color-brand-800: rgb(199, 210, 254);
   --color-brand-primary: var(--color-brand-400);
 
   /* Success colors for dark mode */
@@ -251,18 +252,21 @@
   --color-success-100: rgba(34, 197, 94, 0.25);
   --color-success-600: rgb(74, 222, 128);
   --color-success-700: rgb(134, 239, 172);
+  --color-success-800: rgb(187, 247, 208);
 
   /* Error colors for dark mode */
   --color-error-50: rgba(239, 68, 68, 0.15);
   --color-error-100: rgba(239, 68, 68, 0.25);
   --color-error-600: rgb(248, 113, 113);
   --color-error-700: rgb(252, 165, 165);
+  --color-error-800: rgb(254, 202, 202);
 
   /* Warning colors for dark mode */
   --color-warning-50: rgba(245, 158, 11, 0.15);
   --color-warning-100: rgba(245, 158, 11, 0.25);
   --color-warning-600: rgb(251, 191, 36);
   --color-warning-700: rgb(252, 211, 77);
+  --color-warning-800: rgb(253, 230, 138);
 
   /* Cyan colors for dark mode */
   --color-cyan-50: rgba(6, 182, 212, 0.15);

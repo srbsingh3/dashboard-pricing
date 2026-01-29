@@ -78,7 +78,7 @@ const STATUS_CONFIG: Record<
 function StatusBadge({ status }: { status: ExperimentStatus }) {
   const config = STATUS_CONFIG[status];
   return (
-    <Badge variant={config.variant} icon={config.icon}>
+    <Badge variant={config.variant} icon={config.icon} className="dark:border-transparent">
       {config.label}
     </Badge>
   );
