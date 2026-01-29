@@ -80,7 +80,7 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="group w-full justify-between text-neutral-600 hover:bg-neutral-50 hover:text-neutral-600 active:bg-neutral-100"
+                className="group w-full justify-between text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200"
               >
                 <span className="flex items-center gap-2">
                   <FeatherGlobe className="size-4" />
@@ -104,7 +104,7 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="group w-full justify-between text-neutral-600 hover:bg-neutral-50 hover:text-neutral-600 active:bg-neutral-100"
+                className="group w-full justify-between text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200"
               >
                 <span className="flex items-center gap-2">
                   <Image
@@ -167,7 +167,7 @@ export function Sidebar() {
           <ThemeToggle />
 
           {/* Settings */}
-          <SidebarWithSections.NavItem icon={<FeatherSettings />}>
+          <SidebarWithSections.NavItem icon={<FeatherSettings />} className="hover:bg-neutral-100 active:bg-neutral-200">
             Settings
           </SidebarWithSections.NavItem>
 
@@ -177,7 +177,7 @@ export function Sidebar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="group w-full justify-between text-neutral-600 hover:bg-neutral-50 hover:text-neutral-600 active:bg-neutral-100"
+                className="group w-full justify-between text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200"
               >
                 <span className="flex items-center gap-2">
                   <Image
@@ -225,7 +225,7 @@ export function Sidebar() {
                   <div className="w-full">
                     <SidebarWithSections.NavItem
                       icon={NAV_ICONS[item.id]}
-                      className="cursor-not-allowed opacity-40"
+                      className="cursor-not-allowed opacity-40 hover:bg-neutral-100 active:bg-neutral-200"
                     >
                       {item.label}
                     </SidebarWithSections.NavItem>
@@ -243,6 +243,7 @@ export function Sidebar() {
               <SidebarWithSections.NavItem
                 icon={NAV_ICONS[item.id]}
                 selected={isActive}
+                className="hover:bg-neutral-100 active:bg-neutral-200"
               >
                 {item.label}
               </SidebarWithSections.NavItem>
@@ -258,6 +259,7 @@ export function Sidebar() {
           <SidebarWithSections.NavItem
             icon={<Gift className="size-4" />}
             selected={pathname === "/storybook"}
+            className="hover:bg-neutral-100 active:bg-neutral-200"
           >
             Storybook
           </SidebarWithSections.NavItem>
