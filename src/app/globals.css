@@ -299,7 +299,7 @@
   --color-popover: rgb(30, 30, 30);
   --color-popover-foreground: var(--color-default-font);
   --color-primary: var(--color-brand-400);
-  --color-primary-foreground: rgb(23, 23, 23);
+  --color-primary-foreground: rgb(255, 255, 255);
   --color-secondary: rgb(64, 64, 64);
   --color-secondary-foreground: rgb(250, 250, 250);
   --color-muted: rgb(38, 38, 38);
@@ -307,7 +307,7 @@
   --color-accent: rgba(99, 102, 241, 0.2);
   --color-accent-foreground: rgb(199, 210, 254);
   --color-destructive: var(--color-error-500);
-  --color-destructive-foreground: var(--color-white);
+  --color-destructive-foreground: rgb(255, 255, 255);
   --color-border: rgb(55, 55, 55);
   --color-input: rgb(55, 55, 55);
   --color-ring: var(--color-brand-400);
@@ -329,11 +329,26 @@
   --color-sidebar: rgb(23, 23, 23);
   --color-sidebar-foreground: var(--color-default-font);
   --color-sidebar-primary: var(--color-brand-400);
-  --color-sidebar-primary-foreground: rgb(23, 23, 23);
+  --color-sidebar-primary-foreground: rgb(255, 255, 255);
   --color-sidebar-accent: rgba(99, 102, 241, 0.2);
   --color-sidebar-accent-foreground: rgb(199, 210, 254);
   --color-sidebar-border: rgb(55, 55, 55);
   --color-sidebar-ring: var(--color-brand-400);
+}
+
+/* ============================================
+   DARK MODE BUTTON TEXT FIX
+   Restores --color-white to actual white on elements with colored
+   backgrounds. The global dark mode remaps --color-white to dark
+   for card/container backgrounds, but text-white on brand and
+   destructive buttons must remain legible.
+   ============================================ */
+
+.dark .bg-brand-600,
+.dark .bg-brand-500,
+.dark .bg-error-600,
+.dark .bg-error-500 {
+  --color-white: rgb(255, 255, 255);
 }
 
 /* ============================================
