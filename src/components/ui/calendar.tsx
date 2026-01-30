@@ -36,9 +36,9 @@ function Calendar({
           "text-subtext-color w-9 font-normal text-caption",
         week: "flex w-full mt-2",
         day: cn(
-          "relative p-0 text-center text-body focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md",
+          "relative p-0 text-center text-body focus-within:relative focus-within:z-20 [&:has([aria-selected].day-outside)]:bg-accent/50",
           props.mode === "range"
-            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md"
+            ? "[&:has(>.day-range-end)]:rounded-r-md [&:has(>.day-range-start)]:rounded-l-md [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md [&:has([aria-selected].day-range-end)]:rounded-r-md"
             : "[&:has([aria-selected])]:rounded-md"
         ),
         day_button: cn(
@@ -46,17 +46,17 @@ function Calendar({
           "size-9 p-0 font-normal hover:bg-brand-50 hover:text-brand-700 aria-selected:opacity-100"
         ),
         range_start:
-          "day-range-start aria-selected:bg-brand-600 aria-selected:text-white rounded-l-md",
+          "day-range-start aria-selected:bg-brand-600 aria-selected:text-white aria-selected:hover:bg-brand-600 aria-selected:hover:text-white rounded-l-md",
         range_end:
-          "day-range-end aria-selected:bg-brand-600 aria-selected:text-white rounded-r-md",
+          "day-range-end aria-selected:bg-brand-600 aria-selected:text-white aria-selected:hover:bg-brand-600 aria-selected:hover:text-white rounded-r-md",
         selected:
-          "bg-brand-600 text-white hover:bg-brand-600 hover:text-white focus:bg-brand-600 focus:text-white",
+          "bg-brand-600 text-white rounded-md hover:bg-brand-600 hover:text-white focus:bg-brand-600 focus:text-white",
         today: "bg-neutral-100 text-default-font",
         outside:
           "day-outside text-subtext-color opacity-50 aria-selected:bg-accent/50 aria-selected:text-subtext-color aria-selected:opacity-30",
         disabled: "text-subtext-color opacity-50",
         range_middle:
-          "aria-selected:bg-brand-50 aria-selected:text-brand-700",
+          "aria-selected:bg-brand-50 aria-selected:text-brand-700 aria-selected:hover:bg-brand-50 aria-selected:hover:text-brand-700",
         hidden: "invisible",
         ...classNames,
       }}
