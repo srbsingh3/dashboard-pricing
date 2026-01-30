@@ -272,6 +272,10 @@ export function ExperimentFormDialog({
   const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>([]);
   const [numberOfVariations, setNumberOfVariations] = useState("1");
   const [participantShare, setParticipantShare] = useState("");
+  const [formErrors, setFormErrors] = useState<{
+    experimentName?: boolean;
+    participantShare?: boolean;
+  }>({});
   const [allExpanded, setAllExpanded] = useState(true);
   const [importPopoverOpen, setImportPopoverOpen] = useState(false);
   const [priorityGroups, setPriorityGroups] = useState<{
@@ -673,6 +677,15 @@ export function ExperimentFormDialog({
     ));
   }, [selectedTargetGroups, numberOfVariations, priorityGroups]);
 
+  // Validate mandatory fields — returns true if valid
+  const validateForm = useCallback(() => {
+    const errors: typeof formErrors = {};
+    if (!experimentName.trim()) errors.experimentName = true;
+    if (!participantShare.trim()) errors.participantShare = true;
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  }, [experimentName, participantShare]);
+
   const handleClose = () => {
     onOpenChange(false);
     // Reset form state
@@ -689,6 +702,7 @@ export function ExperimentFormDialog({
       setAllExpanded(true);
       setImportPopoverOpen(false);
       setPriorityGroups([]);
+      setFormErrors({});
     }, 200);
   };
 
@@ -740,11 +754,21 @@ export function ExperimentFormDialog({
           <div data-tour="form-left-panel" className="hidden w-96 border-r border-neutral-200 bg-white p-6 lg:block">
             <div className="space-y-5">
               {/* Experiment Name */}
-              <TextField label="Experiment Name" className="w-full gap-2">
+              <TextField
+                label="Experiment Name"
+                className="w-full gap-2"
+                error={formErrors.experimentName}
+                helpText={formErrors.experimentName ? "Required" : undefined}
+              >
                 <TextField.Input
                   placeholder="Enter experiment name"
                   value={experimentName}
-                  onChange={(e) => setExperimentName(e.target.value)}
+                  onChange={(e) => {
+                    setExperimentName(e.target.value);
+                    if (formErrors.experimentName) {
+                      setFormErrors((prev) => ({ ...prev, experimentName: false }));
+                    }
+                  }}
                 />
               </TextField>
 
@@ -867,6 +891,8 @@ export function ExperimentFormDialog({
                 <TextField
                   label="Total Participant Share"
                   className="flex-1 gap-2"
+                  error={formErrors.participantShare}
+                  helpText={formErrors.participantShare ? "Required" : undefined}
                   iconRight={<span className="text-body text-neutral-400">%</span>}
                 >
                   <TextField.Input
@@ -877,6 +903,9 @@ export function ExperimentFormDialog({
                       const val = e.target.value;
                       if (val === "" || (Number(val) >= 1 && Number(val) <= 100)) {
                         setParticipantShare(val);
+                        if (formErrors.participantShare) {
+                          setFormErrors((prev) => ({ ...prev, participantShare: false }));
+                        }
                       }
                     }}
                   />
@@ -1706,6 +1735,7 @@ export function ExperimentFormDialog({
               <div className="flex h-8 items-center rounded-md bg-brand-600">
                 <button
                   type="button"
+                  onClick={() => validateForm()}
                   className="flex h-full cursor-pointer items-center justify-center rounded-l-md border-none bg-transparent px-3 hover:bg-brand-500 active:bg-brand-600"
                 >
                   <span className="text-body-bold whitespace-nowrap text-white">
@@ -1731,7 +1761,7 @@ export function ExperimentFormDialog({
                   asChild
                 >
                   <DropdownMenu>
-                    <DropdownMenu.DropdownItem icon={null}>
+                    <DropdownMenu.DropdownItem icon={null} onClick={() => validateForm()}>
                       Save and Activate Experiment
                     </DropdownMenu.DropdownItem>
                   </DropdownMenu>
