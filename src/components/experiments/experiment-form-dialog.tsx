@@ -61,6 +61,7 @@ import {
   MapPinned,
   Import,
   CheckCircle2,
+  AlertTriangle,
 } from "lucide-react";
 import * as SubframeCore from "@subframe/core";
 import { FeatherChevronDown, FeatherTrash2, FeatherCopy, FeatherGripVertical } from "@subframe/core";
@@ -683,7 +684,18 @@ export function ExperimentFormDialog({
     if (!experimentName.trim()) errors.experimentName = true;
     if (!participantShare.trim()) errors.participantShare = true;
     setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    const errorCount = Object.values(errors).filter(Boolean).length;
+    if (errorCount > 0) {
+      SubframeCore.toast.custom(() => (
+        <Toast
+          variant="error"
+          icon={<AlertTriangle className="size-4" />}
+          title={`${errorCount} required ${errorCount === 1 ? "field" : "fields"} missing`}
+          description="Please fill in all required fields to continue"
+        />
+      ));
+    }
+    return errorCount === 0;
   }, [experimentName, participantShare]);
 
   const handleClose = () => {
