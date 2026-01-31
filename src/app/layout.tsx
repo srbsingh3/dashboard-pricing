@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/sidebar";
-import { MainContent } from "@/components/layout/main-content";
+import { LayoutShell } from "@/components/layout/layout-shell";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@subframe/core";
 import { TourProvider } from "@/components/tour/tour-provider";
@@ -67,10 +66,7 @@ export default function RootLayout({
         <ThemeProvider>
           <TooltipProvider delayDuration={300}>
             <TourProvider>
-              <div className="flex h-screen bg-neutral-50">
-                <Sidebar />
-                <MainContent>{children}</MainContent>
-              </div>
+              <LayoutShell>{children}</LayoutShell>
               <TourOverlay />
             </TourProvider>
           </TooltipProvider>
