@@ -30,6 +30,14 @@ import {
   User,
   LogOut,
   Mail,
+  ToggleLeft,
+  PanelRight,
+  CalendarRange,
+  Search,
+  Sparkles,
+  Moon,
+  Sun,
+  RotateCcw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/subframe/components/Button";
@@ -88,28 +96,53 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetFooter,
+} from "@/components/ui/sheet";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { SearchSelect } from "@/components/ui/search-select";
+import { useTheme } from "@/components/theme/theme-provider";
+import {
+  FADE_IN,
+  SLIDE_UP,
+  SLIDE_IN_RIGHT,
+  SLIDE_DOWN,
+  STAGGER_CHILDREN,
+} from "@/lib/constants";
 
 type Section =
   | "colors"
   | "typography"
   | "shadows"
   | "radius"
+  | "animations"
   | "button"
   | "badge"
   | "input"
   | "checkbox"
+  | "switch"
   | "select"
+  | "searchselect"
   | "avatar"
   | "dialog"
   | "dropdown"
+  | "sheet"
+  | "popover"
+  | "tooltip"
+  | "table"
   | "tabs"
+  | "calendar"
+  | "daterange"
   | "progress"
   | "skeleton"
-  | "separator"
-  | "calendar"
-  | "popover"
-  | "table"
-  | "tooltip";
+  | "separator";
 
 const SECTION_GROUPS = [
   {
@@ -119,6 +152,7 @@ const SECTION_GROUPS = [
       { id: "typography" as Section, label: "Typography", icon: Type },
       { id: "shadows" as Section, label: "Shadows", icon: Layers },
       { id: "radius" as Section, label: "Radius", icon: Circle },
+      { id: "animations" as Section, label: "Animations", icon: Sparkles },
     ],
   },
   {
@@ -128,7 +162,9 @@ const SECTION_GROUPS = [
       { id: "badge" as Section, label: "Badge", icon: Check },
       { id: "input" as Section, label: "Input", icon: TextCursorInput },
       { id: "checkbox" as Section, label: "Checkbox", icon: CheckSquare },
+      { id: "switch" as Section, label: "Switch", icon: ToggleLeft },
       { id: "select" as Section, label: "Select", icon: Menu },
+      { id: "searchselect" as Section, label: "Search Select", icon: Search },
       { id: "avatar" as Section, label: "Avatar", icon: CircleUser },
     ],
   },
@@ -137,6 +173,7 @@ const SECTION_GROUPS = [
     items: [
       { id: "dialog" as Section, label: "Dialog", icon: PanelTop },
       { id: "dropdown" as Section, label: "Dropdown", icon: ChevronDown },
+      { id: "sheet" as Section, label: "Sheet", icon: PanelRight },
       { id: "popover" as Section, label: "Popover", icon: MousePointer },
       { id: "tooltip" as Section, label: "Tooltip", icon: MessageSquare },
     ],
@@ -147,6 +184,7 @@ const SECTION_GROUPS = [
       { id: "table" as Section, label: "Table", icon: TableIcon },
       { id: "tabs" as Section, label: "Tabs", icon: Columns2 },
       { id: "calendar" as Section, label: "Calendar", icon: CalendarIcon },
+      { id: "daterange" as Section, label: "Date Range", icon: CalendarRange },
       { id: "progress" as Section, label: "Progress", icon: Activity },
       { id: "skeleton" as Section, label: "Skeleton", icon: Loader },
       { id: "separator" as Section, label: "Separator", icon: Minus },
@@ -250,6 +288,15 @@ const radiusTokens = [
   { name: "radius-full", value: "9999px", cssClass: "rounded-full" },
 ];
 
+const SEARCH_SELECT_OPTIONS = [
+  { value: "conversion", label: "Conversion Rate", id: "M-001" },
+  { value: "revenue", label: "Revenue per Order", id: "M-002" },
+  { value: "orders", label: "Order Volume", id: "M-003" },
+  { value: "aov", label: "Average Order Value", id: "M-004" },
+  { value: "delivery", label: "Avg Delivery Fee", id: "M-005" },
+  { value: "basket", label: "Basket Size", id: "M-006" },
+];
+
 export default function StorybookPage() {
   const [activeSection, setActiveSection] = useState<Section>("colors");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -257,6 +304,13 @@ export default function StorybookPage() {
   const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
   const [chipMultiSelectValue, setChipMultiSelectValue] = useState<string[]>([]);
   const [checkboxChecked, setCheckboxChecked] = useState(true);
+  const [searchSelectValue, setSearchSelectValue] = useState<string | null>(null);
+  const [searchSelectGhost, setSearchSelectGhost] = useState<string | null>("conversion");
+  const [switchA, setSwitchA] = useState(true);
+  const [switchB, setSwitchB] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
+
+  const { theme, toggleTheme } = useTheme();
 
   // Sliding hover indicator for storybook sidebar
   const navRef = useRef<HTMLElement>(null);
@@ -1772,6 +1826,567 @@ export default function StorybookPage() {
           </div>
         );
 
+      case "switch":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Switch</h2>
+              <p className="text-body text-subtext-color">
+                Toggle controls for binary on/off settings, distinct from checkboxes in their immediate effect.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* States */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">States</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex flex-col gap-6">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="switch-on" className="text-body-bold text-default-font">
+                          Enabled
+                        </Label>
+                        <p className="text-caption text-subtext-color">This switch is toggled on.</p>
+                      </div>
+                      <Switch
+                        id="switch-on"
+                        checked={switchA}
+                        onCheckedChange={setSwitchA}
+                      />
+                    </div>
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="switch-off" className="text-body-bold text-default-font">
+                          Disabled state
+                        </Label>
+                        <p className="text-caption text-subtext-color">This switch is toggled off.</p>
+                      </div>
+                      <Switch
+                        id="switch-off"
+                        checked={switchB}
+                        onCheckedChange={setSwitchB}
+                      />
+                    </div>
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="switch-disabled-on" className="text-body text-neutral-400">
+                          Disabled (on)
+                        </Label>
+                        <p className="text-caption text-neutral-400">Cannot be changed.</p>
+                      </div>
+                      <Switch id="switch-disabled-on" checked disabled />
+                    </div>
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <Label htmlFor="switch-disabled-off" className="text-body text-neutral-400">
+                          Disabled (off)
+                        </Label>
+                        <p className="text-caption text-neutral-400">Cannot be changed.</p>
+                      </div>
+                      <Switch id="switch-disabled-off" disabled />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Settings Pattern */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Settings Pattern</h3>
+                <div className="overflow-hidden rounded-md border border-neutral-border bg-default-background shadow-sm">
+                  {[
+                    { id: "email-notif", label: "Email notifications", desc: "Receive email alerts when experiments complete", defaultChecked: true },
+                    { id: "auto-stop", label: "Auto-stop experiments", desc: "Automatically stop when significance is reached", defaultChecked: true },
+                    { id: "weekly-report", label: "Weekly digest", desc: "Get a summary report every Monday", defaultChecked: false },
+                  ].map((item, i) => (
+                    <div key={item.id} className={cn("flex items-center justify-between px-5 py-4", i > 0 && "border-t border-neutral-border")}>
+                      <div className="space-y-1">
+                        <Label htmlFor={item.id} className="text-body-bold text-default-font">{item.label}</Label>
+                        <p className="text-caption text-subtext-color">{item.desc}</p>
+                      </div>
+                      <Switch id={item.id} defaultChecked={item.defaultChecked} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "sheet":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Sheet</h2>
+              <p className="text-body text-subtext-color">
+                Side panel drawers for secondary content, filters, or detail views without leaving the current page.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Right Sheet */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Right (Default)</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="neutral-secondary">Open Right Sheet</Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="border-neutral-border bg-default-background">
+                      <SheetHeader>
+                        <SheetTitle className="text-heading-3 text-default-font">
+                          Experiment Details
+                        </SheetTitle>
+                        <SheetDescription className="text-body text-subtext-color">
+                          View and edit experiment configuration and parameters.
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="flex-1 space-y-4 px-4">
+                        <div className="space-y-2">
+                          <Label className="text-body-bold text-default-font">Name</Label>
+                          <Input placeholder="Experiment name" className="border-neutral-border" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-body-bold text-default-font">Description</Label>
+                          <Input placeholder="Brief description" className="border-neutral-border" />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-body-bold text-default-font">Status</Label>
+                          <div className="flex gap-2">
+                            <Badge variant="success">Running</Badge>
+                          </div>
+                        </div>
+                      </div>
+                      <SheetFooter>
+                        <Button variant="brand-primary" className="w-full">Save Changes</Button>
+                      </SheetFooter>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+              </div>
+
+              {/* Left Sheet */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Left</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="neutral-secondary">Open Left Sheet</Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="border-neutral-border bg-default-background">
+                      <SheetHeader>
+                        <SheetTitle className="text-heading-3 text-default-font">
+                          Filters
+                        </SheetTitle>
+                        <SheetDescription className="text-body text-subtext-color">
+                          Narrow down results using advanced filters.
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="flex-1 space-y-5 px-4">
+                        {["Region", "City", "Status", "Type"].map((filter) => (
+                          <div key={filter} className="space-y-2">
+                            <Label className="text-caption-bold text-subtext-color">{filter}</Label>
+                            <div className="h-8 rounded-md border border-neutral-border bg-neutral-50" />
+                          </div>
+                        ))}
+                      </div>
+                      <SheetFooter>
+                        <Button variant="neutral-secondary" className="flex-1">Reset</Button>
+                        <Button variant="brand-primary" className="flex-1">Apply</Button>
+                      </SheetFooter>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+              </div>
+
+              {/* Bottom Sheet */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Bottom</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <Sheet>
+                    <SheetTrigger asChild>
+                      <Button variant="neutral-secondary">Open Bottom Sheet</Button>
+                    </SheetTrigger>
+                    <SheetContent side="bottom" className="border-neutral-border bg-default-background">
+                      <SheetHeader>
+                        <SheetTitle className="text-heading-3 text-default-font">
+                          Quick Actions
+                        </SheetTitle>
+                        <SheetDescription className="text-body text-subtext-color">
+                          Common actions for the selected experiments.
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="flex gap-3 px-4 pb-4">
+                        <Button variant="brand-secondary" size="small">Duplicate</Button>
+                        <Button variant="neutral-secondary" size="small">Export</Button>
+                        <Button variant="destructive-secondary" size="small">Archive</Button>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "searchselect":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Search Select</h2>
+              <p className="text-body text-subtext-color">
+                A searchable single-select dropdown with optional ID display, built for data-dense contexts like tables.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Default Variant */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Default Variant</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="max-w-80 space-y-2">
+                    <Label className="text-body-bold text-default-font">Primary Metric</Label>
+                    <SearchSelect
+                      options={SEARCH_SELECT_OPTIONS}
+                      value={searchSelectValue}
+                      onValueChange={setSearchSelectValue}
+                      placeholder="Select a metric"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Ghost Variant */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Ghost Variant</h3>
+                <p className="text-caption text-subtext-color">
+                  Borderless style designed for inline use within table cells. Chevron appears on hover.
+                </p>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="overflow-hidden rounded-md border border-neutral-border">
+                    <div className="border-b border-neutral-border bg-neutral-50 px-4 py-2.5">
+                      <div className="grid grid-cols-3 gap-4">
+                        <span className="text-caption-bold text-subtext-color">Experiment</span>
+                        <span className="text-caption-bold text-subtext-color">Metric</span>
+                        <span className="text-caption-bold text-subtext-color">Status</span>
+                      </div>
+                    </div>
+                    <div className="group/row px-4 py-2.5 hover:bg-neutral-50">
+                      <div className="grid grid-cols-3 items-center gap-4">
+                        <span className="text-body text-default-font">Fee Optimization</span>
+                        <SearchSelect
+                          options={SEARCH_SELECT_OPTIONS}
+                          value={searchSelectGhost}
+                          onValueChange={setSearchSelectGhost}
+                          variant="ghost"
+                        />
+                        <Badge variant="success">Running</Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Disabled */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Disabled</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <SearchSelect
+                    options={SEARCH_SELECT_OPTIONS}
+                    value="conversion"
+                    onValueChange={() => {}}
+                    disabled
+                    className="max-w-80"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "daterange":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Date Range Picker</h2>
+              <p className="text-body text-subtext-color">
+                A dual-calendar date range selector with quick-access presets for common time windows.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Default */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Default (Last 30 Days)</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <DateRangePicker />
+                </div>
+              </div>
+
+              {/* Different Presets */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Preset Options</h3>
+                <p className="text-caption text-subtext-color">
+                  Initialized with different default presets. Click to see the preset sidebar with quick-select options.
+                </p>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex flex-wrap gap-3">
+                    <DateRangePicker defaultPreset="7d" />
+                    <DateRangePicker defaultPreset="90d" />
+                    <DateRangePicker defaultPreset="today" />
+                  </div>
+                </div>
+              </div>
+
+              {/* In Context */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">In Context</h3>
+                <p className="text-caption text-subtext-color">
+                  Typical placement in a filter bar alongside other controls.
+                </p>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="flex items-center justify-between rounded-md border border-neutral-border bg-neutral-50/50 px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-body-bold text-default-font">Dashboard</span>
+                      <span className="text-caption text-subtext-color">/</span>
+                      <span className="text-body text-subtext-color">Overview</span>
+                    </div>
+                    <DateRangePicker defaultPreset="30d" align="end" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "animations":
+        return (
+          <div className="space-y-12">
+            <div>
+              <h2 className="mb-2 text-heading-2 text-default-font">Animations</h2>
+              <p className="text-body text-subtext-color">
+                Reusable motion patterns for consistent, purposeful animation throughout the interface.
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* Easing */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Easing</h3>
+                <div className="rounded-md border border-neutral-border bg-default-background p-8 shadow-sm">
+                  <div className="space-y-4">
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-body text-default-font">ease-out-expo</span>
+                      <span className="font-mono text-caption text-neutral-400">cubic-bezier(0.16, 1, 0.3, 1)</span>
+                    </div>
+                    <p className="text-caption text-subtext-color">
+                      The primary easing curve. Fast start, gentle deceleration. Used for transitions, dropdowns, and interactive feedback.
+                    </p>
+                    <div className="flex items-baseline justify-between pt-2">
+                      <span className="text-body text-default-font">easeOutQuart</span>
+                      <span className="font-mono text-caption text-neutral-400">cubic-bezier(0.25, 0.1, 0.25, 1)</span>
+                    </div>
+                    <p className="text-caption text-subtext-color">
+                      Used for slide-down dropdown menus and scaleY transitions.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Framer Motion Variants */}
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-body-bold text-default-font">Motion Variants</h3>
+                  <button
+                    onClick={() => setAnimKey((k) => k + 1)}
+                    className="flex items-center gap-1.5 rounded-md border border-neutral-border bg-default-background px-3 py-1.5 text-caption-bold text-subtext-color transition-colors hover:bg-neutral-100"
+                  >
+                    <RotateCcw className="size-3" />
+                    Replay All
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {/* FADE_IN */}
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-mono text-caption-bold text-default-font">FADE_IN</span>
+                      <span className="font-mono text-caption text-neutral-400">opacity</span>
+                    </div>
+                    <div className="flex h-20 items-center justify-center rounded-md bg-neutral-50">
+                      <motion.div
+                        key={`fade-${animKey}`}
+                        {...FADE_IN}
+                        transition={{ duration: 0.6 }}
+                        className="flex size-12 items-center justify-center rounded-md bg-brand-500 text-caption-bold text-white"
+                      >
+                        Aa
+                      </motion.div>
+                    </div>
+                    <p className="text-caption text-subtext-color">Opacity 0 → 1. Subtle entrance for UI elements.</p>
+                  </div>
+
+                  {/* SLIDE_UP */}
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-mono text-caption-bold text-default-font">SLIDE_UP</span>
+                      <span className="font-mono text-caption text-neutral-400">opacity + y</span>
+                    </div>
+                    <div className="flex h-20 items-center justify-center overflow-hidden rounded-md bg-neutral-50">
+                      <motion.div
+                        key={`slideup-${animKey}`}
+                        {...SLIDE_UP}
+                        transition={{ duration: 0.5 }}
+                        className="flex size-12 items-center justify-center rounded-md bg-brand-500 text-caption-bold text-white"
+                      >
+                        Aa
+                      </motion.div>
+                    </div>
+                    <p className="text-caption text-subtext-color">Slides up 20px while fading in. Default page entrance.</p>
+                  </div>
+
+                  {/* SLIDE_IN_RIGHT */}
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-mono text-caption-bold text-default-font">SLIDE_IN_RIGHT</span>
+                      <span className="font-mono text-caption text-neutral-400">opacity + x</span>
+                    </div>
+                    <div className="flex h-20 items-center justify-center overflow-hidden rounded-md bg-neutral-50">
+                      <motion.div
+                        key={`slideright-${animKey}`}
+                        {...SLIDE_IN_RIGHT}
+                        transition={{ duration: 0.5 }}
+                        className="flex size-12 items-center justify-center rounded-md bg-brand-500 text-caption-bold text-white"
+                      >
+                        Aa
+                      </motion.div>
+                    </div>
+                    <p className="text-caption text-subtext-color">Slides in from right 20px. For panel or detail transitions.</p>
+                  </div>
+
+                  {/* SLIDE_DOWN */}
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-mono text-caption-bold text-default-font">SLIDE_DOWN</span>
+                      <span className="font-mono text-caption text-neutral-400">opacity + y + scaleY</span>
+                    </div>
+                    <div className="flex h-20 items-center justify-center overflow-hidden rounded-md bg-neutral-50">
+                      <motion.div
+                        key={`slidedown-${animKey}`}
+                        initial={SLIDE_DOWN.initial}
+                        animate={{
+                          ...SLIDE_DOWN.animate,
+                          transition: { duration: 0.3, ease: [0.25, 0.1, 0.25, 1] },
+                        }}
+                        className="flex h-12 w-24 origin-top items-center justify-center rounded-md bg-brand-500 text-caption-bold text-white"
+                      >
+                        Menu
+                      </motion.div>
+                    </div>
+                    <p className="text-caption text-subtext-color">Slides down with scaleY. Used for dropdown menus.</p>
+                  </div>
+
+                  {/* STAGGER_CHILDREN */}
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm sm:col-span-2">
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-mono text-caption-bold text-default-font">STAGGER_CHILDREN</span>
+                      <span className="font-mono text-caption text-neutral-400">50ms delay per child</span>
+                    </div>
+                    <div className="flex h-20 items-center justify-center gap-2 overflow-hidden rounded-md bg-neutral-50">
+                      <motion.div
+                        key={`stagger-${animKey}`}
+                        variants={STAGGER_CHILDREN}
+                        initial="initial"
+                        animate="animate"
+                        className="flex gap-2"
+                      >
+                        {[1, 2, 3, 4, 5].map((i) => (
+                          <motion.div
+                            key={i}
+                            variants={SLIDE_UP}
+                            transition={{ duration: 0.4 }}
+                            className="flex size-10 items-center justify-center rounded-md bg-brand-500 text-caption-bold text-white"
+                          >
+                            {i}
+                          </motion.div>
+                        ))}
+                      </motion.div>
+                    </div>
+                    <p className="text-caption text-subtext-color">Parent variant that staggers child entrances at 50ms intervals. Combine with any child variant.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CSS Animations */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">CSS Animations</h3>
+                <p className="text-caption text-subtext-color">
+                  Utility classes for lightweight animations that don&apos;t need Framer Motion.
+                </p>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <span className="font-mono text-caption-bold text-default-font">.animate-fade-in</span>
+                    <div className="flex h-16 items-center justify-center rounded-md bg-neutral-50">
+                      <div key={`css-fade-${animKey}`} className="flex size-10 items-center justify-center rounded-md bg-brand-100" style={{ animation: "fade-in 0.6s ease-out" }}>
+                        <div className="size-4 rounded-sm bg-brand-500" />
+                      </div>
+                    </div>
+                    <p className="font-mono text-caption text-neutral-400">0.2s ease-out</p>
+                  </div>
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <span className="font-mono text-caption-bold text-default-font">.animate-slide-up</span>
+                    <div className="flex h-16 items-center justify-center overflow-hidden rounded-md bg-neutral-50">
+                      <div key={`css-slideup-${animKey}`} className="flex size-10 items-center justify-center rounded-md bg-brand-100" style={{ animation: "slide-up 0.6s ease-out" }}>
+                        <div className="size-4 rounded-sm bg-brand-500" />
+                      </div>
+                    </div>
+                    <p className="font-mono text-caption text-neutral-400">0.3s ease-out</p>
+                  </div>
+                  <div className="space-y-3 rounded-md border border-neutral-border bg-default-background p-5 shadow-sm">
+                    <span className="font-mono text-caption-bold text-default-font">.animate-slide-down</span>
+                    <div className="flex h-16 items-center justify-center overflow-hidden rounded-md bg-neutral-50">
+                      <div key={`css-slidedown-${animKey}`} className="flex size-10 items-center justify-center rounded-md bg-brand-100" style={{ animation: "slide-down 0.6s ease-out" }}>
+                        <div className="size-4 rounded-sm bg-brand-500" />
+                      </div>
+                    </div>
+                    <p className="font-mono text-caption text-neutral-400">0.3s ease-out</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Timing Reference */}
+              <div className="space-y-4">
+                <h3 className="text-body-bold text-default-font">Timing Reference</h3>
+                <div className="overflow-hidden rounded-md border border-neutral-border bg-default-background shadow-sm">
+                  <div className="border-b border-neutral-border bg-neutral-50 px-5 py-2.5">
+                    <div className="grid grid-cols-3 gap-4">
+                      <span className="text-caption-bold text-subtext-color">Context</span>
+                      <span className="text-caption-bold text-subtext-color">Duration</span>
+                      <span className="text-caption-bold text-subtext-color">Easing</span>
+                    </div>
+                  </div>
+                  {[
+                    { context: "Hover / focus feedback", duration: "100–150ms", easing: "ease-out" },
+                    { context: "Dropdown open", duration: "150ms", easing: "ease-out-expo" },
+                    { context: "Dropdown close", duration: "100ms", easing: "ease-in" },
+                    { context: "Page transitions", duration: "200ms", easing: "ease-out" },
+                    { context: "Slide-up entrance", duration: "300ms", easing: "ease-out" },
+                    { context: "Stagger delay", duration: "50ms", easing: "—" },
+                  ].map((row, i) => (
+                    <div key={row.context} className={cn("grid grid-cols-3 gap-4 px-5 py-3", i > 0 && "border-t border-neutral-border")}>
+                      <span className="text-body text-default-font">{row.context}</span>
+                      <span className="font-mono text-body text-subtext-color">{row.duration}</span>
+                      <span className="font-mono text-body text-subtext-color">{row.easing}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -1789,17 +2404,45 @@ export default function StorybookPage() {
             <h1 className="text-heading-3 text-default-font">Design System</h1>
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex size-10 items-center justify-center rounded-md hover:bg-neutral-100 lg:hidden"
-          >
+          <div className="flex items-center gap-2">
+            {/* Dark mode toggle */}
+            <button
+              onClick={toggleTheme}
+              className="flex size-9 items-center justify-center rounded-md border border-neutral-border bg-default-background transition-colors hover:bg-neutral-100"
+              aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
+            >
+              <span className="relative size-4">
+                <Sun
+                  className={cn(
+                    "absolute inset-0 size-4 text-neutral-600 transition-all duration-200 ease-out-expo",
+                    theme === "dark"
+                      ? "scale-100 rotate-0 opacity-100"
+                      : "scale-0 -rotate-90 opacity-0"
+                  )}
+                />
+                <Moon
+                  className={cn(
+                    "absolute inset-0 size-4 text-neutral-600 transition-all duration-200 ease-out-expo",
+                    theme === "light"
+                      ? "scale-100 rotate-0 opacity-100"
+                      : "scale-0 rotate-90 opacity-0"
+                  )}
+                />
+              </span>
+            </button>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="flex size-10 items-center justify-center rounded-md hover:bg-neutral-100 lg:hidden"
+            >
             {mobileMenuOpen ? (
               <X className="size-5 text-neutral-600" />
             ) : (
               <Menu className="size-5 text-neutral-600" />
             )}
           </button>
+          </div>
         </div>
       </header>
 
