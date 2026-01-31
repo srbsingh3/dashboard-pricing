@@ -2419,7 +2419,7 @@ export default function StorybookPage() {
   };
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-md border border-neutral-border-subtle bg-neutral-50 shadow-sm">
+    <div className="flex h-full flex-col overflow-hidden bg-neutral-50">
       {/* Header */}
       <header className="border-b border-neutral-border bg-default-background">
         <div className="flex h-16 items-center justify-between px-6">
@@ -2434,13 +2434,19 @@ export default function StorybookPage() {
             {/* Dark mode toggle */}
             <button
               onClick={toggleTheme}
-              className="flex size-9 items-center justify-center rounded-md border border-neutral-border bg-default-background transition-colors hover:bg-neutral-100"
+              className={cn(
+                "flex size-9 items-center justify-center rounded-md border border-neutral-border bg-default-background transition-colors hover:bg-neutral-100",
+                "transition-transform duration-100 active:scale-[0.96]",
+                "motion-reduce:transition-none motion-reduce:active:scale-100"
+              )}
               aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
             >
               <span className="relative size-4">
                 <Sun
                   className={cn(
-                    "absolute inset-0 size-4 text-neutral-600 transition-all duration-200 ease-out-expo",
+                    "absolute inset-0 size-4 text-neutral-600",
+                    "transition-all duration-200 ease-out-expo",
+                    "motion-reduce:transition-none",
                     theme === "dark"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-0 -rotate-90 opacity-0"
@@ -2448,7 +2454,9 @@ export default function StorybookPage() {
                 />
                 <Moon
                   className={cn(
-                    "absolute inset-0 size-4 text-neutral-600 transition-all duration-200 ease-out-expo",
+                    "absolute inset-0 size-4 text-neutral-600",
+                    "transition-all duration-200 ease-out-expo",
+                    "motion-reduce:transition-none",
                     theme === "light"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-0 rotate-90 opacity-0"
