@@ -268,6 +268,32 @@ const colorGroups = [
       { name: "error-900", value: "bg-error-900", hex: "#7F1D1D" },
     ],
   },
+  {
+    name: "Cyan",
+    shades: [
+      { name: "cyan-50", value: "bg-cyan-50", hex: "#ECFEFF" },
+      { name: "cyan-100", value: "bg-cyan-100", hex: "#CFFAFE" },
+      { name: "cyan-200", value: "bg-cyan-200", hex: "#A5F3FC" },
+      { name: "cyan-300", value: "bg-cyan-300", hex: "#67E8F9" },
+      { name: "cyan-400", value: "bg-cyan-400", hex: "#22D3EE" },
+      { name: "cyan-500", value: "bg-cyan-500", hex: "#06B6D4" },
+      { name: "cyan-600", value: "bg-cyan-600", hex: "#0891B2" },
+      { name: "cyan-700", value: "bg-cyan-700", hex: "#0E7490" },
+      { name: "cyan-800", value: "bg-cyan-800", hex: "#155E75" },
+      { name: "cyan-900", value: "bg-cyan-900", hex: "#164E63" },
+    ],
+  },
+  {
+    name: "Warm",
+    shades: [
+      { name: "warm-50", value: "bg-warm-50", hex: "#FDFCFB" },
+      { name: "warm-100", value: "bg-warm-100", hex: "#F8F6F3" },
+      { name: "warm-200", value: "bg-warm-200", hex: "#F0EDE8" },
+      { name: "warm-300", value: "bg-warm-300", hex: "#E0DBD4" },
+      { name: "warm-400", value: "bg-warm-400", hex: "#C0B8AE" },
+      { name: "warm-500", value: "bg-warm-500", hex: "#9C9286" },
+    ],
+  },
 ];
 
 const shadowTokens = [
