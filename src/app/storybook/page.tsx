@@ -2587,7 +2587,7 @@ export default function StorybookPage() {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="scrollbar-auto-hide flex-1 overflow-y-auto">
           <div className="mx-auto max-w-5xl p-6 lg:p-12">
             <AnimatePresence mode="wait">
               <motion.div
