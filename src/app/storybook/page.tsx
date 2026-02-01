@@ -2427,7 +2427,7 @@ export default function StorybookPage() {
             <div className="flex size-8 items-center justify-center rounded-md bg-brand-600">
               <Box className="size-4 text-white" />
             </div>
-            <h1 className="text-heading-3 text-default-font">Design System</h1>
+            <h1 className="text-heading-3 text-default-font">Srb&apos;s Design System</h1>
           </div>
 
           <div className="flex items-center gap-2">
