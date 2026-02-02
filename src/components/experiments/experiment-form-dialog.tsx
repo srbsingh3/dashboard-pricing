@@ -27,6 +27,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  SimpleTooltip,
 } from "@/components/ui/tooltip";
 import { ZONES, PARENT_VERTICALS, ASSIGNMENT_NAMES, VARIATION_OPTIONS, OBJECTIVE_OPTIONS, DELIVERY_FEE_COMPONENTS, MOV_COMPONENTS, EXPERIMENT_VARIABLE_COLUMNS, FLEET_DELAY_COMPONENTS, BASKET_VALUE_COMPONENTS, SERVICE_FEE_COMPONENTS, PRIORITY_FEE_COMPONENTS, CUSTOMER_CONDITION_TYPES, CUSTOMER_LOCATIONS } from "@/lib/constants";
 import { IconButton } from "@/subframe/components/IconButton";
@@ -947,27 +948,29 @@ export function ExperimentFormDialog({
                       )}
                     </div>
                     <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={toggleAllExpanded}
-                        className="relative flex size-8 items-center justify-center rounded-md transition-transform duration-150 ease-out hover:bg-neutral-100 active:scale-95"
-                        aria-label={allExpanded ? "Collapse all groups" : "Expand all groups"}
-                      >
-                        {/* Collapse icon - visible when expanded */}
-                        <ChevronsDownUp
-                          className={cn(
-                            "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
-                            allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                          )}
-                        />
-                        {/* Expand icon - visible when collapsed */}
-                        <ChevronsUpDown
-                          className={cn(
-                            "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
-                            !allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                          )}
-                        />
-                      </button>
+                      <SimpleTooltip label={allExpanded ? "Collapse All" : "Expand All"}>
+                        <button
+                          type="button"
+                          onClick={toggleAllExpanded}
+                          className="relative flex size-8 items-center justify-center rounded-md transition-transform duration-150 ease-out hover:bg-neutral-100 active:scale-95"
+                          aria-label={allExpanded ? "Collapse all groups" : "Expand all groups"}
+                        >
+                          {/* Collapse icon - visible when expanded */}
+                          <ChevronsDownUp
+                            className={cn(
+                              "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
+                              allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                            )}
+                          />
+                          {/* Expand icon - visible when collapsed */}
+                          <ChevronsUpDown
+                            className={cn(
+                              "absolute size-4 text-subtext-color transition-all duration-150 ease-out",
+                              !allExpanded ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                            )}
+                          />
+                        </button>
+                      </SimpleTooltip>
                       {/* Import Target Groups Popover */}
                       <Popover open={importPopoverOpen} onOpenChange={setImportPopoverOpen}>
                         <Tooltip open={importPopoverOpen ? false : undefined}>
@@ -1016,11 +1019,13 @@ export function ExperimentFormDialog({
                           </div>
                         </PopoverContent>
                       </Popover>
-                      <IconButton
-                        size="medium"
-                        icon={<Plus className="size-4 text-subtext-color" />}
-                        onClick={addPriorityGroup}
-                      />
+                      <SimpleTooltip label="Add Target Group">
+                        <IconButton
+                          size="medium"
+                          icon={<Plus className="size-4 text-subtext-color" />}
+                          onClick={addPriorityGroup}
+                        />
+                      </SimpleTooltip>
                     </div>
                   </div>
                 </div>
@@ -1184,14 +1189,16 @@ export function ExperimentFormDialog({
                             >
                               <FeatherTrash2 className="text-body text-subtext-color group-hover/delete:text-error-600" />
                             </button>
-                            <button
-                              type="button"
-                              onClick={() => duplicatePriorityGroup(group.id)}
-                              className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
-                              aria-label="Duplicate priority group"
-                            >
-                              <FeatherCopy className="text-body text-subtext-color" />
-                            </button>
+                            <SimpleTooltip label="Duplicate Target Group">
+                              <button
+                                type="button"
+                                onClick={() => duplicatePriorityGroup(group.id)}
+                                className="-my-1 flex size-8 items-center justify-center rounded-md opacity-0 transition-all group-hover/header:opacity-100 hover:bg-neutral-100"
+                                aria-label="Duplicate priority group"
+                              >
+                                <FeatherCopy className="text-body text-subtext-color" />
+                              </button>
+                            </SimpleTooltip>
                             <button
                               type="button"
                               onClick={() => toggleGroupExpanded(group.id)}
@@ -1232,12 +1239,14 @@ export function ExperimentFormDialog({
                           )}
                         </div>
                         <SubframeCore.DropdownMenu.Root>
-                          <SubframeCore.DropdownMenu.Trigger asChild>
-                            <IconButton
-                              size="medium"
-                              icon={<ListFilter className="size-4 text-subtext-color" />}
-                            />
-                          </SubframeCore.DropdownMenu.Trigger>
+                          <SimpleTooltip label="Add Target Vendor Filters">
+                            <SubframeCore.DropdownMenu.Trigger asChild>
+                              <IconButton
+                                size="medium"
+                                icon={<ListFilter className="size-4 text-subtext-color" />}
+                              />
+                            </SubframeCore.DropdownMenu.Trigger>
+                          </SimpleTooltip>
                           <SubframeCore.DropdownMenu.Portal>
                             <SubframeCore.DropdownMenu.Content
                               side="left"
@@ -1345,12 +1354,14 @@ export function ExperimentFormDialog({
                           </span>
                         </div>
                         <SubframeCore.DropdownMenu.Root>
-                          <SubframeCore.DropdownMenu.Trigger asChild>
-                            <IconButton
-                              size="medium"
-                              icon={<Plus className="size-4 text-subtext-color" />}
-                            />
-                          </SubframeCore.DropdownMenu.Trigger>
+                          <SimpleTooltip label="Add Condition">
+                            <SubframeCore.DropdownMenu.Trigger asChild>
+                              <IconButton
+                                size="medium"
+                                icon={<Plus className="size-4 text-subtext-color" />}
+                              />
+                            </SubframeCore.DropdownMenu.Trigger>
+                          </SimpleTooltip>
                           <SubframeCore.DropdownMenu.Portal>
                             <SubframeCore.DropdownMenu.Content
                               side="left"
@@ -1405,12 +1416,14 @@ export function ExperimentFormDialog({
                           </span>
                         </div>
                         <SubframeCore.DropdownMenu.Root>
-                          <SubframeCore.DropdownMenu.Trigger asChild>
-                            <IconButton
-                              size="medium"
-                              icon={<Plus className="size-4 text-subtext-color" />}
-                            />
-                          </SubframeCore.DropdownMenu.Trigger>
+                          <SimpleTooltip label="Add Component Type">
+                            <SubframeCore.DropdownMenu.Trigger asChild>
+                              <IconButton
+                                size="medium"
+                                icon={<Plus className="size-4 text-subtext-color" />}
+                              />
+                            </SubframeCore.DropdownMenu.Trigger>
+                          </SimpleTooltip>
                           <SubframeCore.DropdownMenu.Portal>
                             <SubframeCore.DropdownMenu.Content
                               side="left"

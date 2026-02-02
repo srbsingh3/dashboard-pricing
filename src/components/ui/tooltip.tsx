@@ -58,4 +58,25 @@ function TooltipContent({
   )
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider }
+function SimpleTooltip({
+  label,
+  side = "top",
+  sideOffset = 4,
+  children,
+}: {
+  label: React.ReactNode
+  side?: "top" | "bottom" | "left" | "right"
+  sideOffset?: number
+  children: React.ReactNode
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent side={side} sideOffset={sideOffset}>
+        {label}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, SimpleTooltip }
