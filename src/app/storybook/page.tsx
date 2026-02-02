@@ -2427,20 +2427,26 @@ export default function StorybookPage() {
             <div className="flex size-8 items-center justify-center rounded-md bg-brand-600">
               <Box className="size-4 text-white" />
             </div>
-            <h1 className="text-heading-3 text-default-font">Design System</h1>
+            <h1 className="text-heading-3 text-default-font">SRB&apos;s Design System</h1>
           </div>
 
           <div className="flex items-center gap-2">
             {/* Dark mode toggle */}
             <button
               onClick={toggleTheme}
-              className="flex size-9 items-center justify-center rounded-md border border-neutral-border bg-default-background transition-colors hover:bg-neutral-100"
+              className={cn(
+                "flex size-9 items-center justify-center rounded-md border border-neutral-border bg-default-background transition-colors hover:bg-neutral-100",
+                "transition-transform duration-100 active:scale-[0.96]",
+                "motion-reduce:transition-none motion-reduce:active:scale-100"
+              )}
               aria-label={theme === "light" ? "Switch to dark mode" : "Switch to light mode"}
             >
               <span className="relative size-4">
                 <Sun
                   className={cn(
-                    "absolute inset-0 size-4 text-neutral-600 transition-all duration-200 ease-out-expo",
+                    "absolute inset-0 size-4 text-neutral-600",
+                    "transition-all duration-200 ease-out-expo",
+                    "motion-reduce:transition-none",
                     theme === "dark"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-0 -rotate-90 opacity-0"
@@ -2448,7 +2454,9 @@ export default function StorybookPage() {
                 />
                 <Moon
                   className={cn(
-                    "absolute inset-0 size-4 text-neutral-600 transition-all duration-200 ease-out-expo",
+                    "absolute inset-0 size-4 text-neutral-600",
+                    "transition-all duration-200 ease-out-expo",
+                    "motion-reduce:transition-none",
                     theme === "light"
                       ? "scale-100 rotate-0 opacity-100"
                       : "scale-0 rotate-90 opacity-0"
@@ -2579,7 +2587,7 @@ export default function StorybookPage() {
         </AnimatePresence>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="scrollbar-auto-hide flex-1 overflow-y-auto">
           <div className="mx-auto max-w-5xl p-6 lg:p-12">
             <AnimatePresence mode="wait">
               <motion.div
