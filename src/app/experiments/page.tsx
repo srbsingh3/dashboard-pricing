@@ -20,9 +20,7 @@ export default function ExperimentsPage() {
         <div className="mx-auto max-w-[1600px] space-y-6 p-6">
           {/* Page Header */}
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-heading-2 text-default-font">Experiments</h1>
-            </div>
+            <h1 className="text-heading-2 text-default-font">Experiments</h1>
 
             <div data-tour="experiments-create">
               <Button

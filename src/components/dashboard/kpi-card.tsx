@@ -4,33 +4,36 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { KPIMetric } from "@/lib/types";
 
+// Map change type to trend icon
+const TREND_ICONS = {
+  positive: TrendingUp,
+  negative: TrendingDown,
+  neutral: Minus,
+} as const;
+
 interface KPICardProps {
   metric: KPIMetric;
   index?: number;
 }
 
-export function KPICard({ metric }: KPICardProps) {
-  const formatValue = (value: number, format: string) => {
-    switch (format) {
-      case "currency":
-        return value.toLocaleString("en-US", {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
-      case "percentage":
-        return value.toFixed(2);
-      case "number":
-        return value.toLocaleString("en-US");
-      default:
-        return value.toString();
-    }
-  };
+function formatValue(value: number, format: string): string {
+  switch (format) {
+    case "currency":
+      return value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    case "percentage":
+      return value.toFixed(2);
+    case "number":
+      return value.toLocaleString("en-US");
+    default:
+      return value.toString();
+  }
+}
 
-  const TrendIcon = metric.changeType === "positive"
-    ? TrendingUp
-    : metric.changeType === "negative"
-    ? TrendingDown
-    : Minus;
+export function KPICard({ metric }: KPICardProps) {
+  const TrendIcon = TREND_ICONS[metric.changeType];
 
   return (
     <div className="group relative rounded-lg border border-neutral-border bg-default-background p-5 transition-all duration-200 hover:border-neutral-300 hover:shadow-sm">

@@ -38,14 +38,16 @@ function formatKPIValue(value: number, format: string): string {
   }
 }
 
+// Map change type to trend icon
+const TREND_ICONS = {
+  positive: TrendingUp,
+  negative: TrendingDown,
+  neutral: Minus,
+} as const;
+
 // KPI Cell component matching Subframe Reporting Dashboard pattern
 function KPICell({ metric, isLast }: { metric: KPIMetric; isLast: boolean }) {
-  const TrendIcon =
-    metric.changeType === "positive"
-      ? TrendingUp
-      : metric.changeType === "negative"
-        ? TrendingDown
-        : Minus;
+  const TrendIcon = TREND_ICONS[metric.changeType];
 
   return (
     <>
@@ -79,7 +81,7 @@ function KPICell({ metric, isLast }: { metric: KPIMetric; isLast: boolean }) {
         >
           <TrendIcon className="size-3" />
           <span className="text-caption whitespace-nowrap">
-            {metric.changeType === "positive" ? "+" : metric.changeType === "negative" ? "" : ""}
+            {metric.changeType === "positive" && "+"}
             {metric.change.toFixed(2)}%
           </span>
         </div>
