@@ -151,7 +151,7 @@ export function ChipMultiSelect({
     );
   };
 
-  const removeValue = (optionValue: string, e: React.MouseEvent) => {
+  const removeValue = (optionValue: string, e: React.SyntheticEvent) => {
     e.stopPropagation();
     e.preventDefault();
     onValueChange(value.filter((v) => v !== optionValue));
