@@ -20,16 +20,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 const THEME_STORAGE_KEY = "dps-theme";
 
-// Lazy initializer for theme state - called only once during initial render
+// Default to light mode for new users, respect stored preference for returning users
 function getInitialTheme(): Theme {
-  // Server-side: return light as default
   if (typeof window === "undefined") return "light";
 
-  // Client-side: check localStorage first, default to light
   const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-  if (stored) return stored;
-
-  return "light";
+  return stored ?? "light";
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
