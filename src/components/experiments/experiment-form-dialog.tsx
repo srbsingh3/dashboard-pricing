@@ -1044,7 +1044,7 @@ export function ExperimentFormDialog({
                   className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border border-dashed border-neutral-300 bg-white px-8 py-16"
                 >
                   <Image
-                    src="/piggy-bank.png"
+                    src="/piggy-bank-transparent.png"
                     alt=""
                     width={200}
                     height={200}
