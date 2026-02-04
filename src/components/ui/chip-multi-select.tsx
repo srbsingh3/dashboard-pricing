@@ -209,17 +209,25 @@ export function ChipMultiSelect({
                 variant="brand"
                 className="shrink-0"
                 iconRight={
-                  <button
-                    type="button"
+                  <span
+                    role="button"
+                    tabIndex={0}
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
                       onValueChange([]);
                     }}
-                    className="ml-0.5 rounded-sm hover:bg-brand-200"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        onValueChange([]);
+                      }
+                    }}
+                    className="ml-0.5 cursor-pointer rounded-sm hover:bg-brand-200"
                   >
                     <X className="size-3" />
-                  </button>
+                  </span>
                 }
               >
                 {value.length} assignments selected
@@ -247,13 +255,19 @@ export function ChipMultiSelect({
                     variant="brand"
                     className="shrink-0"
                     iconRight={
-                      <button
-                        type="button"
+                      <span
+                        role="button"
+                        tabIndex={0}
                         onClick={(e) => removeValue(value[index], e)}
-                        className="ml-0.5 rounded-sm hover:bg-brand-200"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            removeValue(value[index], e);
+                          }
+                        }}
+                        className="ml-0.5 cursor-pointer rounded-sm hover:bg-brand-200"
                       >
                         <X className="size-3" />
-                      </button>
+                      </span>
                     }
                   >
                     {label}
