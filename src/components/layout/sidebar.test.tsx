@@ -24,18 +24,7 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 })
 
-// Mock Subframe components
-vi.mock('@/subframe/components/SidebarWithSections', () => ({
-  SidebarWithSections: ({ children, header, footer }: { children: React.ReactNode; header: React.ReactNode; footer: React.ReactNode }) => (
-    <div data-testid="sidebar">
-      <div data-testid="sidebar-header">{header}</div>
-      <div data-testid="sidebar-content">{children}</div>
-      <div data-testid="sidebar-footer">{footer}</div>
-    </div>
-  ),
-}))
-
-// Add NavItem to the mock
+// Mock Subframe components (with NavItem)
 vi.mock('@/subframe/components/SidebarWithSections', () => {
   const SidebarWithSections = ({ children, header, footer }: { children: React.ReactNode; header: React.ReactNode; footer: React.ReactNode }) => (
     <div data-testid="sidebar">
@@ -72,6 +61,9 @@ vi.mock('@subframe/core', () => ({
   FeatherMoreVertical: () => <span>MoreIcon</span>,
   FeatherGlobe: () => <span>GlobeIcon</span>,
   FeatherChevronDown: () => <span>ChevronIcon</span>,
+  createTwClassNames: () => (...args: string[]) => args.filter(Boolean).join(' '),
+  toast: { custom: vi.fn(), dismiss: vi.fn() },
+  Toaster: () => null,
 }))
 
 const renderSidebar = () =>
