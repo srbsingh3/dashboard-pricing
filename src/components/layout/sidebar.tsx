@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -157,46 +158,48 @@ export function Sidebar() {
           const showDivider = NAV_ITEMS[index - 1]?.id === "experiments";
 
           return (
-            <div key={item.id}>
-              {showDivider && <div className="my-2 h-px bg-neutral-200" />}
+            <Fragment key={item.id}>
+              <div>
+                {showDivider && <div className="my-2 h-px bg-neutral-200" />}
 
-              {item.disabled ? (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="w-full">
-                      <SidebarWithSections.NavItem
-                        icon={NAV_ICONS[item.id]}
-                        className="cursor-not-allowed hover:bg-neutral-100 active:bg-neutral-200"
-                        onClick={(e) => e.preventDefault()}
-                        aria-disabled
-                      >
-                        {item.label}
-                      </SidebarWithSections.NavItem>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent side="right" sideOffset={8}>
-                    {DISABLED_NAV_TOOLTIP}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <Link
-                  href={item.href}
-                  className="w-full"
-                  data-tour={item.id === "experiments" ? "nav-experiments" : undefined}
-                >
-                  <SidebarWithSections.NavItem
-                    icon={NAV_ICONS[item.id]}
-                    selected={isActive}
-                    className="hover:bg-neutral-100 active:bg-neutral-200"
+                {item.disabled ? (
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-full">
+                        <SidebarWithSections.NavItem
+                          icon={NAV_ICONS[item.id]}
+                          className="cursor-not-allowed hover:bg-neutral-100 active:bg-neutral-200"
+                          onClick={(e) => e.preventDefault()}
+                          aria-disabled
+                        >
+                          {item.label}
+                        </SidebarWithSections.NavItem>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right" sideOffset={8}>
+                      {DISABLED_NAV_TOOLTIP}
+                    </TooltipContent>
+                  </Tooltip>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="w-full"
+                    data-tour={item.id === "experiments" ? "nav-experiments" : undefined}
                   >
-                    {item.label}
-                  </SidebarWithSections.NavItem>
-                </Link>
-              )}
+                    <SidebarWithSections.NavItem
+                      icon={NAV_ICONS[item.id]}
+                      selected={isActive}
+                      className="hover:bg-neutral-100 active:bg-neutral-200"
+                    >
+                      {item.label}
+                    </SidebarWithSections.NavItem>
+                  </Link>
+                )}
+              </div>
 
-              {/* Storybook - right after Experiments */}
+              {/* Storybook - as sibling so gap-1 applies consistently */}
               {item.id === "experiments" && (
-                <Link href="/storybook" className="mt-1 w-full">
+                <Link key="storybook" href="/storybook" className="w-full">
                   <SidebarWithSections.NavItem
                     icon={<Gift className="size-4" />}
                     selected={pathname === "/storybook"}
@@ -206,7 +209,7 @@ export function Sidebar() {
                   </SidebarWithSections.NavItem>
                 </Link>
               )}
-            </div>
+            </Fragment>
           );
         })}
 
