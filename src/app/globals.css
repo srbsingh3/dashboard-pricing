@@ -841,3 +841,24 @@ button:focus-visible,
   }
 }
 
+/* ============================================
+   SIDEBAR FOOTER DIVIDER CONSISTENCY
+   Replace the border-t with a 1px div-style divider
+   matching the content section divider (h-px bg-neutral-200)
+   ============================================ */
+
+[data-sidebar-nav] > div:last-child {
+  border-top: none !important;
+  position: relative;
+}
+
+[data-sidebar-nav] > div:last-child::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background-color: var(--color-neutral-200);
+}
+

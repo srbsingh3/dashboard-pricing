@@ -52,6 +52,7 @@ export function Sidebar() {
 
   return (
     <SidebarWithSections
+      data-sidebar-nav
       className="sticky top-0 h-screen shrink-0 border-r-0! bg-neutral-50!"
       header={
         <Link href="/" className="mt-2.5 flex items-center gap-2 transition-opacity hover:opacity-80">
