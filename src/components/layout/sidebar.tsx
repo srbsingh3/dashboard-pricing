@@ -98,71 +98,6 @@ export function Sidebar() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Entity selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="group w-full justify-between text-neutral-600 hover:bg-neutral-100 hover:text-neutral-600 active:bg-neutral-200"
-              >
-                <span className="flex items-center gap-2">
-                  <Image
-                    src="/foodpanda.jpg"
-                    alt="Foodpanda"
-                    width={16}
-                    height={16}
-                    className="size-4 rounded-full object-cover"
-                  />
-                  <span className="font-medium">FP_DE</span>
-                </span>
-                <ChevronDown className="size-3 origin-center transition-transform duration-200 group-data-[state=open]:rotate-180" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48">
-              <DropdownMenuItem className="gap-2">
-                <Image
-                  src="/foodpanda.jpg"
-                  alt="Foodpanda"
-                  width={20}
-                  height={20}
-                  className="size-5 rounded-full object-cover"
-                />
-                FP_DE
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2">
-                <Image
-                  src="/foodpanda.jpg"
-                  alt="Foodpanda"
-                  width={20}
-                  height={20}
-                  className="size-5 rounded-full object-cover"
-                />
-                FP_SG
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2">
-                <Image
-                  src="/foodpanda.jpg"
-                  alt="Foodpanda"
-                  width={20}
-                  height={20}
-                  className="size-5 rounded-full object-cover"
-                />
-                FP_AR
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-2">
-                <Image
-                  src="/foodpanda.jpg"
-                  alt="Foodpanda"
-                  width={20}
-                  height={20}
-                  className="size-5 rounded-full object-cover"
-                />
-                FP_UK
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
           {/* Theme toggle */}
           <ThemeToggle />
 
@@ -213,57 +148,68 @@ export function Sidebar() {
     >
       {/* Main Navigation */}
       <div className="flex w-full flex-col gap-1">
-        {NAV_ITEMS.map((item) => {
+        {NAV_ITEMS.map((item, index) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/" && pathname.startsWith(item.href));
 
-          if (item.disabled) {
-            return (
-              <Tooltip key={item.id}>
-                <TooltipTrigger asChild>
-                  <div className="w-full">
-                    <SidebarWithSections.NavItem
-                      icon={NAV_ICONS[item.id]}
-                      className="cursor-not-allowed opacity-40 hover:bg-neutral-100 active:bg-neutral-200"
-                    >
-                      {item.label}
-                    </SidebarWithSections.NavItem>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={8}>
-                  {DISABLED_NAV_TOOLTIP}
-                </TooltipContent>
-              </Tooltip>
-            );
-          }
+          // Add divider immediately after Experiments
+          const showDivider = NAV_ITEMS[index - 1]?.id === "experiments";
 
           return (
-            <Link key={item.id} href={item.href} className="w-full" data-tour={item.id === "experiments" ? "nav-experiments" : undefined}>
-              <SidebarWithSections.NavItem
-                icon={NAV_ICONS[item.id]}
-                selected={isActive}
-                className="hover:bg-neutral-100 active:bg-neutral-200"
-              >
-                {item.label}
-              </SidebarWithSections.NavItem>
-            </Link>
+            <div key={item.id}>
+              {showDivider && <div className="my-2 h-px bg-neutral-200" />}
+
+              {item.disabled ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="w-full">
+                      <SidebarWithSections.NavItem
+                        icon={NAV_ICONS[item.id]}
+                        className="cursor-not-allowed hover:bg-neutral-100 active:bg-neutral-200"
+                        onClick={(e) => e.preventDefault()}
+                        aria-disabled
+                      >
+                        {item.label}
+                      </SidebarWithSections.NavItem>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={8}>
+                    {DISABLED_NAV_TOOLTIP}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <Link
+                  href={item.href}
+                  className="w-full"
+                  data-tour={item.id === "experiments" ? "nav-experiments" : undefined}
+                >
+                  <SidebarWithSections.NavItem
+                    icon={NAV_ICONS[item.id]}
+                    selected={isActive}
+                    className="hover:bg-neutral-100 active:bg-neutral-200"
+                  >
+                    {item.label}
+                  </SidebarWithSections.NavItem>
+                </Link>
+              )}
+
+              {/* Storybook - right after Experiments */}
+              {item.id === "experiments" && (
+                <Link href="/storybook" className="mt-1 w-full">
+                  <SidebarWithSections.NavItem
+                    icon={<Gift className="size-4" />}
+                    selected={pathname === "/storybook"}
+                    className="hover:bg-neutral-100 active:bg-neutral-200"
+                  >
+                    Storybook
+                  </SidebarWithSections.NavItem>
+                </Link>
+              )}
+            </div>
           );
         })}
 
-        {/* Separator */}
-        <div className="my-2 h-px bg-neutral-200" />
-
-        {/* Storybook */}
-        <Link href="/storybook" className="w-full">
-          <SidebarWithSections.NavItem
-            icon={<Gift className="size-4" />}
-            selected={pathname === "/storybook"}
-            className="hover:bg-neutral-100 active:bg-neutral-200"
-          >
-            Storybook
-          </SidebarWithSections.NavItem>
-        </Link>
       </div>
 
     </SidebarWithSections>
