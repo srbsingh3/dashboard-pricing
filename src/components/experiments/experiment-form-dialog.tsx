@@ -1472,16 +1472,16 @@ export function ExperimentFormDialog({
                           </colgroup>
                           <TableHeader>
                             <TableRow className="hover:bg-transparent">
-                              <TableHead className="h-10 rounded-l-md border-y border-l border-neutral-border bg-neutral-50 text-caption-bold text-neutral-500" />
-                              <TableHead className="h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500">
+                              <TableHead className="h-10 rounded-l-md border-y border-l border-r border-neutral-border border-r-neutral-200 bg-neutral-50 text-caption-bold text-neutral-500" />
+                              <TableHead className="h-10 border-y border-r border-neutral-border border-r-neutral-200 bg-neutral-50 px-3 text-caption-bold text-neutral-500">
                                 <div className="flex items-center gap-1.5">
                                   <Banknote className="size-3.5" />
                                   Delivery Fee
                                 </div>
                               </TableHead>
                               <TableHead className={cn(
-                                "h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                group.enabledColumns.length === 0 && "rounded-r-md border-r"
+                                "h-10 border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                group.enabledColumns.length === 0 ? "rounded-r-md" : "border-r-neutral-200"
                               )}>
                                 <div className="flex items-center gap-1.5">
                                   <ShoppingCart className="size-3.5" />
@@ -1490,8 +1490,8 @@ export function ExperimentFormDialog({
                               </TableHead>
                               {group.enabledColumns.includes("fleet_delay") && (
                                 <TableHead className={cn(
-                                  "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                  !group.enabledColumns.includes("basket_value") && !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
+                                  "group/header h-10 border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                  !group.enabledColumns.includes("basket_value") && !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") ? "rounded-r-md" : "border-r-neutral-200"
                                 )}>
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
@@ -1510,8 +1510,8 @@ export function ExperimentFormDialog({
                               )}
                               {group.enabledColumns.includes("basket_value") && (
                                 <TableHead className={cn(
-                                  "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                  !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
+                                  "group/header h-10 border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                  !group.enabledColumns.includes("service_fee") && !group.enabledColumns.includes("priority_fee") ? "rounded-r-md" : "border-r-neutral-200"
                                 )}>
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
@@ -1530,8 +1530,8 @@ export function ExperimentFormDialog({
                               )}
                               {group.enabledColumns.includes("service_fee") && (
                                 <TableHead className={cn(
-                                  "group/header h-10 border-y border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
-                                  !group.enabledColumns.includes("priority_fee") && "rounded-r-md border-r"
+                                  "group/header h-10 border-y border-r border-neutral-border bg-neutral-50 px-3 text-caption-bold text-neutral-500",
+                                  !group.enabledColumns.includes("priority_fee") ? "rounded-r-md" : "border-r-neutral-200"
                                 )}>
                                   <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-1.5">
@@ -1570,8 +1570,8 @@ export function ExperimentFormDialog({
                           <TableBody>
                             {/* Control Row */}
                             <TableRow className="group/row border-0 hover:bg-neutral-50 has-data-[state=open]:bg-neutral-50">
-                              <TableCell className="py-2 pl-3 text-body text-neutral-500">Control</TableCell>
-                              <TableCell className="px-3 py-2">
+                              <TableCell className="border-r border-neutral-200 py-2 pl-3 text-body text-neutral-500">Control</TableCell>
+                              <TableCell className="border-r border-neutral-200 px-3 py-2">
                                 <ComponentDetailCell
                                   options={DELIVERY_FEE_COMPONENTS}
                                   value={group.controlDeliveryFee}
@@ -1580,7 +1580,7 @@ export function ExperimentFormDialog({
                                   showDetailsIcon={Boolean(group.controlDeliveryFee)}
                                 />
                               </TableCell>
-                              <TableCell className="px-3 py-2">
+                              <TableCell className="border-r border-neutral-200 px-3 py-2">
                                 <ComponentDetailCell
                                   options={MOV_COMPONENTS}
                                   value={group.controlMov}
@@ -1590,7 +1590,7 @@ export function ExperimentFormDialog({
                                 />
                               </TableCell>
                               {group.enabledColumns.includes("fleet_delay") && (
-                                <TableCell className="px-3 py-2">
+                                <TableCell className="border-r border-neutral-200 px-3 py-2">
                                   <ComponentDetailCell
                                     options={FLEET_DELAY_COMPONENTS}
                                     value={group.controlFleetDelay}
@@ -1601,7 +1601,7 @@ export function ExperimentFormDialog({
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("basket_value") && (
-                                <TableCell className="px-3 py-2">
+                                <TableCell className="border-r border-neutral-200 px-3 py-2">
                                   <ComponentDetailCell
                                     options={BASKET_VALUE_COMPONENTS}
                                     value={group.controlBasketValue}
@@ -1612,7 +1612,7 @@ export function ExperimentFormDialog({
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("service_fee") && (
-                                <TableCell className="px-3 py-2">
+                                <TableCell className="border-r border-neutral-200 px-3 py-2">
                                   <ComponentDetailCell
                                     options={SERVICE_FEE_COMPONENTS}
                                     value={group.controlServiceFee}
@@ -1623,7 +1623,7 @@ export function ExperimentFormDialog({
                                 </TableCell>
                               )}
                               {group.enabledColumns.includes("priority_fee") && (
-                                <TableCell className="px-3 py-2">
+                                <TableCell className="border-r border-neutral-200 px-3 py-2">
                                   <ComponentDetailCell
                                     options={PRIORITY_FEE_COMPONENTS}
                                     value={group.controlPriorityFee}
@@ -1637,8 +1637,8 @@ export function ExperimentFormDialog({
                             {/* Variation Rows */}
                             {Array.from({ length: parseInt(numberOfVariations, 10) }, (_, i) => (
                               <TableRow key={i} className="group/row border-0 hover:bg-neutral-50 has-data-[state=open]:bg-neutral-50">
-                                <TableCell className="py-2 pl-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
-                                <TableCell className="px-3 py-2">
+                                <TableCell className="border-r border-neutral-200 py-2 pl-3 text-body text-neutral-500">Variation {i + 1}</TableCell>
+                                <TableCell className="border-r border-neutral-200 px-3 py-2">
                                   <ComponentDetailCell
                                     options={[
                                       { value: "same_as_control", label: "Same as control" },
@@ -1650,7 +1650,7 @@ export function ExperimentFormDialog({
                                     showDetailsIcon={Boolean(group.variations[i]?.deliveryFee) && group.variations[i]?.deliveryFee !== "same_as_control"}
                                   />
                                 </TableCell>
-                                <TableCell className="px-3 py-2">
+                                <TableCell className="border-r border-neutral-200 px-3 py-2">
                                   <ComponentDetailCell
                                     options={[
                                       { value: "same_as_control", label: "Same as control" },
@@ -1663,7 +1663,7 @@ export function ExperimentFormDialog({
                                   />
                                 </TableCell>
                                 {group.enabledColumns.includes("fleet_delay") && (
-                                  <TableCell className="px-3 py-2">
+                                  <TableCell className="border-r border-neutral-200 px-3 py-2">
                                     <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
@@ -1677,7 +1677,7 @@ export function ExperimentFormDialog({
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("basket_value") && (
-                                  <TableCell className="px-3 py-2">
+                                  <TableCell className="border-r border-neutral-200 px-3 py-2">
                                     <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
@@ -1691,7 +1691,7 @@ export function ExperimentFormDialog({
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("service_fee") && (
-                                  <TableCell className="px-3 py-2">
+                                  <TableCell className="border-r border-neutral-200 px-3 py-2">
                                     <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
@@ -1705,7 +1705,7 @@ export function ExperimentFormDialog({
                                   </TableCell>
                                 )}
                                 {group.enabledColumns.includes("priority_fee") && (
-                                  <TableCell className="px-3 py-2">
+                                  <TableCell className="border-r border-neutral-200 px-3 py-2">
                                     <ComponentDetailCell
                                       options={[
                                         { value: "same_as_control", label: "Same as control" },
