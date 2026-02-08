@@ -144,9 +144,13 @@ export function SearchSelect({
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-(--radix-popover-trigger-width) overflow-hidden rounded-md border border-solid border-neutral-border bg-white p-0 shadow-lg"
+        className={cn(
+          "overflow-hidden rounded-md border border-solid border-neutral-border bg-white p-0 shadow-lg",
+          variant === "ghost" ? "w-[calc(var(--radix-popover-trigger-width)+8px)]" : "w-(--radix-popover-trigger-width)"
+        )}
         align="start"
-        sideOffset={4}
+        alignOffset={variant === "ghost" ? -4 : 0}
+        sideOffset={variant === "ghost" ? 12 : 4}
       >
         {/* Search input */}
         {showSearch && (
