@@ -91,7 +91,7 @@ export function SearchSelect({
               "data-[state=open]:border-brand-primary",
             ],
             variant === "ghost" && [
-              "bg-transparent",
+              "bg-transparent px-3",
             ],
             disabled && "cursor-not-allowed opacity-50",
             className
@@ -135,7 +135,7 @@ export function SearchSelect({
           <FeatherChevronDown
             className={cn(
               "shrink-0 text-body text-subtext-color transition duration-200",
-              variant === "ghost" && "mr-2 opacity-0 group-hover:opacity-100 group-hover/row:opacity-100 group-has-data-[state=open]/row:opacity-100 group-data-[state=open]:opacity-100",
+              variant === "ghost" && "opacity-0 group-hover:opacity-100 group-hover/row:opacity-100 group-has-data-[state=open]/row:opacity-100 group-data-[state=open]:opacity-100",
               open && "rotate-180",
               open && variant === "ghost" && "opacity-100"
             )}
@@ -152,7 +152,7 @@ export function SearchSelect({
         {showSearch && (
           <div className="p-2">
             <div className="flex h-8 items-center gap-2 rounded-md border border-neutral-border bg-default-background px-2">
-              <Search className="size-4 text-neutral-400" />
+              <Search className="size-4 shrink-0 text-neutral-400" />
               <input
                 type="text"
                 placeholder="Search..."

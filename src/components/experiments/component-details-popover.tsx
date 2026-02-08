@@ -92,7 +92,7 @@ export function ComponentDetailCell({
       <PopoverAnchor asChild>
         <div
           data-state={detailsOpen ? "open" : "closed"}
-          className="-mx-3 -my-2 px-3 py-2 outline-1 outline-transparent has-data-[state=open]:z-10 has-data-[state=open]:outline-brand-primary data-[state=open]:z-10 data-[state=open]:outline-brand-primary"
+          className="-mx-3 -my-2 py-2 outline-1 outline-transparent has-data-[state=open]:relative has-data-[state=open]:z-10 has-data-[state=open]:outline-brand-primary data-[state=open]:relative data-[state=open]:z-10 data-[state=open]:outline-brand-primary"
         >
           <SearchSelect
             options={options}
