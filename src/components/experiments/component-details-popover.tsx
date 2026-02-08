@@ -90,7 +90,10 @@ export function ComponentDetailCell({
   return (
     <Popover open={detailsOpen} onOpenChange={setDetailsOpen}>
       <PopoverAnchor asChild>
-        <div data-state={detailsOpen ? "open" : "closed"}>
+        <div
+          data-state={detailsOpen ? "open" : "closed"}
+          className="-mx-3 -my-2 px-3 py-2 outline-1 outline-transparent has-data-[state=open]:z-10 has-data-[state=open]:outline-brand-primary data-[state=open]:z-10 data-[state=open]:outline-brand-primary"
+        >
           <SearchSelect
             options={options}
             value={value}
