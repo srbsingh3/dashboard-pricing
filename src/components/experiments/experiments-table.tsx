@@ -608,11 +608,6 @@ export function ExperimentsTable() {
                     <span className="text-body-bold whitespace-nowrap text-neutral-700">
                       {experiment.name}
                     </span>
-                    <div className="mt-0.5 flex items-center gap-2">
-                      <span className="text-caption text-neutral-500">
-                        {experiment.variations} variations &bull; {experiment.targetGroups} groups
-                      </span>
-                    </div>
                   </div>
                 </td>
                 <td>
