@@ -217,24 +217,24 @@
    ============================================ */
 
 .dark {
-  /* Core semantic colors — Linear-inspired cool-shifted surfaces.
-     All surfaces carry a subtle blue undertone (5-8pt) to
-     complement the indigo brand and avoid flat neutral grays. */
-  --color-default-background: rgb(25, 26, 31);
+  /* Core semantic colors — Linear dark mode surfaces.
+     Sidebar: #0A0A0A, Content card: #0F1112.
+     Surfaces carry a subtle cool shift to complement indigo brand. */
+  --color-default-background: rgb(15, 17, 18);
   --color-default-font: rgb(227, 227, 232);
   --color-subtext-color: rgb(143, 143, 155);
-  --color-neutral-border: rgb(48, 49, 56);
-  --color-neutral-border-subtle: rgb(40, 41, 48);
-  --color-white: rgb(32, 33, 39);
+  --color-neutral-border: rgb(32, 34, 38);
+  --color-neutral-border-subtle: rgb(25, 27, 30);
+  --color-white: rgb(15, 17, 18);
 
   /* Neutral palette overrides for dark mode
-     Surfaces: cool-shifted darks with subtle blue tint.
+     Surfaces: anchored to #0A0A0A (sidebar) and #0F1112 (content).
      Text: soft ceiling (~245) with even ~20pt steps. */
-  --color-neutral-0: rgb(22, 22, 28);
-  --color-neutral-50: rgb(25, 26, 31);
-  --color-neutral-100: rgb(35, 36, 42);
-  --color-neutral-200: rgb(48, 49, 56);
-  --color-neutral-300: rgb(60, 61, 68);
+  --color-neutral-0: rgb(8, 8, 8);
+  --color-neutral-50: rgb(10, 10, 10);
+  --color-neutral-100: rgb(20, 22, 24);
+  --color-neutral-200: rgb(32, 34, 38);
+  --color-neutral-300: rgb(44, 46, 50);
   --color-neutral-400: rgb(107, 107, 117);
   --color-neutral-500: rgb(143, 143, 155);
   --color-neutral-600: rgb(165, 165, 172);
@@ -278,13 +278,13 @@
   --color-cyan-600: rgb(34, 211, 238);
   --color-cyan-700: rgb(103, 232, 249);
 
-  /* Warm neutral overrides — adapted with cool shift */
-  --color-warm-50: rgb(27, 28, 33);
-  --color-warm-100: rgb(36, 37, 43);
-  --color-warm-200: rgb(46, 47, 54);
-  --color-warm-300: rgb(62, 63, 70);
-  --color-warm-400: rgb(85, 86, 94);
-  --color-warm-500: rgb(120, 121, 130);
+  /* Warm neutral overrides — matched to Linear surfaces */
+  --color-warm-50: rgb(14, 16, 17);
+  --color-warm-100: rgb(22, 24, 26);
+  --color-warm-200: rgb(32, 34, 38);
+  --color-warm-300: rgb(46, 48, 52);
+  --color-warm-400: rgb(68, 70, 76);
+  --color-warm-500: rgb(100, 102, 110);
 
   /* Shadows for dark mode - more subtle */
   --shadow-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
@@ -298,29 +298,29 @@
   /* shadcn/ui component tokens */
   --color-background: var(--color-default-background);
   --color-foreground: var(--color-default-font);
-  --color-card: rgb(30, 31, 37);
+  --color-card: rgb(18, 20, 22);
   --color-card-foreground: var(--color-default-font);
-  --color-popover: rgb(30, 31, 37);
+  --color-popover: rgb(18, 20, 22);
   --color-popover-foreground: var(--color-default-font);
   --color-primary: var(--color-brand-400);
   --color-primary-foreground: rgb(255, 255, 255);
-  --color-secondary: rgb(48, 49, 56);
+  --color-secondary: rgb(32, 34, 38);
   --color-secondary-foreground: rgb(227, 227, 232);
-  --color-muted: rgb(35, 36, 42);
+  --color-muted: rgb(20, 22, 24);
   --color-muted-foreground: rgb(143, 143, 155);
   --color-accent: rgba(99, 102, 241, 0.2);
   --color-accent-foreground: rgb(199, 210, 254);
   --color-destructive: var(--color-error-500);
   --color-destructive-foreground: rgb(255, 255, 255);
-  --color-border: rgb(40, 41, 48);
-  --color-input: rgb(40, 41, 48);
+  --color-border: rgb(28, 30, 34);
+  --color-input: rgb(28, 30, 34);
   --color-ring: var(--color-brand-400);
 
   /* Status colors */
   --color-success: var(--color-success-400);
-  --color-success-foreground: rgb(22, 22, 28);
+  --color-success-foreground: rgb(10, 10, 10);
   --color-warning: var(--color-warning-400);
-  --color-warning-foreground: rgb(22, 22, 28);
+  --color-warning-foreground: rgb(10, 10, 10);
 
   /* Chart colors - brighter for dark mode */
   --color-chart-1: var(--color-brand-400);
@@ -329,14 +329,14 @@
   --color-chart-4: var(--color-brand-200);
   --color-chart-5: var(--color-brand-600);
 
-  /* Sidebar — slightly darker than content for depth */
-  --color-sidebar: rgb(22, 22, 28);
+  /* Sidebar — #0A0A0A, darker than content #0F1112 */
+  --color-sidebar: rgb(10, 10, 10);
   --color-sidebar-foreground: var(--color-default-font);
   --color-sidebar-primary: var(--color-brand-400);
   --color-sidebar-primary-foreground: rgb(255, 255, 255);
   --color-sidebar-accent: rgba(99, 102, 241, 0.18);
   --color-sidebar-accent-foreground: rgb(199, 210, 254);
-  --color-sidebar-border: rgb(40, 41, 48);
+  --color-sidebar-border: rgb(25, 27, 30);
   --color-sidebar-ring: var(--color-brand-400);
 }
 
