@@ -219,25 +219,27 @@
 .dark {
   /* Core semantic colors */
   --color-default-background: rgb(23, 23, 23);
-  --color-default-font: rgb(250, 250, 250);
-  --color-subtext-color: rgb(163, 163, 163);
+  --color-default-font: rgb(227, 227, 232);
+  --color-subtext-color: rgb(143, 143, 155);
   --color-neutral-border: rgb(64, 64, 64);
   --color-neutral-border-subtle: rgb(55, 55, 55);
   --color-white: rgb(38, 38, 38);
 
-  /* Neutral palette overrides for dark mode */
+  /* Neutral palette overrides for dark mode
+     Soft ceiling (~245) with subtle cool tint to complement indigo brand.
+     Even ~20pt steps create clear text hierarchy without harsh white. */
   --color-neutral-0: rgb(23, 23, 23);
   --color-neutral-50: rgb(23, 23, 23);
   --color-neutral-100: rgb(38, 38, 38);
   --color-neutral-200: rgb(64, 64, 64);
   --color-neutral-300: rgb(82, 82, 82);
-  --color-neutral-400: rgb(115, 115, 115);
-  --color-neutral-500: rgb(163, 163, 163);
-  --color-neutral-600: rgb(212, 212, 212);
-  --color-neutral-700: rgb(229, 229, 229);
-  --color-neutral-800: rgb(245, 245, 245);
-  --color-neutral-900: rgb(250, 250, 250);
-  --color-neutral-950: rgb(255, 255, 255);
+  --color-neutral-400: rgb(107, 107, 117);
+  --color-neutral-500: rgb(143, 143, 155);
+  --color-neutral-600: rgb(165, 165, 172);
+  --color-neutral-700: rgb(185, 185, 192);
+  --color-neutral-800: rgb(205, 205, 212);
+  --color-neutral-900: rgb(227, 227, 232);
+  --color-neutral-950: rgb(245, 245, 248);
 
   /* Brand colors - adjusted for dark mode contrast */
   --color-brand-50: rgba(79, 70, 229, 0.15);
@@ -301,9 +303,9 @@
   --color-primary: var(--color-brand-400);
   --color-primary-foreground: rgb(255, 255, 255);
   --color-secondary: rgb(64, 64, 64);
-  --color-secondary-foreground: rgb(250, 250, 250);
+  --color-secondary-foreground: rgb(227, 227, 232);
   --color-muted: rgb(38, 38, 38);
-  --color-muted-foreground: rgb(163, 163, 163);
+  --color-muted-foreground: rgb(143, 143, 155);
   --color-accent: rgba(99, 102, 241, 0.2);
   --color-accent-foreground: rgb(199, 210, 254);
   --color-destructive: var(--color-error-500);
