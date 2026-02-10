@@ -637,8 +637,8 @@ export function ExperimentsTable() {
                 <td>
                   <div className="flex h-14 items-center px-3">
                     {experiment.status === "running" ? (
-                      <span className="text-body text-neutral-600">
-                        {experiment.daysRunning} days
+                      <span className="text-body whitespace-nowrap text-neutral-600">
+                        {experiment.daysRunning}d
                       </span>
                     ) : (
                       <span className="text-neutral-400">&mdash;</span>
