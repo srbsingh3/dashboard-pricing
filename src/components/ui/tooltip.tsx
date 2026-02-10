@@ -69,9 +69,25 @@ function SimpleTooltip({
   sideOffset?: number
   children: React.ReactNode
 }) {
+  const [open, setOpen] = React.useState(false)
+  const pointerInside = React.useRef(false)
+
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+    <Tooltip
+      open={open}
+      onOpenChange={(isOpen) => {
+        // Only open via pointer hover, not focus (prevents tooltip from
+        // auto-showing when focus returns after a dropdown menu closes)
+        setOpen(isOpen && pointerInside.current)
+      }}
+    >
+      <TooltipTrigger
+        asChild
+        onPointerEnter={() => { pointerInside.current = true }}
+        onPointerLeave={() => { pointerInside.current = false }}
+      >
+        {children}
+      </TooltipTrigger>
       <TooltipContent side={side} sideOffset={sideOffset}>
         {label}
       </TooltipContent>
