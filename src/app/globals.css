@@ -866,3 +866,20 @@ button:focus-visible,
   background-color: var(--color-neutral-200);
 }
 
+/* ============================================
+   RADIO CARD SELECTION — DARK MODE REFINEMENT
+   Soften the selected-state treatment for the Experiment Type
+   radio cards. The Subframe defaults (brand-200 border + brand-50 bg)
+   are too loud in dark mode — reduce to a subtle hint.
+   Scoped to [data-tour="form-type"] so nothing else is affected.
+   ============================================ */
+
+.dark [data-tour="form-type"] button[aria-checked="true"] {
+  border-color: rgba(129, 140, 248, 0.30) !important;
+  background-color: rgba(99, 102, 241, 0.06) !important;
+}
+
+.dark [data-tour="form-type"] button[aria-checked="true"]:hover {
+  background-color: rgba(99, 102, 241, 0.10) !important;
+}
+
