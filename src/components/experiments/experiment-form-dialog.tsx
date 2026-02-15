@@ -224,6 +224,57 @@ const getRandomEnabledColumns = (): string[] => {
 interface ExperimentFormDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialExperiment?: {
+    name: string;
+    objective: string;
+    type: "ab" | "switchback";
+    variations: number;
+    targetGroups: number;
+    status: string;
+  } | null;
+}
+
+// Vendor filter fields to randomly pick from for pre-filled edit groups
+const VENDOR_FILTER_FIELDS = [
+  "assignment", "chain_name", "city_names", "vertical_type",
+  "zone_names", "marketing_tags", "delivery_types",
+];
+
+function generateMockPriorityGroups(groupCount: number, variationCount: number) {
+  const defaultVariation = {
+    deliveryFee: "same_as_control",
+    mov: "same_as_control",
+    fleetDelay: "same_as_control",
+    basketValue: "same_as_control",
+    serviceFee: "same_as_control",
+    priorityFee: "same_as_control",
+  };
+
+  return Array.from({ length: groupCount }, (_, i) => {
+    const enabledColumns = getRandomEnabledColumns();
+    const filterField = VENDOR_FILTER_FIELDS[i % VENDOR_FILTER_FIELDS.length];
+    return {
+      id: i + 1,
+      isExpanded: i < 2, // first two expanded, rest collapsed
+      isNew: false,
+      vendorFilters: [{
+        id: generateFilterId(),
+        field: filterField,
+        condition: "is" as const,
+        values: [],
+      }],
+      vendorCount: generateRandomVendorCount(),
+      conditions: [createRandomCondition()],
+      controlDeliveryFee: getRandomComponent(DELIVERY_FEE_COMPONENTS),
+      controlMov: getRandomComponent(MOV_COMPONENTS),
+      controlFleetDelay: enabledColumns.includes("fleet_delay") ? getRandomComponent(FLEET_DELAY_COMPONENTS) : null,
+      controlBasketValue: enabledColumns.includes("basket_value") ? getRandomComponent(BASKET_VALUE_COMPONENTS) : null,
+      controlServiceFee: enabledColumns.includes("service_fee") ? getRandomComponent(SERVICE_FEE_COMPONENTS) : null,
+      controlPriorityFee: enabledColumns.includes("priority_fee") ? getRandomComponent(PRIORITY_FEE_COMPONENTS) : null,
+      enabledColumns,
+      variations: Array.from({ length: variationCount }, () => ({ ...defaultVariation })),
+    };
+  });
 }
 
 // Sortable Priority Card wrapper component
@@ -264,16 +315,30 @@ function SortablePriorityCard({ id, children, disabled }: SortablePriorityCardPr
 export function ExperimentFormDialog({
   open,
   onOpenChange,
+  initialExperiment,
 }: ExperimentFormDialogProps) {
-  const [experimentName, setExperimentName] = useState("");
+  const isEditing = Boolean(initialExperiment);
+  const [experimentName, setExperimentName] = useState(
+    initialExperiment?.name ?? ""
+  );
   const [experimentHypothesis, setExperimentHypothesis] = useState("");
-  const [experimentObjective, setExperimentObjective] = useState("");
-  const [experimentType, setExperimentType] = useState("ab_test");
+  const [experimentObjective, setExperimentObjective] = useState(
+    initialExperiment
+      ? (OBJECTIVE_OPTIONS.find(o => o.label === initialExperiment.objective)?.value ?? "")
+      : ""
+  );
+  const [experimentType, setExperimentType] = useState(
+    initialExperiment?.type === "switchback" ? "switchback_test" : "ab_test"
+  );
   const [selectedZones, setSelectedZones] = useState<string[]>([]);
   const [selectedVerticals, setSelectedVerticals] = useState<string[]>([]);
   const [selectedTargetGroups, setSelectedTargetGroups] = useState<string[]>([]);
-  const [numberOfVariations, setNumberOfVariations] = useState("1");
-  const [participantShare, setParticipantShare] = useState("");
+  const [numberOfVariations, setNumberOfVariations] = useState(
+    initialExperiment ? String(initialExperiment.variations) : "1"
+  );
+  const [participantShare, setParticipantShare] = useState(
+    initialExperiment ? "40" : ""
+  );
   const [formErrors, setFormErrors] = useState<{
     experimentName?: boolean;
     participantShare?: boolean;
@@ -302,7 +367,15 @@ export function ExperimentFormDialog({
       serviceFee: string | null;
       priorityFee: string | null;
     }>;
-  }[]>(() => []);
+  }[]>(() => {
+    if (initialExperiment && initialExperiment.targetGroups > 0) {
+      return generateMockPriorityGroups(
+        initialExperiment.targetGroups,
+        initialExperiment.variations
+      );
+    }
+    return [];
+  });
 
   // Add a new filter to a specific priority group
   const addVendorFilter = useCallback((groupId: number, fieldValue: string) => {
@@ -736,7 +809,7 @@ export function ExperimentFormDialog({
     >
       {/* Visually hidden title for accessibility */}
       <DialogPrimitive.Title className="sr-only">
-        New Experiment
+        {isEditing ? "Edit Experiment" : "New Experiment"}
       </DialogPrimitive.Title>
 
       {/* Header - Figma: Modal Header */}
@@ -744,7 +817,7 @@ export function ExperimentFormDialog({
         <div className="flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
             <h2 className="text-body-bold text-neutral-900">
-              New Experiment
+              {isEditing ? "Edit Experiment" : "New Experiment"}
             </h2>
           </div>
           <button
@@ -1760,11 +1833,22 @@ export function ExperimentFormDialog({
               <div className="flex h-8 items-center rounded-md bg-brand-600">
                 <button
                   type="button"
-                  onClick={() => validateForm()}
+                  onClick={() => {
+                    if (validateForm()) {
+                      SubframeCore.toast.custom(() => (
+                        <Toast
+                          variant="success"
+                          icon={<CheckCircle2 className="size-4" />}
+                          title={isEditing ? "Experiment updated" : "Experiment saved as draft"}
+                        />
+                      ));
+                      handleClose();
+                    }
+                  }}
                   className="flex h-full cursor-pointer items-center justify-center rounded-l-md border-none bg-transparent px-3 hover:bg-brand-500 active:bg-brand-600"
                 >
                   <span className="text-body-bold whitespace-nowrap text-white">
-                    Save as Draft
+                    {isEditing ? "Save Changes" : "Save as Draft"}
                   </span>
                 </button>
                 {/* Vertical divider */}
@@ -1786,7 +1870,18 @@ export function ExperimentFormDialog({
                   asChild
                 >
                   <DropdownMenu>
-                    <DropdownMenu.DropdownItem icon={null} onClick={() => validateForm()}>
+                    <DropdownMenu.DropdownItem icon={null} onClick={() => {
+                      if (validateForm()) {
+                        SubframeCore.toast.custom(() => (
+                          <Toast
+                            variant="success"
+                            icon={<CheckCircle2 className="size-4" />}
+                            title="Experiment saved and activated"
+                          />
+                        ));
+                        handleClose();
+                      }
+                    }}>
                       Save and Activate Experiment
                     </DropdownMenu.DropdownItem>
                   </DropdownMenu>

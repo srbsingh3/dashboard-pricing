@@ -192,7 +192,11 @@ function SortIndicator({
   );
 }
 
-export function ExperimentsTable() {
+interface ExperimentsTableProps {
+  onEditExperiment?: (experiment: Experiment) => void;
+}
+
+export function ExperimentsTable({ onEditExperiment }: ExperimentsTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("id");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
@@ -689,7 +693,7 @@ export function ExperimentsTable() {
                             <AreaChart className="size-3.5" />
                             View Results
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => onEditExperiment?.(experiment)}>
                             <Pencil className="size-3.5" />
                             Edit
                           </DropdownMenuItem>
